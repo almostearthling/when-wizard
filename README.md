@@ -1,6 +1,6 @@
 # When Wizard
 
-It turns out that [**When**](https://github.com/almostearthling/when-command) could be more productive for some users if there was a more streamlined interface to manage conditions and reactions, while other reports consider the interface already usable. I think that the applet should be able to behave in both ways:
+It turns out that [**When**](https://github.com/almostearthling/when-command) could be more productive for some users if there was a more streamlined interface to manage conditions and reactions, while other reports consider the interface already usable. I think that **When** should be able to behave in both ways:
 
 * offer the usual interface, with direct access to *tasks*, *conditions* and *signal handlers*
 * provide a simpler, intuitive and wizard-based interface to hide the parts that require knowledge of the shell, scripting and maybe even some programming.
