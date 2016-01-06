@@ -34,9 +34,10 @@ from gi.repository import Pango
 # base constants
 APP_NAME = 'when-wizard'
 APP_FULLNAME = 'When Gnome Scheduler Wizard'
-APP_SHORTNAME = 'When'
+APP_SHORTNAME = 'WhenWizard'
 APP_COPYRIGHT = '(c) 2015-2016 Francesco Garosi'
 APP_URL = 'http://almostearthling.github.io/when-command/'
+APP_ID = 'it.jks.WhenWizard'
 APP_LONGDESC = "Application for easier setup of the When scheduler."
 
 # NOTE: the following lines *must both* be edited at each release increment
@@ -89,6 +90,14 @@ elif not INVOKED_DIR.startswith('/usr'):
     APP_LOCALE_FOLDER = os.path.join(APP_BASE_FOLDER, 'share', 'locale')
 
 # the above pseudo-connstants should be available to all modules
+__builtins__.APP_NAME = APP_NAME
+__builtins__.APP_FULLNAME = APP_FULLNAME
+__builtins__.APP_SHORTNAME = APP_SHORTNAME
+__builtins__.APP_COPYRIGHT = APP_COPYRIGHT
+__builtins__.APP_URL = APP_URL
+__builtins__.APP_ID = APP_ID
+__builtins__.APP_LONGDESC = APP_LONGDESC
+
 __builtins__.APP_BIN_FOLDER = APP_BIN_FOLDER
 __builtins__.APP_BASE_FOLDER = APP_BASE_FOLDER
 __builtins__.APP_DATA_FOLDER = APP_DATA_FOLDER
@@ -120,13 +129,19 @@ def _x(e):
 
 
 def gui_main():
-    import wizard
+    from wizard import WizardApplication
+    app = WizardApplication()
+    exit_status = app.run(sys.argv)
+    sys.exit(exit_status)
 
 
+# take care of parsing possible arguments (if any) and run the GUI application
 def main():
+    # TODO: parse args and initialize applet
     gui_main()
 
 
+# standard Python application paradigm
 if __name__ == '__main__':
     main()
 

@@ -5,6 +5,19 @@
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
+# NOTE: all APP_... constants are builtins from the main script
+
+import os
+import sys
+import locale
+
+
+# setup i18n for both applet text and dialogs
+locale.setlocale(locale.LC_ALL, locale.getlocale())
+locale.bindtextdomain(APP_NAME, APP_LOCALE_FOLDER)
+locale.textdomain(APP_NAME)
+_ = locale.gettext
+
 
 # action constants
 ACTION_OK = 0

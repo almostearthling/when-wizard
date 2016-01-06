@@ -57,13 +57,15 @@
           <object class="GtkBox" id="boxMaster">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="margin_left">5</property>
-            <property name="margin_right">5</property>
+            <property name="margin_left">10</property>
+            <property name="margin_right">10</property>
+            <property name="margin_top">10</property>
+            <property name="margin_bottom">5</property>
             <child>
               <object class="GtkImage" id="imgDeco">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="pixbuf">clock-side.png</property>
+                <property name="pixbuf">../graphics/wizard-side.png</property>
               </object>
               <packing>
                 <property name="expand">False</property>

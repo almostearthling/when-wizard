@@ -5,12 +5,15 @@
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
+import os
+import sys
+
 from gi.repository import GLib, Gio
 from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Pango
 
-# NOTE: all APP_..._FOLDER constants are builtins from the main module
+# NOTE: all APP_... constants are builtins from the main script
 
 
 def load_app_dialog(name):
