@@ -10,6 +10,9 @@ from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Pango
 
+from dialogs import load_app_dialog
+
+
 
 
 

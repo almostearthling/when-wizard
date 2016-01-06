@@ -37,7 +37,7 @@ APP_FULLNAME = 'When Gnome Scheduler Wizard'
 APP_SHORTNAME = 'When'
 APP_COPYRIGHT = '(c) 2015-2016 Francesco Garosi'
 APP_URL = 'http://almostearthling.github.io/when-command/'
-APP_LONGDESC = "When is a configurable user task scheduler for Gnome."
+APP_LONGDESC = "Application for easier setup of the When scheduler."
 
 # NOTE: the following lines *must both* be edited at each release increment
 # * the first holds the version ID that build utilities can extract
@@ -46,12 +46,89 @@ APP_LONGDESC = "When is a configurable user task scheduler for Gnome."
 APP_VERSION = '0.0.1~beta.1'
 APP_TAGDESC = 'This application is still not released'
 
-# action constants
-ACTION_OK = 0
-ACTION_CANCEL = -1
-ACTION_DELETE = 9
+
+#############################################################################
+# Support these installation schemes:
+#
+# * default: LSB standard (/usr/bin, /usr/share/when-command/*)
+# * /opt based (/opt/when-command, /opt/when-command/share/when-command/*)
+# * own folder ($FOLDER, $FOLDER/share/when-command/*)
+#
+# where first element is the invoked command directory, second one is the
+# prefix of the applet data folder (where dialogs, icons and other resources
+# have to be installed); icons have their own subtree in the data folder;
+# locales are either in standard system folders or a subtree of data folder.
+APP_BASE_FOLDER = '/usr'
+APP_BIN_FOLDER = os.path.join(APP_BASE_FOLDER, 'bin')
+APP_DATA_FOLDER = os.path.join(APP_BASE_FOLDER, 'share', APP_NAME)
+APP_MODULE_FOLDER = os.path.join(APP_DATA_FOLDER, 'modules')
+APP_GRAPHICS_FOLDER = os.path.join(APP_DATA_FOLDER, 'graphics')
+APP_RESOURCE_FOLDER = os.path.join(APP_DATA_FOLDER, 'ui')
+APP_PLUGIN_FOLDER = os.path.join(APP_DATA_FOLDER, 'plugins')
+APP_LOCALE_FOLDER = os.path.join(APP_BASE_FOLDER, 'share', 'locale')
+
+INVOKED_CMD = os.path.realpath(sys.argv[0])
+INVOKED_DIR = os.path.dirname(INVOKED_CMD)
+if INVOKED_DIR == os.path.join('/opt', APP_NAME):
+    APP_BIN_FOLDER = INVOKED_DIR
+    APP_BASE_FOLDER = INVOKED_DIR
+    APP_DATA_FOLDER = os.path.join(APP_BASE_FOLDER, 'share')
+    APP_MODULE_FOLDER = os.path.join(APP_DATA_FOLDER, 'modules')
+    APP_RESOURCE_FOLDER = os.path.join(APP_DATA_FOLDER, 'ui')
+    APP_PLUGIN_FOLDER = os.path.join(APP_DATA_FOLDER, 'plugins')
+    APP_GRAPHICS_FOLDER = os.path.join(APP_DATA_FOLDER, 'graphics')
+    APP_LOCALE_FOLDER = os.path.join(APP_DATA_FOLDER, 'locale')
+elif not INVOKED_DIR.startswith('/usr'):
+    APP_BIN_FOLDER = INVOKED_DIR
+    APP_BASE_FOLDER = INVOKED_DIR
+    APP_DATA_FOLDER = os.path.join(APP_BASE_FOLDER, 'share', APP_NAME)
+    APP_MODULE_FOLDER = os.path.join(APP_DATA_FOLDER, 'modules')
+    APP_RESOURCE_FOLDER = os.path.join(APP_DATA_FOLDER, 'ui')
+    APP_PLUGIN_FOLDER = os.path.join(APP_DATA_FOLDER, 'plugins')
+    APP_GRAPHICS_FOLDER = os.path.join(APP_DATA_FOLDER, 'graphics')
+    APP_LOCALE_FOLDER = os.path.join(APP_BASE_FOLDER, 'share', 'locale')
+
+# the above pseudo-connstants should be available to all modules
+__builtins__.APP_BIN_FOLDER = APP_BIN_FOLDER
+__builtins__.APP_BASE_FOLDER = APP_BASE_FOLDER
+__builtins__.APP_DATA_FOLDER = APP_DATA_FOLDER
+__builtins__.APP_MODULE_FOLDER = APP_MODULE_FOLDER
+__builtins__.APP_RESOURCE_FOLDER = APP_RESOURCE_FOLDER
+__builtins__.APP_PLUGIN_FOLDER = APP_PLUGIN_FOLDER
+__builtins__.APP_GRAPHICS_FOLDER = APP_GRAPHICS_FOLDER
+__builtins__.APP_LOCALE_FOLDER = APP_LOCALE_FOLDER
 
 
+# update Python path
+sys.path.insert(0, APP_DATA_FOLDER)
+sys.path.insert(0, APP_MODULE_FOLDER)
+
+
+# setup i18n for both applet text and dialogs
+locale.setlocale(locale.LC_ALL, locale.getlocale())
+locale.bindtextdomain(APP_NAME, APP_LOCALE_FOLDER)
+locale.textdomain(APP_NAME)
+_ = locale.gettext
+
+
+# format an exception for logging purposes
+def _x(e):
+    t, v, tb = sys.exc_info()
+    if t is None:
+        return ''
+    return '%s: %s' % (t.__name__, v)
+
+
+def gui_main():
+    import wizard
+
+
+def main():
+    gui_main()
+
+
+if __name__ == '__main__':
+    main()
 
 
 # end.
