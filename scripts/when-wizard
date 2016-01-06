@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#
+# When Wizard
+#
+# Copyright (c) 2015-2016 Francesco Garosi
+# Released under the BSD License (see LICENSE file)
+#
+# Main application script: prepare all paths and start application
+
+import os
+import sys
+
+import time
+import signal
+import subprocess
+import configparser
+import pickle
+import json
+import argparse
+import shutil
+import re
+import locale
+
+from gi.repository import GLib, Gio
+from gi.repository import GObject
+from gi.repository import Gtk
+from gi.repository import Pango
+
+
+#############################################################################
+# constants
+
+# base constants
+APP_NAME = 'when-wizard'
+APP_FULLNAME = 'When Gnome Scheduler Wizard'
+APP_SHORTNAME = 'When'
+APP_COPYRIGHT = '(c) 2015-2016 Francesco Garosi'
+APP_URL = 'http://almostearthling.github.io/when-command/'
+APP_LONGDESC = "When is a configurable user task scheduler for Gnome."
+
+# NOTE: the following lines *must both* be edited at each release increment
+# * the first holds the version ID that build utilities can extract
+# * the second one includes a message that is used both as a commit message
+#   and as a tag-associated message (in `git tag -m`)
+APP_VERSION = '0.0.1~beta.1'
+APP_TAGDESC = 'This application is still not released'
+
+# action constants
+ACTION_OK = 0
+ACTION_CANCEL = -1
+ACTION_DELETE = 9
+
+
+
+
+# end.
