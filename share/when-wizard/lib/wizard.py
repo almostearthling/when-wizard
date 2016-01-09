@@ -23,6 +23,7 @@ from resources import RESOURCES as R
 # NOTE: all APP_... constants are builtins from the main script
 
 # mockup for the overall interface test
+from app_plugin import PLUGIN_CONSTANTS
 from plugins_mockup import PLUGINS as all_plugins
 
 ui_app_wizard_master = load_app_dialog('app-wizard-master')
@@ -98,17 +99,14 @@ class WizardAppWindow(object):
     # control reactions
     def changed_cbCategory(self, cb):
         p = self.builder_panes.get_object
-        # cb = p('cbCategory')
         v = cb.get_active()
         model = cb.get_model()
         category = model[v][1]
-        # print(x, '::', v)
         store = Gtk.ListStore(str, GdkPixbuf.Pixbuf, str, str)
         related_plugins = (
             m for m in all_plugins if
             all_plugins[m].category == category and
-            all_plugins[m].plugintype == 'task'
-            )
+            all_plugins[m].plugintype == PLUGIN_CONSTANTS.PLUGIN_TYPE_TASK)
         for m in related_plugins:
             elem = [
                 all_plugins[m].basename,

@@ -9,7 +9,7 @@ import textwrap
 
 
 _PLUGIN_DESC_FORMAT = """\
-basename: %s,
+basename: %s
 name: %s
 type: %s
 description: %s
@@ -24,7 +24,7 @@ class ApplicationPluginConstants(object):
     PLUGIN_TYPE_CONDITION = 'condition'
 
 
-APPLICATION_PLUGIN_CONSTANTS = ApplicationPluginConstants()
+PLUGIN_CONSTANTS = ApplicationPluginConstants()
 
 
 class ApplicationPlugin(object):

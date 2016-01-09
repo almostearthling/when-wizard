@@ -6,13 +6,13 @@
 # Released under the BSD License (see LICENSE file)
 
 
-from app_plugin import ApplicationPlugin, APPLICATION_PLUGIN_CONSTANTS
+from app_plugin import ApplicationPlugin, PLUGIN_CONSTANTS
 
 
 # the list of all (mock) plugins
 PLUGINS = {
     'applications-launch': ApplicationPlugin(
-        plugintype=APPLICATION_PLUGIN_CONSTANTS.PLUGIN_TYPE_TASK,
+        plugintype=PLUGIN_CONSTANTS.PLUGIN_TYPE_TASK,
         category='apps',
         basename='applications-launch',
         name='Application Launcher',
@@ -24,7 +24,7 @@ PLUGINS = {
         default=True,
     ),
     'applications-cmdexec': ApplicationPlugin(
-        plugintype=APPLICATION_PLUGIN_CONSTANTS.PLUGIN_TYPE_TASK,
+        plugintype=PLUGIN_CONSTANTS.PLUGIN_TYPE_TASK,
         category='apps',
         basename='applications-cmdexec',
         name='Command Launcher',
@@ -36,7 +36,7 @@ PLUGINS = {
         default=True,
     ),
     'settings-background': ApplicationPlugin(
-        plugintype=APPLICATION_PLUGIN_CONSTANTS.PLUGIN_TYPE_TASK,
+        plugintype=PLUGIN_CONSTANTS.PLUGIN_TYPE_TASK,
         category='settings',
         basename='settings-background',
         name='Set Background',
@@ -48,7 +48,7 @@ PLUGINS = {
         default=True,
     ),
     'settings-spam': ApplicationPlugin(
-        plugintype=APPLICATION_PLUGIN_CONSTANTS.PLUGIN_TYPE_TASK,
+        plugintype=PLUGIN_CONSTANTS.PLUGIN_TYPE_TASK,
         category='settings',
         basename='settings-spam',
         name='Spam Egg',
@@ -60,7 +60,7 @@ PLUGINS = {
         default=True,
     ),
     'settings-parrot': ApplicationPlugin(
-        plugintype=APPLICATION_PLUGIN_CONSTANTS.PLUGIN_TYPE_TASK,
+        plugintype=PLUGIN_CONSTANTS.PLUGIN_TYPE_TASK,
         category='settings',
         basename='settings-parrot',
         name='Blue Parrot',
@@ -72,7 +72,7 @@ PLUGINS = {
         default=True,
     ),
     'fileops-open': ApplicationPlugin(
-        plugintype=APPLICATION_PLUGIN_CONSTANTS.PLUGIN_TYPE_TASK,
+        plugintype=PLUGIN_CONSTANTS.PLUGIN_TYPE_TASK,
         category='fileops',
         basename='fileops-open',
         name='Open File',
@@ -84,7 +84,7 @@ PLUGINS = {
         default=True,
     ),
     'fileops-opendir': ApplicationPlugin(
-        plugintype=APPLICATION_PLUGIN_CONSTANTS.PLUGIN_TYPE_TASK,
+        plugintype=PLUGIN_CONSTANTS.PLUGIN_TYPE_TASK,
         category='fileops',
         basename='fileops-opendir',
         name='Open Folder',
@@ -96,7 +96,7 @@ PLUGINS = {
         default=True,
     ),
     'power-shutdown': ApplicationPlugin(
-        plugintype=APPLICATION_PLUGIN_CONSTANTS.PLUGIN_TYPE_TASK,
+        plugintype=PLUGIN_CONSTANTS.PLUGIN_TYPE_TASK,
         category='power',
         basename='power-shutdown',
         name='Shutdown',
@@ -108,7 +108,7 @@ PLUGINS = {
         default=True,
     ),
     'power-reboot': ApplicationPlugin(
-        plugintype=APPLICATION_PLUGIN_CONSTANTS.PLUGIN_TYPE_TASK,
+        plugintype=PLUGIN_CONSTANTS.PLUGIN_TYPE_TASK,
         category='power',
         basename='power-reboot',
         name='Reboot',
@@ -120,7 +120,7 @@ PLUGINS = {
         default=True,
     ),
     'power-hibernate': ApplicationPlugin(
-        plugintype=APPLICATION_PLUGIN_CONSTANTS.PLUGIN_TYPE_TASK,
+        plugintype=PLUGIN_CONSTANTS.PLUGIN_TYPE_TASK,
         category='power',
         basename='power-hibernate',
         name='Hibernate',
