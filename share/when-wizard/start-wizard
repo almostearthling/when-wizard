@@ -1,0 +1,44 @@
+# script: share/when-wizard/start-wizard
+# -*- coding: utf-8 -*-
+#
+# When Wizard
+#
+# Copyright (c) 2015-2016 Francesco Garosi
+# Released under the BSD License (see LICENSE file)
+#
+# Main application script: prepare all paths and start application
+
+import os
+import sys
+
+import argparse
+import configparser
+import locale
+
+from gi.repository import GLib, Gio
+from gi.repository import GObject
+from gi.repository import Gtk
+from gi.repository import Pango
+
+from utility import *
+
+
+# setup i18n for both applet text and dialogs
+locale.setlocale(locale.LC_ALL, locale.getlocale())
+locale.bindtextdomain(APP_NAME, APP_LOCALE_FOLDER)
+locale.textdomain(APP_NAME)
+_ = locale.gettext
+
+
+def gui_main():
+    from wizard import WizardApplication
+    app = WizardApplication()
+    exit_status = app.run()
+    sys.exit(exit_status)
+
+
+# take care of parsing possible arguments (if any) and run the GUI application
+def main():
+    # TODO: parse args and initialize applet
+    verify_user_folders()
+    gui_main()

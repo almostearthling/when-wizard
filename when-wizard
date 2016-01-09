@@ -6,26 +6,15 @@
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 #
-# Main application script: prepare all paths and start application
+# Main application loader: setup global variables and run a specified script.
+# Usage: when-wizard script_name [arg1 .. argN]
+#
+# The code is kept as small as possible in order to be able to use this script
+# also to load wrappers for operations that should be periodically run in the
+# When applet, both to check conditions and to run tasks.
 
 import os
 import sys
-
-import time
-import signal
-import subprocess
-import configparser
-import pickle
-import json
-import argparse
-import shutil
-import re
-import locale
-
-from gi.repository import GLib, Gio
-from gi.repository import GObject
-from gi.repository import Gtk
-from gi.repository import Pango
 
 
 #############################################################################
@@ -33,12 +22,13 @@ from gi.repository import Pango
 
 # base constants
 APP_NAME = 'when-wizard'
+APP_WHEN = 'when-command'
 APP_FULLNAME = 'When Gnome Scheduler Wizard'
-APP_SHORTNAME = 'WhenWizard'
+APP_SHORTNAME = 'When Wizard'
 APP_COPYRIGHT = '(c) 2015-2016 Francesco Garosi'
 APP_URL = 'http://almostearthling.github.io/when-command/'
 APP_ID = 'it.jks.WhenWizard'
-APP_LONGDESC = "Application for easier setup of the When scheduler."
+APP_LONGDESC = "A simple Wizard for easier setup of the When scheduler."
 
 # NOTE: the following lines *must both* be edited at each release increment
 # * the first holds the version ID that build utilities can extract
@@ -51,18 +41,18 @@ APP_TAGDESC = 'This application is still not released'
 #############################################################################
 # Support these installation schemes:
 #
-# * default: LSB standard (/usr/bin, /usr/share/when-command/*)
-# * /opt based (/opt/when-command, /opt/when-command/share/when-command/*)
-# * own folder ($FOLDER, $FOLDER/share/when-command/*)
+# * default: LSB standard (/usr/bin, /usr/share/when-wizard/*)
+# * /opt based (/opt/when-wizard, /opt/when-command/share/when-wizard/*)
+# * own folder ($FOLDER, $FOLDER/share/when-wizard/*)
 #
 # where first element is the invoked command directory, second one is the
-# prefix of the applet data folder (where dialogs, icons and other resources
+# prefix of the app data folder (where dialogs, icons and other resources
 # have to be installed); icons have their own subtree in the data folder;
 # locales are either in standard system folders or a subtree of data folder.
 APP_BASE_FOLDER = '/usr'
 APP_BIN_FOLDER = os.path.join(APP_BASE_FOLDER, 'bin')
 APP_DATA_FOLDER = os.path.join(APP_BASE_FOLDER, 'share', APP_NAME)
-APP_MODULE_FOLDER = os.path.join(APP_DATA_FOLDER, 'modules')
+APP_LIB_FOLDER = os.path.join(APP_DATA_FOLDER, 'lib')
 APP_GRAPHICS_FOLDER = os.path.join(APP_DATA_FOLDER, 'graphics')
 APP_RESOURCE_FOLDER = os.path.join(APP_DATA_FOLDER, 'ui')
 APP_PLUGIN_FOLDER = os.path.join(APP_DATA_FOLDER, 'plugins')
@@ -74,7 +64,7 @@ if INVOKED_DIR == os.path.join('/opt', APP_NAME):
     APP_BIN_FOLDER = INVOKED_DIR
     APP_BASE_FOLDER = INVOKED_DIR
     APP_DATA_FOLDER = os.path.join(APP_BASE_FOLDER, 'share')
-    APP_MODULE_FOLDER = os.path.join(APP_DATA_FOLDER, 'modules')
+    APP_LIB_FOLDER = os.path.join(APP_DATA_FOLDER, 'lib')
     APP_RESOURCE_FOLDER = os.path.join(APP_DATA_FOLDER, 'ui')
     APP_PLUGIN_FOLDER = os.path.join(APP_DATA_FOLDER, 'plugins')
     APP_GRAPHICS_FOLDER = os.path.join(APP_DATA_FOLDER, 'graphics')
@@ -83,67 +73,90 @@ elif not INVOKED_DIR.startswith('/usr'):
     APP_BIN_FOLDER = INVOKED_DIR
     APP_BASE_FOLDER = INVOKED_DIR
     APP_DATA_FOLDER = os.path.join(APP_BASE_FOLDER, 'share', APP_NAME)
-    APP_MODULE_FOLDER = os.path.join(APP_DATA_FOLDER, 'modules')
+    APP_LIB_FOLDER = os.path.join(APP_DATA_FOLDER, 'lib')
     APP_RESOURCE_FOLDER = os.path.join(APP_DATA_FOLDER, 'ui')
     APP_PLUGIN_FOLDER = os.path.join(APP_DATA_FOLDER, 'plugins')
     APP_GRAPHICS_FOLDER = os.path.join(APP_DATA_FOLDER, 'graphics')
     APP_LOCALE_FOLDER = os.path.join(APP_BASE_FOLDER, 'share', 'locale')
 
+# configuration and store folders
+USER_FOLDER = os.path.expanduser('~')
+USER_DATA_FOLDER = os.path.join(USER_FOLDER, '.local', 'share', APP_WHEN)
+USER_LAUNCHER_FOLDER = os.path.join(USER_FOLDER, '.local', 'share', 'applications')
+USER_CONFIG_FOLDER = os.path.join(USER_FOLDER, '.config', APP_WHEN)
+USER_STORE_BASE_FOLDER = os.path.join(USER_CONFIG_FOLDER, APP_NAME)
+USER_STORE_FOLDER = os.path.join(USER_STORE_BASE_FOLDER, 'store')
+USER_PLUGIN_FOLDER = os.path.join(USER_STORE_BASE_FOLDER, 'plugins')
+
+USER_CONFIG_FILE = os.path.join(USER_CONFIG_FOLDER, '%s.conf' % APP_NAME)
+
+
 # the above pseudo-connstants should be available to all modules
 __builtins__.APP_NAME = APP_NAME
+__builtins__.APP_WHEN = APP_WHEN
 __builtins__.APP_FULLNAME = APP_FULLNAME
 __builtins__.APP_SHORTNAME = APP_SHORTNAME
 __builtins__.APP_COPYRIGHT = APP_COPYRIGHT
 __builtins__.APP_URL = APP_URL
 __builtins__.APP_ID = APP_ID
 __builtins__.APP_LONGDESC = APP_LONGDESC
+__builtins__.APP_VERSION = APP_VERSION
+__builtins__.APP_TAGDESC = APP_TAGDESC
 
 __builtins__.APP_BIN_FOLDER = APP_BIN_FOLDER
 __builtins__.APP_BASE_FOLDER = APP_BASE_FOLDER
 __builtins__.APP_DATA_FOLDER = APP_DATA_FOLDER
-__builtins__.APP_MODULE_FOLDER = APP_MODULE_FOLDER
+__builtins__.APP_LIB_FOLDER = APP_LIB_FOLDER
 __builtins__.APP_RESOURCE_FOLDER = APP_RESOURCE_FOLDER
 __builtins__.APP_PLUGIN_FOLDER = APP_PLUGIN_FOLDER
 __builtins__.APP_GRAPHICS_FOLDER = APP_GRAPHICS_FOLDER
 __builtins__.APP_LOCALE_FOLDER = APP_LOCALE_FOLDER
 
+__builtins__.USER_FOLDER = USER_FOLDER
+__builtins__.USER_DATA_FOLDER = USER_DATA_FOLDER
+__builtins__.USER_LAUNCHER_FOLDER = USER_LAUNCHER_FOLDER
+__builtins__.USER_CONFIG_FOLDER = USER_CONFIG_FOLDER
+__builtins__.USER_STORE_BASE_FOLDER = USER_STORE_BASE_FOLDER
+__builtins__.USER_STORE_FOLDER = USER_STORE_FOLDER
+__builtins__.USER_PLUGIN_FOLDER = USER_PLUGIN_FOLDER
+
+__builtins__.APP_LOADER_SCRIPT = INVOKED_CMD
+__builtins__.USER_CONFIG_FILE = USER_CONFIG_FILE
+
 
 # update Python path
 sys.path.insert(0, APP_DATA_FOLDER)
-sys.path.insert(0, APP_MODULE_FOLDER)
+sys.path.insert(0, APP_LIB_FOLDER)
 
 
-# setup i18n for both applet text and dialogs
-locale.setlocale(locale.LC_ALL, locale.getlocale())
-locale.bindtextdomain(APP_NAME, APP_LOCALE_FOLDER)
-locale.textdomain(APP_NAME)
-_ = locale.gettext
-
-
-# format an exception for logging purposes
-def _x(e):
-    t, v, tb = sys.exc_info()
-    if t is None:
-        return ''
-    return '%s: %s' % (t.__name__, v)
-
-
-def gui_main():
-    from wizard import WizardApplication
-    app = WizardApplication()
-    exit_status = app.run(sys.argv)
-    sys.exit(exit_status)
-
-
-# take care of parsing possible arguments (if any) and run the GUI application
-def main():
-    # TODO: parse args and initialize applet
-    gui_main()
-
-
-# standard Python application paradigm
+# the code below is used to load a script that has a main() function: this
+# is required to avoid to give the script a reserved name; the particular
+# form of the code allows the called application to be written as if it was
+# directly run from the Python interpreter, except for having the main()
+# entry point and for being aware of many already defined global variables
 if __name__ == '__main__':
-    main()
+    if len(sys.argv) > 1:
+        source_module = sys.argv[1]
+        source_path = os.path.join(APP_DATA_FOLDER, source_module)
+        if os.path.exists(source_path):
+            from importlib.machinery import SourceFileLoader
+            sys.argv = sys.argv[1:]
+            module = SourceFileLoader(source_module, source_path).load_module()
+            if hasattr(module, 'main'):
+                ret = module.main()
+                if ret:
+                    try:
+                        ret = int(ret)
+                        sys.exit(ret)
+                    except ValueError:
+                        # generic error: exit code 2
+                        sys.exit(2)
+            else:
+                # cannot execute: exit code 126
+                sys.exit(126)
+        else:
+            # command not found: exit code 127
+            sys.exit(127)
 
 
 # end.

@@ -3,10 +3,47 @@
 <interface>
   <requires lib="gtk+" version="3.10"/>
   <!-- interface-local-resource-path /home/franz/Projects/Managed/when-wizard/share/when-wizard/graphics -->
+  <object class="GtkAboutDialog" id="dlgAbout">
+    <property name="can_focus">False</property>
+    <property name="window_position">center</property>
+    <property name="type_hint">menu</property>
+    <property name="program_name">When Wizard</property>
+    <property name="version">0.0.0</property>
+    <property name="copyright" translatable="yes">Copyright (c) Francesco Garosi</property>
+    <property name="comments" translatable="yes">A simple Wizard for easier setup of the When scheduler.</property>
+    <property name="website">http://almostearthling.github.io/when-command/</property>
+    <property name="website_label" translatable="yes">When's Web Page</property>
+    <property name="logo_icon_name"/>
+    <property name="license_type">lgpl-3-0</property>
+    <child internal-child="vbox">
+      <object class="GtkBox" id="aboutdialog-vbox1">
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox" id="aboutdialog-action_area1">
+            <property name="can_focus">False</property>
+            <property name="layout_style">end</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <placeholder/>
+        </child>
+      </object>
+    </child>
+  </object>
   <object class="GtkDialog" id="dlgWhenWizardMaster">
     <property name="can_focus">False</property>
+    <property name="title" translatable="yes">When Wizard</property>
     <property name="default_width">750</property>
     <property name="default_height">500</property>
+    <property name="icon_name">applications-utilities</property>
     <property name="type_hint">dialog</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="actionBox">
@@ -18,6 +55,21 @@
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
             <child>
+              <object class="GtkButton" id="btnAbout">
+                <property name="label">gtk-about</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+                <signal name="clicked" handler="show_about" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkButton" id="btnBack">
                 <property name="label">gtk-media-previous</property>
                 <property name="visible">True</property>
@@ -28,7 +80,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">1</property>
+                <property name="position">2</property>
               </packing>
             </child>
             <child>
@@ -42,7 +94,7 @@
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">2</property>
+                <property name="position">3</property>
               </packing>
             </child>
           </object>
@@ -65,7 +117,6 @@
               <object class="GtkImage" id="imgDeco">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="pixbuf">../graphics/wizard-side.png</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -77,6 +128,7 @@
               <object class="GtkScrolledWindow" id="paneWizard">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="margin_left">20</property>
                 <property name="hscrollbar_policy">never</property>
                 <child>
                   <placeholder/>
