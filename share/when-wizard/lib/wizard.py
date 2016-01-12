@@ -19,11 +19,11 @@ from dialogs import load_app_dialog
 from utility import app_pixbuf_from_name as get_iconpb
 
 from resources import RESOURCES as R
+from plugin import CONST as P
 
 # NOTE: all APP_... constants are builtins from the main script
 
 # mockup for the overall interface test
-from app_plugin import PLUGIN_CONSTANTS
 from plugins_mockup import PLUGINS as all_plugins
 
 ui_app_wizard_master = load_app_dialog('app-wizard-master')
@@ -64,10 +64,10 @@ class WizardAppWindow(object):
     def get_viewStart(self):
         p = self.builder_panes.get_object
         store = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str)
-        store.append([get_iconpb('process'), 'apps', R.UI_COMBO_CATEGORY_APPLICATIONS])
-        store.append([get_iconpb('settings'), 'settings', R.UI_COMBO_CATEGORY_SETTINGS])
-        store.append([get_iconpb('electricity'), 'power', R.UI_COMBO_CATEGORY_POWER])
-        store.append([get_iconpb('folder'), 'fileops', R.UI_COMBO_CATEGORY_FILEOPS])
+        store.append([get_iconpb('process'), P.CATEGORY_TASK_APPS, R.UI_COMBO_CATEGORY_APPLICATIONS])
+        store.append([get_iconpb('settings'), P.CATEGORY_TASK_SETTINGS, R.UI_COMBO_CATEGORY_SETTINGS])
+        store.append([get_iconpb('electricity'), P.CATEGORY_TASK_POWER, R.UI_COMBO_CATEGORY_POWER])
+        store.append([get_iconpb('folder'), P.CATEGORY_TASK_FILEOPS, R.UI_COMBO_CATEGORY_FILEOPS])
         r_text = Gtk.CellRendererText()
         r_pixbuf = Gtk.CellRendererPixbuf()
         cb = p('cbCategory')
@@ -106,7 +106,7 @@ class WizardAppWindow(object):
         related_plugins = (
             m for m in all_plugins if
             all_plugins[m].category == category and
-            all_plugins[m].plugintype == PLUGIN_CONSTANTS.PLUGIN_TYPE_TASK)
+            all_plugins[m].plugin_type == 'task')
         for m in related_plugins:
             elem = [
                 all_plugins[m].basename,
@@ -119,20 +119,21 @@ class WizardAppWindow(object):
         l.set_model(store)
 
     def changed_listActions(self, sel):
+        p = self.builder_panes.get_object
         m, i = sel.get_selected()
+        t = p('txtHint').get_buffer()
         if i is not None:
             item = m[i][0]
-            plugin = all_plugins[item]
-            print(plugin.desc_string())
+            item_plugin = all_plugins[item]
+            t.set_text(item_plugin.desc_string_gui())
         else:
-            print('<empty>')
+            t.set_text('')
 
     # wizard window main function
     def run(self):
         self.dialog.present()
         ret = self.dialog.run()
         self.dialog.hide()
-        return ret
 
 
 class WizardApplication(Gtk.Application):

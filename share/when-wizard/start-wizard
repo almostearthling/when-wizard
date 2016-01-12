@@ -33,12 +33,14 @@ _ = locale.gettext
 def gui_main():
     from wizard import WizardApplication
     app = WizardApplication()
-    exit_status = app.run()
-    sys.exit(exit_status)
+    return app.run()
 
 
 # take care of parsing possible arguments (if any) and run the GUI application
 def main():
     # TODO: parse args and initialize applet
     verify_user_folders()
-    gui_main()
+    return gui_main()
+
+
+# end.
