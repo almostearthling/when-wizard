@@ -1,0 +1,38 @@
+# script: share/when-wizard/launcher
+# -*- coding: utf-8 -*-
+#
+# When Wizard
+#
+# Copyright (c) 2015-2016 Francesco Garosi
+# Released under the BSD License (see LICENSE file)
+#
+# Task launcher: stub to run a task implemented as a task plugin
+# Usage: when-wizard launcher plugin_name instance_id
+
+import os
+import sys
+import time
+
+import argparse
+import configparser
+import locale
+
+from plugin import load_plugin_module
+
+
+# setup i18n for both applet text and dialogs
+locale.setlocale(locale.LC_ALL, locale.getlocale())
+locale.bindtextdomain(APP_NAME, APP_LOCALE_FOLDER)
+locale.textdomain(APP_NAME)
+_ = locale.gettext
+
+
+def main():
+    mod = load_plugin_module(sys.argv[1])
+    if mod:
+        p = mod.Plugin()
+        p.load(sys.argv[2])
+        p.run()
+
+
+# end.
