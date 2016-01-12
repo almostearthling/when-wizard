@@ -7,9 +7,11 @@
 # Released under the BSD License (see LICENSE file)
 #
 # Main application script: prepare all paths and start application
+# Usage: when-wizard start-wizard
 
 import os
 import sys
+import time
 
 import argparse
 import configparser
@@ -20,7 +22,7 @@ from gi.repository import GObject
 from gi.repository import Gtk
 from gi.repository import Pango
 
-from utility import *
+from utility import verify_user_folders
 
 
 # setup i18n for both applet text and dialogs
@@ -40,7 +42,8 @@ def gui_main():
 def main():
     # TODO: parse args and initialize applet
     verify_user_folders()
-    return gui_main()
+    r = gui_main()
+    return r
 
 
 # end.

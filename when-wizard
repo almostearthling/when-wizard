@@ -6,7 +6,7 @@
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 #
-# Main application loader: setup global variables and run a specified script.
+# Main application loader: setup global variables and run a specified script
 # Usage: when-wizard script_name [arg1 .. argN]
 #
 # The code is kept as small as possible in order to be able to use this script

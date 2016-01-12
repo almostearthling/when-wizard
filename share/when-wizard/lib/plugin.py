@@ -6,8 +6,11 @@
 # Released under the BSD License (see LICENSE file)
 
 
+import os
+import sys
 import json
 import textwrap
+import subprocess
 
 
 class PluginConstants(object):
@@ -48,6 +51,10 @@ _PLUGIN_DESC_FORMAT_GUI = """\
 """
 _PLUGIN_DESC_FORMAT_GUI_COPYRIGHT = """\n{copyright}, {author}"""
 
+_PLUGIN_FILE_EXTENSIONS = ['.py']
+
+_PLUGIN_UNIQUE_ID_INDEX = 1
+
 
 class BasePlugin(object):
 
@@ -59,6 +66,7 @@ class BasePlugin(object):
                  copyright,
                  icon=None,
                  help_string=None):
+        global _PLUGIN_UNIQUE_ID_INDEX
         if self.__class__.__name__ == 'BasePlugin':
             raise TypeError("cannot instantiate abstract class")
         self.basename = basename
@@ -77,10 +85,14 @@ class BasePlugin(object):
         self.stock = False
         self.module_basename = None
         self.module_path = None
+        self.unique_id = '%s_%s' % (
+            self.basename, ('000000' + str(_PLUGIN_UNIQUE_ID_INDEX))[-6:])
+        _PLUGIN_UNIQUE_ID_INDEX += 1
 
     # prepare for JSON
     def to_dict(self):
         return {
+            'unique_id': self.unique_id,
             'basename': self.basename,
             'name': self.name,
             'description': self.description,
@@ -96,6 +108,7 @@ class BasePlugin(object):
         }
 
     def from_dict(self, d):
+        self.unique_id = d['unique_id']
         self.basename = d['basename']
         self.name = d['name']
         self.description = d['description']
@@ -108,6 +121,43 @@ class BasePlugin(object):
         self.stock = d['stock']
         self.module_basename = d['module_basename']
         self.module_path = d['module_path']
+
+    def to_itemdef_dict(self):
+        return {}
+
+    def to_itemdef(self):
+        d = self.to_itemdef_dict()
+        res = '[%s]\n' % self.unique_id
+        for key in d:
+            v = d[key]
+            if isinstance(v, tuple):
+                sv = ', '.join(map(str, v))
+            elif isinstance(v, list):
+                sv = '\n'
+                for x in v:
+                    if isinstance(x, tuple):
+                        s = ', '.join(map(str, x))
+                    else:
+                        s = str(x)
+                    sv += '    %s' % s
+            elif isinstance(v, dict):
+                sv = '\n'
+                for x in v:
+                    sv += '    %s=%s\n' % (x, str(v[x]))
+            else:
+                sv = str(v)
+            res += '%s: %s' % (key, sv)
+        res += '\n'
+        return res
+
+    def register(self):
+        filename = os.tmpnam()
+        with open(filename, 'w') as f:
+            f.write(self.to_itemdef())
+        return subprocess.call(['when-command', '--item-add', filename])
+
+    def unregister(self):
+        return subprocess.call(['when-command', '--item-del', self.unique_id])
 
     # descriptive strings
     def desc_string_console(self):
@@ -124,6 +174,9 @@ class BasePlugin(object):
         if not self.stock:
             s += _PLUGIN_DESC_FORMAT_GUI_COPYRIGHT.format(**self.to_dict())
         return s
+
+    def get_pane(self):
+        return None
 
 
 # main abstract base classes
@@ -145,11 +198,13 @@ class TaskPlugin(BasePlugin):
         self.plugin_type = CONST.PLUGIN_TYPE_TASK
         self.category = category
 
-    def register(self):
-        raise TypeError("this item cannot be registered")
+    def to_itemdef_dict(self):
+        d = BasePlugin.to_itemdef_dict()
+        d['type'] = 'task'
+        return d
 
     def run(self):
-        return True
+        return False
 
 
 class ConditionPlugin(BasePlugin):
@@ -170,11 +225,47 @@ class ConditionPlugin(BasePlugin):
         self.plugin_type = CONST.PLUGIN_TYPE_CONDITION
         self.category = category
 
-    def register(self):
-        raise TypeError("this item cannot be registered")
+    def to_itemdef_dict(self):
+        d = BasePlugin.to_itemdef_dict()
+        d['type'] = 'condition'
+        return d
 
     def startup_check(self):
         return False
+
+
+class TimeConditionPlugin(ConditionPlugin):
+
+    def __init__(self,
+                 basename,
+                 name,
+                 description,
+                 author,
+                 copyright,
+                 icon=None,
+                 help_string=None):
+        ConditionPlugin.__init__(self, CONST.CATEGORY_COND_TIME, basename,
+                                 name, description, author, copyright,
+                                 icon, help_string)
+        self.time_spec = None
+
+
+# function to load a plugin as a module
+def load_plugin_module(basename, stock=False):
+    base = APP_PLUGIN_FOLDER if stock else USER_PLUGIN_FOLDER
+    for ext in _PLUGIN_FILE_EXTENSIONS:
+        basename_ext = basename + ext
+        path = os.path.join(base, basename_ext)
+        if os.path.exists(path):
+            break
+        else:
+            path = None
+    if path:
+        from importlib.machinery import SourceFileLoader
+        module = SourceFileLoader(basename, path).load_module()
+        return module
+    else:
+        return None
 
 
 # end.

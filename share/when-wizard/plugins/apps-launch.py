@@ -6,6 +6,7 @@
 # Released under the BSD License (see LICENSE file)
 
 
+import subprocess
 from plugin import TaskPlugin, CONST
 
 
@@ -25,7 +26,7 @@ class Plugin(TaskPlugin):
             category=CONST.CATEGORY_TASK_APPS,
             basename='apps-launch',
             name='Application Launcher',
-            description='apps-launch',
+            description='Start an Application',
             author='Francesco Garosi',
             copyright='Copyright (c) 2016',
             icon='electro_devices',
@@ -34,8 +35,21 @@ class Plugin(TaskPlugin):
         self.stock = True
         self.module_basename = 'apps-launch'
         self.module_path = None
+        self.application = None
 
+    def to_dict(self):
+        d = TaskPlugin.to_dict(self)
+        d['application'] = self.application
+        return d
 
+    def from_dict(self, d):
+        TaskPlugin.from_dict(self, d)
+        self.application = d['application']
+
+    def run(self):
+        if not self.application:
+            raise ValueError("application not set")
+        subprocess.call(self.application, start_new_session=True)
 
 
 # end.

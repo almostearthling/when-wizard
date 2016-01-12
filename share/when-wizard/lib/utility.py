@@ -38,6 +38,14 @@ def verify_user_folders():
         os.makedirs(USER_PLUGIN_FOLDER, exist_ok=True)
 
 
+def load_app_dialog(name):
+    base = os.path.dirname(sys.argv[0])
+    with open(os.path.join(APP_RESOURCE_FOLDER, '%s.glade' % name)) as f:
+        dialog_xml = f.read()
+    return dialog_xml
+
+
+# images from files
 def app_icon_from_name(name, size=24):
     appicon_dir = os.path.join(APP_GRAPHICS_FOLDER, 'app-icons', str(size))
     appicon_file = os.path.join(appicon_dir, '%s.png' % name)

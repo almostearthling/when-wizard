@@ -15,7 +15,7 @@ from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import Pango
 
-from dialogs import load_app_dialog
+from utility import load_app_dialog
 from utility import app_pixbuf_from_name as get_iconpb
 
 from resources import RESOURCES as R
