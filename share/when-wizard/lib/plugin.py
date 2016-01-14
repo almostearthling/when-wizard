@@ -9,6 +9,7 @@
 import os
 import sys
 import json
+import glob
 import textwrap
 import subprocess
 
@@ -20,10 +21,11 @@ class PluginConstants(object):
     CATEGORY_TASK_APPS = 'apps'
     CATEGORY_TASK_SETTINGS = 'settings'
     CATEGORY_TASK_POWER = 'power'
+    CATEGORY_TASK_SESSION = 'session'
     CATEGORY_TASK_FILEOPS = 'fileops'
+    CATEGORY_TASK_MISC = 'misc'
 
     CATEGORY_COND_TIME = 'time'
-    CATEGORY_COND_INTERVAL = 'interval'
     CATEGORY_COND_EVENT = 'event'
     CATEGORY_COND_MISC = 'misc'
 
@@ -41,9 +43,7 @@ information: {help_string}"""
 
 _PLUGIN_HELP_HEADER_LENGTH_CONSOLE = len(
     _PLUGIN_DESC_FORMAT_CONSOLE.split('\n')[-1]) - len('{help_string}')
-
 _PLUGIN_HELP_LINE_LENGTH_CONSOLE = 78 - _PLUGIN_HELP_HEADER_LENGTH_CONSOLE
-
 _PLUGIN_DESC_FORMAT_GUI = """\
 {help_string}
 
@@ -52,10 +52,16 @@ _PLUGIN_DESC_FORMAT_GUI = """\
 _PLUGIN_DESC_FORMAT_GUI_COPYRIGHT = """\n{copyright}, {author}"""
 
 _PLUGIN_FILE_EXTENSIONS = ['.py']
-
+_PLUGIN_UNIQUE_ID_MAGIC = '00wiz99_'
 _PLUGIN_UNIQUE_ID_INDEX = 1
 
 
+# all external task commands will be launched using a stub launcher
+_WIZARD_LOADER = 'when-wizard'
+_WIZARD_SUBCOMMAND = 'launcher'
+
+
+# base for all plugins
 class BasePlugin(object):
 
     def __init__(self,
@@ -70,6 +76,7 @@ class BasePlugin(object):
         if self.__class__.__name__ == 'BasePlugin':
             raise TypeError("cannot instantiate abstract class")
         self.basename = basename
+        self.module_basename = basename
         self.name = name
         self.description = description
         self.author = author
@@ -83,9 +90,8 @@ class BasePlugin(object):
         self.category = None
         self.plugin_type = None
         self.stock = False
-        self.module_basename = None
         self.module_path = None
-        self.unique_id = '%s_%s' % (
+        self.unique_id = _PLUGIN_UNIQUE_ID_MAGIC + '%s_%s' % (
             self.basename, ('000000' + str(_PLUGIN_UNIQUE_ID_INDEX))[-6:])
         _PLUGIN_UNIQUE_ID_INDEX += 1
 
@@ -191,20 +197,43 @@ class TaskPlugin(BasePlugin):
                  copyright,
                  icon=None,
                  help_string=None):
-        # if self.__class__.__name__ == 'TaskPlugin':
-        #     raise TypeError("cannot instantiate abstract class")
+        if self.__class__.__name__ == 'TaskPlugin':
+            raise TypeError("cannot instantiate abstract class")
         BasePlugin.__init__(self, basename, name, description,
                             author, copyright, icon, help_string)
         self.plugin_type = CONST.PLUGIN_TYPE_TASK
         self.category = category
+        self.command_line = None
+        self.process_wait = False
 
-    def to_itemdef_dict(self):
-        d = BasePlugin.to_itemdef_dict()
-        d['type'] = 'task'
+    def command(self):
+        loader_path = os.path.join(APP_BIN_FOLDER, _WIZARD_LOADER)
+        return '%s %s %s' % (loader_path, _WIZARD_SUBCOMMAND, self.unique_id)
+
+    def to_dict(self):
+        d = BasePlugin.to_dict(self)
+        d['command_line'] = self.command_line
+        d['process_wait'] = self.process_wait
         return d
 
+    def to_itemdef_dict(self):
+        d = BasePlugin.to_itemdef_dict(self)
+        d['type'] = 'task'
+        d['command'] = self.command()
+        return d
+
+    def from_dict(self, d):
+        BasePlugin.from_dict(self, d)
+        self.command_line = d['command_line']
+        self.process_wait = d['process_wait']
+
     def run(self):
-        return False
+        new_session = not self.process_wait
+        if self.command_line:
+            subprocess.call(self.command_line, start_new_session=new_session)
+            return True
+        else:
+            return False
 
 
 class ConditionPlugin(BasePlugin):
@@ -266,6 +295,24 @@ def load_plugin_module(basename, stock=False):
         return module
     else:
         return None
+
+
+# find plugins dynamically
+def _plugins_names(basedir):
+    r = []
+    for x in _PLUGIN_FILE_EXTENSIONS:
+        li = glob.glob(os.path.join(basedir, '*' + x))
+        for y in li:
+            r.append(os.path.basename(y)[:-len(x)])
+    return r
+
+
+def stock_plugins_names():
+    return _plugins_names(APP_PLUGIN_FOLDER)
+
+
+def user_plugins_names():
+    return _plugins_names(USER_PLUGIN_FOLDER)
 
 
 # end.

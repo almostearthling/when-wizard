@@ -34,8 +34,10 @@ class Resources(object):
     # Step 1: Deal With ComboBox entries
     UI_COMBO_CATEGORY_APPLICATIONS = _("Applications")
     UI_COMBO_CATEGORY_SETTINGS = _("Desktop and System Settings")
+    UI_COMBO_CATEGORY_SESSION = _("Session Management")
     UI_COMBO_CATEGORY_POWER = _("Power Management")
     UI_COMBO_CATEGORY_FILEOPS = _("File and Folder Operations")
+    UI_COMBO_CATEGORY_MISC = _("Miscellaneous")
 
 
 # a single instance of the class will contain all resource strings

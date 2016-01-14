@@ -20,12 +20,25 @@ from utility import app_pixbuf_from_name as get_iconpb
 
 from resources import RESOURCES as R
 from plugin import CONST as P
+from plugin import stock_plugins_names, user_plugins_names, load_plugin_module
 
 # NOTE: all APP_... constants are builtins from the main script
 
 # mockup for the overall interface test
-from plugins_mockup import PLUGINS as all_plugins
+# from plugins_mockup import PLUGINS as all_plugins
+# load all plugins
+all_plugins = {}
+for name in stock_plugins_names():
+    m = load_plugin_module(name, stock=True)
+    if m:
+        all_plugins[name] = m.Plugin()
+for name in user_plugins_names():
+    m = load_plugin_module(name)
+    if m:
+        all_plugins[name] = m.Plugin()
 
+
+# load windows and stock panes
 ui_app_wizard_master = load_app_dialog('app-wizard-master')
 ui_app_wizard_panes = load_app_dialog('app-wizard-panes')
 
@@ -64,10 +77,18 @@ class WizardAppWindow(object):
     def get_viewStart(self):
         p = self.builder_panes.get_object
         store = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str)
-        store.append([get_iconpb('process'), P.CATEGORY_TASK_APPS, R.UI_COMBO_CATEGORY_APPLICATIONS])
-        store.append([get_iconpb('settings'), P.CATEGORY_TASK_SETTINGS, R.UI_COMBO_CATEGORY_SETTINGS])
-        store.append([get_iconpb('electricity'), P.CATEGORY_TASK_POWER, R.UI_COMBO_CATEGORY_POWER])
-        store.append([get_iconpb('folder'), P.CATEGORY_TASK_FILEOPS, R.UI_COMBO_CATEGORY_FILEOPS])
+        store.append([get_iconpb('process'), P.CATEGORY_TASK_APPS,
+                      R.UI_COMBO_CATEGORY_APPLICATIONS])
+        store.append([get_iconpb('settings'), P.CATEGORY_TASK_SETTINGS,
+                      R.UI_COMBO_CATEGORY_SETTINGS])
+        store.append([get_iconpb('key'), P.CATEGORY_TASK_SESSION,
+                      R.UI_COMBO_CATEGORY_SESSION])
+        store.append([get_iconpb('electricity'), P.CATEGORY_TASK_POWER,
+                      R.UI_COMBO_CATEGORY_POWER])
+        store.append([get_iconpb('folder'), P.CATEGORY_TASK_FILEOPS,
+                      R.UI_COMBO_CATEGORY_FILEOPS])
+        store.append([get_iconpb('mind_map'), P.CATEGORY_TASK_MISC,
+                      R.UI_COMBO_CATEGORY_MISC])
         r_text = Gtk.CellRendererText()
         r_pixbuf = Gtk.CellRendererPixbuf()
         cb = p('cbCategory')
