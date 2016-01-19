@@ -36,13 +36,43 @@ def verify_user_folders():
         os.makedirs(USER_STORE_FOLDER, exist_ok=True)
     if not os.path.exists(USER_PLUGIN_FOLDER):
         os.makedirs(USER_PLUGIN_FOLDER, exist_ok=True)
+    if not os.path.exists(USER_RESOURCE_FOLDER):
+        os.makedirs(USER_RESOURCE_FOLDER, exist_ok=True)
 
 
 def load_app_dialog(name):
-    base = os.path.dirname(sys.argv[0])
     with open(os.path.join(APP_RESOURCE_FOLDER, '%s.glade' % name)) as f:
         dialog_xml = f.read()
     return dialog_xml
+
+
+def load_dialog(name):
+    for path in [USER_RESOURCE_FOLDER, APP_RESOURCE_FOLDER]:
+        for ext in ['glade', 'ui']:
+            filename = os.path.join(path, '%s.%s' % (name, ext))
+            if os.path.exists(filename):
+                with open(filename) as f:
+                    dialog_xml = f.read()
+                    return dialog_xml
+    return None
+
+
+def load_icon(name, size=24):
+    for path in [USER_RESOURCE_FOLDER, APP_GRAPHICS_FOLDER]:
+        filename = os.path.join(path, '%s.png' % name)
+        if os.path.exists(filename):
+            image = Gtk.Image.new_from_file(filename)
+            return image
+    return None
+
+
+def load_pixbuf(name, size=24):
+    for path in [USER_RESOURCE_FOLDER, APP_GRAPHICS_FOLDER]:
+        filename = os.path.join(path, '%s.png' % name)
+        if os.path.exists(filename):
+            image = Gtk.Image.new_from_file(filename)
+            return image.get_pixbuf()
+    return None
 
 
 # images from files
