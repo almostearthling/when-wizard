@@ -13,6 +13,8 @@ import glob
 import textwrap
 import subprocess
 
+from utility import load_icon, load_pixbuf, load_dialog
+
 
 class PluginConstants(object):
     PLUGIN_TYPE_TASK = 'task'
@@ -181,6 +183,14 @@ class BasePlugin(object):
             s += _PLUGIN_DESC_FORMAT_GUI_COPYRIGHT.format(**self.to_dict())
         return s
 
+    # utility resource functions
+    def get_dialog(self, name):
+        return build_dialog(name, reverse_order=not self.stock)
+
+    def get_image(self, name):
+        return load_icon(name, reverse_order=not self.stock)
+
+    # virtual pane interface
     def get_pane(self):
         return None
 

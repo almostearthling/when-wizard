@@ -40,14 +40,13 @@ def verify_user_folders():
         os.makedirs(USER_RESOURCE_FOLDER, exist_ok=True)
 
 
-def load_app_dialog(name):
-    with open(os.path.join(APP_RESOURCE_FOLDER, '%s.glade' % name)) as f:
-        dialog_xml = f.read()
-    return dialog_xml
-
-
-def load_dialog(name):
-    for path in [USER_RESOURCE_FOLDER, APP_RESOURCE_FOLDER]:
+# retrieve dialog design resources using a custom directory search order
+def load_dialog(name, reverse_order=False):
+    if reverse_order:
+        order = USER_RESOURCE_FOLDER, APP_RESOURCE_FOLDER
+    else:
+        order = APP_RESOURCE_FOLDER, USER_RESOURCE_FOLDER
+    for path in order:
         for ext in ['glade', 'ui']:
             filename = os.path.join(path, '%s.%s' % (name, ext))
             if os.path.exists(filename):
@@ -57,8 +56,21 @@ def load_dialog(name):
     return None
 
 
-def load_icon(name, size=24):
-    for path in [USER_RESOURCE_FOLDER, APP_GRAPHICS_FOLDER]:
+def build_dialog(name, reverse_order=False):
+    dialog_xml = load_dialog(name, reverse_order)
+    if dialog_xml:
+        return Gtk.Builder().new_from_file(dialog_xml)
+    else:
+        return None
+
+
+# retrieve images from files using a custom directory search order
+def load_icon(name, reverse_order=False):
+    if reverse_order:
+        order = USER_RESOURCE_FOLDER, APP_GRAPHICS_FOLDER
+    else:
+        order = APP_GRAPHICS_FOLDER, USER_RESOURCE_FOLDER
+    for path in order:
         filename = os.path.join(path, '%s.png' % name)
         if os.path.exists(filename):
             image = Gtk.Image.new_from_file(filename)
@@ -66,16 +78,21 @@ def load_icon(name, size=24):
     return None
 
 
-def load_pixbuf(name, size=24):
-    for path in [USER_RESOURCE_FOLDER, APP_GRAPHICS_FOLDER]:
-        filename = os.path.join(path, '%s.png' % name)
-        if os.path.exists(filename):
-            image = Gtk.Image.new_from_file(filename)
-            return image.get_pixbuf()
-    return None
+def load_pixbuf(name, reverse_order=False):
+    image = load_icon(name, reverse_order)
+    if image:
+        return image.get_pixbuf()
+    else:
+        return None
 
 
-# images from files
+# specific function for application specific icons and resources
+def app_dialog_from_name(name):
+    with open(os.path.join(APP_RESOURCE_FOLDER, '%s.glade' % name)) as f:
+        dialog_xml = f.read()
+    return dialog_xml
+
+
 def app_icon_from_name(name, size=24):
     appicon_dir = os.path.join(APP_GRAPHICS_FOLDER, 'app-icons', str(size))
     appicon_file = os.path.join(appicon_dir, '%s.png' % name)
@@ -86,12 +103,11 @@ def app_icon_from_name(name, size=24):
 
 
 def app_pixbuf_from_name(name, size=24):
-    appicon_dir = os.path.join(APP_GRAPHICS_FOLDER, 'app-icons', str(size))
-    appicon_file = os.path.join(appicon_dir, '%s.png' % name)
-    if not os.path.exists(appicon_file):
+    image = app_icon_from_name(name, size)
+    if image:
+        return image.get_pixbuf()
+    else:
         return None
-    image = Gtk.Image.new_from_file(appicon_file)
-    return image.get_pixbuf()
 
 
 # end.

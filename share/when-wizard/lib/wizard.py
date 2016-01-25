@@ -15,8 +15,8 @@ from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import Pango
 
-from utility import load_app_dialog
-from utility import app_pixbuf_from_name as get_iconpb
+from utility import app_dialog_from_name
+from utility import app_pixbuf_from_name
 
 from resources import RESOURCES as R
 from plugin import CONST as P
@@ -39,8 +39,8 @@ for name in user_plugins_names():
 
 
 # load windows and stock panes
-ui_app_wizard_master = load_app_dialog('app-wizard-master')
-ui_app_wizard_panes = load_app_dialog('app-wizard-panes')
+ui_app_wizard_master = app_dialog_from_name('app-wizard-master')
+ui_app_wizard_panes = app_dialog_from_name('app-wizard-panes')
 
 
 class WizardAppWindow(object):
@@ -77,17 +77,17 @@ class WizardAppWindow(object):
     def get_viewStart(self):
         p = self.builder_panes.get_object
         store = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str)
-        store.append([get_iconpb('process'), P.CATEGORY_TASK_APPS,
+        store.append([app_pixbuf_from_name('process'), P.CATEGORY_TASK_APPS,
                       R.UI_COMBO_CATEGORY_APPLICATIONS])
-        store.append([get_iconpb('settings'), P.CATEGORY_TASK_SETTINGS,
+        store.append([app_pixbuf_from_name('settings'), P.CATEGORY_TASK_SETTINGS,
                       R.UI_COMBO_CATEGORY_SETTINGS])
-        store.append([get_iconpb('key'), P.CATEGORY_TASK_SESSION,
+        store.append([app_pixbuf_from_name('key'), P.CATEGORY_TASK_SESSION,
                       R.UI_COMBO_CATEGORY_SESSION])
-        store.append([get_iconpb('electricity'), P.CATEGORY_TASK_POWER,
+        store.append([app_pixbuf_from_name('electricity'), P.CATEGORY_TASK_POWER,
                       R.UI_COMBO_CATEGORY_POWER])
-        store.append([get_iconpb('folder'), P.CATEGORY_TASK_FILEOPS,
+        store.append([app_pixbuf_from_name('folder'), P.CATEGORY_TASK_FILEOPS,
                       R.UI_COMBO_CATEGORY_FILEOPS])
-        store.append([get_iconpb('mind_map'), P.CATEGORY_TASK_MISC,
+        store.append([app_pixbuf_from_name('mind_map'), P.CATEGORY_TASK_MISC,
                       R.UI_COMBO_CATEGORY_MISC])
         r_text = Gtk.CellRendererText()
         r_pixbuf = Gtk.CellRendererPixbuf()
@@ -131,7 +131,7 @@ class WizardAppWindow(object):
         for m in related_plugins:
             elem = [
                 all_plugins[m].basename,
-                get_iconpb(all_plugins[m].icon),
+                app_pixbuf_from_name(all_plugins[m].icon),
                 all_plugins[m].name,
                 all_plugins[m].description,
             ]
