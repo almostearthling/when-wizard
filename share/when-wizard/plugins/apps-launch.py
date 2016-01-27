@@ -65,18 +65,18 @@ class Plugin(TaskPlugin):
         apps = []
         for filename in desktop_files:
             with open(filename) as f:
+                icon = None
+                name = None
+                command = None
                 for line in f:
                     values = line.split('=', 1)
                     entry = values[0].lower()
-                    icon = None
-                    name = None
-                    command = None
                     if entry == 'icon':
-                        icon = values[1]
+                        icon = values[1].strip()
                     elif entry == 'name':
-                        name = values[1]
+                        name = values[1].strip()
                     elif entry == 'exec':
-                        command = values[1]
+                        command = values[1].strip()
                 if icon and name and command:
                     apps.append((name, filename, command, icon))
         return apps
@@ -87,18 +87,20 @@ class Plugin(TaskPlugin):
             # prepare panel and fill up application icons
             o = self.builder.get_object
             apps = self.list_applications()
+            apps.sort()
             liststore = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str)
             default_theme = Gtk.IconTheme.get_default()
-            for app in apps:
-                try:
-                    pixbuf = default_theme.load_icon(app[3], 64, 0)
-                except:
-                    pixbuf = default_theme.load_icon('unknown', 64, 0)
-                liststore.append([pixbuf, app[0], app[1]])
             iconview = o('iconsApplications')
+            # iconview.set_size_request(-1, 23)
             iconview.set_model(liststore)
             iconview.set_pixbuf_column(0)
             iconview.set_text_column(1)
+            for app in apps:
+                try:
+                    pixbuf = default_theme.load_icon(app[3], 32, 0)
+                except:
+                    pixbuf = default_theme.load_icon('unknown', 32, 0)
+                liststore.append([pixbuf, app[0], app[1]])
             self.plugin_panel = o('viewPlugin')
             self.builder.connect_signals(self)
         return self.plugin_panel

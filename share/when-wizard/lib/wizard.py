@@ -72,18 +72,24 @@ class WizardAppWindow(object):
         self.dialog_about.set_comments(APP_LONGDESC)
         self.dialog_about.set_version(APP_VERSION)
 
+        self.current_pane = None
         self.set_pane(self.get_viewStart())
+        self.next_step = None
+        self.curr_step = 'task'
+        self.prev_step = None
 
     def get_viewStart(self):
         p = self.builder_panes.get_object
         store = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str)
         store.append([app_pixbuf_from_name('process'), P.CATEGORY_TASK_APPS,
                       R.UI_COMBO_CATEGORY_APPLICATIONS])
-        store.append([app_pixbuf_from_name('settings'), P.CATEGORY_TASK_SETTINGS,
+        store.append([app_pixbuf_from_name('settings'),
+                      P.CATEGORY_TASK_SETTINGS,
                       R.UI_COMBO_CATEGORY_SETTINGS])
         store.append([app_pixbuf_from_name('key'), P.CATEGORY_TASK_SESSION,
                       R.UI_COMBO_CATEGORY_SESSION])
-        store.append([app_pixbuf_from_name('electricity'), P.CATEGORY_TASK_POWER,
+        store.append([app_pixbuf_from_name('electricity'),
+                      P.CATEGORY_TASK_POWER,
                       R.UI_COMBO_CATEGORY_POWER])
         store.append([app_pixbuf_from_name('folder'), P.CATEGORY_TASK_FILEOPS,
                       R.UI_COMBO_CATEGORY_FILEOPS])
@@ -115,7 +121,10 @@ class WizardAppWindow(object):
 
     def set_pane(self, pane):
         o = self.builder.get_object
+        if self.current_pane is not None:
+            o('paneWizard').remove(self.current_pane)
         o('paneWizard').add(pane)
+        self.current_pane = pane
 
     # control reactions
     def changed_cbCategory(self, cb):
@@ -147,14 +156,33 @@ class WizardAppWindow(object):
             item = m[i][0]
             item_plugin = all_plugins[item]
             t.set_text(item_plugin.desc_string_gui())
+            self.next_step = item_plugin
         else:
             t.set_text('')
+            self.next_step = None
+
+    def click_Next(self, o):
+        if self.next_step:
+            self.prev_step = self.curr_step
+            self.curr_step = self.next_step
+            self.next_step = None
+        if self.curr_step == 'task':
+            view = self.get_viewStart()
+        elif self.curr_step == 'cond':
+            view = self.get_viewCond()
+        else:
+            view = self.curr_step.get_pane()
+        self.set_pane(view)
+
+    def click_Previous(self, o):
+        pass
 
     # wizard window main function
     def run(self):
         self.dialog.present()
         ret = self.dialog.run()
         self.dialog.hide()
+        return ret
 
 
 class WizardApplication(Gtk.Application):

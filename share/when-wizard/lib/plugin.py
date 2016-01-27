@@ -13,7 +13,7 @@ import glob
 import textwrap
 import subprocess
 
-from utility import load_icon, load_pixbuf, load_dialog
+from utility import load_icon, load_pixbuf, load_dialog, build_dialog
 
 
 class PluginConstants(object):

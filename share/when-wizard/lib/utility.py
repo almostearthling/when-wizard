@@ -59,7 +59,7 @@ def load_dialog(name, reverse_order=False):
 def build_dialog(name, reverse_order=False):
     dialog_xml = load_dialog(name, reverse_order)
     if dialog_xml:
-        return Gtk.Builder().new_from_file(dialog_xml)
+        return Gtk.Builder().new_from_string(dialog_xml, -1)
     else:
         return None
 
