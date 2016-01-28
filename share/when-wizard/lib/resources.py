@@ -1,4 +1,4 @@
-# file: share/when-wizard/modules/dialogs.py
+# file: share/when-wizard/lib/dialogs.py
 # -*- coding: utf-8 -*-
 #
 # Resources and constants

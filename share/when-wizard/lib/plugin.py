@@ -8,6 +8,7 @@
 
 import os
 import sys
+import time
 import json
 import glob
 import textwrap
@@ -55,7 +56,6 @@ _PLUGIN_DESC_FORMAT_GUI_COPYRIGHT = """\n{copyright}, {author}"""
 
 _PLUGIN_FILE_EXTENSIONS = ['.py']
 _PLUGIN_UNIQUE_ID_MAGIC = '00wiz99_'
-_PLUGIN_UNIQUE_ID_INDEX = 1
 
 
 # all external task commands will be launched using a stub launcher
@@ -94,8 +94,7 @@ class BasePlugin(object):
         self.stock = False
         self.module_path = None
         self.unique_id = _PLUGIN_UNIQUE_ID_MAGIC + '%s_%s' % (
-            self.basename, ('000000' + str(_PLUGIN_UNIQUE_ID_INDEX))[-6:])
-        _PLUGIN_UNIQUE_ID_INDEX += 1
+            self.basename, hex(int(time.time() * 10000000))[2:])
 
     # prepare for JSON
     def to_dict(self):
@@ -115,6 +114,11 @@ class BasePlugin(object):
             'module_path': self.module_path,
         }
 
+    def to_store(self):
+        d = self.to_dict()
+        s = json.dumps(d, separators=(',', ':'))
+        return s
+
     def from_dict(self, d):
         self.unique_id = d['unique_id']
         self.basename = d['basename']
@@ -129,6 +133,10 @@ class BasePlugin(object):
         self.stock = d['stock']
         self.module_basename = d['module_basename']
         self.module_path = d['module_path']
+
+    def from_store(self, s):
+        d = json.loads(s)
+        self.from_dict(d)
 
     def to_itemdef_dict(self):
         return {}

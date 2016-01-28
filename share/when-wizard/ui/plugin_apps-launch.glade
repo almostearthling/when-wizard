@@ -11,12 +11,12 @@
     <property name="margin_right">5</property>
     <property name="margin_top">10</property>
     <property name="orientation">vertical</property>
-    <property name="spacing">5</property>
     <child>
       <object class="GtkLabel" id="lblSelect">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="halign">start</property>
+        <property name="margin_bottom">10</property>
         <property name="label" translatable="yes">Select Application to Launch:</property>
         <attributes>
           <attribute name="weight" value="bold"/>
@@ -29,25 +29,11 @@
       </packing>
     </child>
     <child>
-      <object class="GtkScrolledWindow" id="scroll">
+      <object class="GtkAppChooserWidget" id="appChooser">
         <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="margin_top">10</property>
-        <property name="shadow_type">in</property>
-        <child>
-          <object class="GtkIconView" id="iconsApplications">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="margin">6</property>
-            <property name="vexpand">True</property>
-            <property name="hscroll_policy">natural</property>
-            <property name="vscroll_policy">natural</property>
-            <property name="columns">3</property>
-            <property name="column_spacing">20</property>
-            <property name="activate_on_single_click">True</property>
-            <signal name="item-activated" handler="select_item" swapped="no"/>
-          </object>
-        </child>
+        <property name="can_focus">False</property>
+        <property name="show_recommended">False</property>
+        <signal name="application-selected" handler="select_application" swapped="no"/>
       </object>
       <packing>
         <property name="expand">True</property>

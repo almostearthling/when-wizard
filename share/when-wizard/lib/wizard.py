@@ -1,4 +1,4 @@
-# file: share/when-wizard/modules/wizard.py
+# file: share/when-wizard/lib/wizard.py
 # -*- coding: utf-8 -*-
 #
 # Implement the Wizard interface

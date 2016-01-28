@@ -1,4 +1,4 @@
-# file: share/when-wizard/modules/utility.py
+# file: share/when-wizard/lib/utility.py
 # -*- coding: utf-8 -*-
 #
 # Generic utilities

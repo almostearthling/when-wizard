@@ -153,6 +153,8 @@ if __name__ == '__main__':
                     except ValueError:
                         # generic error: exit code 2
                         sys.exit(2)
+                else:
+                    sys.exit(0)
             else:
                 # cannot execute: exit code 126
                 sys.exit(126)
