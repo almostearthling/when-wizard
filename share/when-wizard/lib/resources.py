@@ -39,6 +39,10 @@ class Resources(object):
     UI_COMBO_CATEGORY_FILEOPS = _("File and Folder Operations")
     UI_COMBO_CATEGORY_MISC = _("Miscellaneous")
 
+    UI_COMBO_CATEGORY_COND_TIME = _("Time Related")
+    UI_COMBO_CATEGORY_COND_EVENT = _("Session or System Event")
+    UI_COMBO_CATEGORY_COND_MISC = _("Miscellaneous")
+
 
 # a single instance of the class will contain all resource strings
 RESOURCES = Resources()

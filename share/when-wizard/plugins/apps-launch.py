@@ -63,6 +63,8 @@ class Plugin(TaskPlugin):
     def list_applications(self):
         desktop_files = glob('%s/*.desktop' % SYSTEM_APPS_DIR)
         apps = []
+        nodupc = []
+        nodupn = []
         for filename in desktop_files:
             with open(filename) as f:
                 icon = None
@@ -71,18 +73,32 @@ class Plugin(TaskPlugin):
                 for line in f:
                     values = line.split('=', 1)
                     entry = values[0].lower()
+                    show = True
                     if entry == 'icon':
                         icon = values[1].strip()
                     elif entry == 'name':
                         name = values[1].strip()
                     elif entry == 'exec':
                         command = values[1].strip()
-                if icon and name and command:
+                    elif entry == 'nodisplay':
+                        if values[1].strip().lower() == 'true':
+                            show = False
+                    elif entry == 'notshowin':
+                        if 'unity' in values[1].strip().lower():
+                            show = False
+                    elif entry == 'onlyshowin':
+                        if 'unity' not in values[1].strip().lower():
+                            show = False
+                if command in nodupc or name in nodupn:
+                    show = False
+                if show and icon and name and command:
                     apps.append((name, filename, command, icon))
+                    nodupc.append(command)
+                    nodupn.append(name)
         return apps
 
     # see http://python-gtk-3-tutorial.readthedocs.org/en/latest/iconview.html
-    def get_pane(self):
+    def get_pane(self, index=None):
         if self.plugin_panel is None:
             # prepare panel and fill up application icons
             o = self.builder.get_object
@@ -91,7 +107,6 @@ class Plugin(TaskPlugin):
             liststore = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str)
             default_theme = Gtk.IconTheme.get_default()
             iconview = o('iconsApplications')
-            # iconview.set_size_request(-1, 23)
             iconview.set_model(liststore)
             iconview.set_pixbuf_column(0)
             iconview.set_text_column(1)
@@ -100,9 +115,15 @@ class Plugin(TaskPlugin):
                     pixbuf = default_theme.load_icon(app[3], 32, 0)
                 except:
                     pixbuf = default_theme.load_icon('unknown', 32, 0)
-                liststore.append([pixbuf, app[0], app[1]])
+                liststore.append([pixbuf, app[0], app[2]])
             self.plugin_panel = o('viewPlugin')
             self.builder.connect_signals(self)
         return self.plugin_panel
+
+    def select_item(self, o, idx):
+        model = o.get_model()
+        item = model[idx]
+        self.command_line = item[2]
+
 
 # end.

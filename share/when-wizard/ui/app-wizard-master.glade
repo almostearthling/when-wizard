@@ -127,11 +127,11 @@
               </packing>
             </child>
             <child>
-              <object class="GtkScrolledWindow" id="paneWizard">
+              <object class="GtkBox" id="paneWizard">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="margin_left">10</property>
-                <property name="hscrollbar_policy">never</property>
+                <property name="orientation">vertical</property>
                 <child>
                   <placeholder/>
                 </child>

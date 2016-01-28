@@ -2,53 +2,58 @@
 <!-- Generated with glade 3.16.1 -->
 <interface>
   <requires lib="gtk+" version="3.10"/>
-  <object class="GtkViewport" id="viewPlugin">
+  <object class="GtkBox" id="viewPlugin">
+    <property name="width_request">100</property>
+    <property name="height_request">80</property>
     <property name="visible">True</property>
     <property name="can_focus">False</property>
+    <property name="margin_left">5</property>
+    <property name="margin_right">5</property>
+    <property name="margin_top">10</property>
+    <property name="orientation">vertical</property>
+    <property name="spacing">5</property>
     <child>
-      <object class="GtkBox" id="boxPlugin">
+      <object class="GtkLabel" id="lblSelect">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="margin_left">5</property>
-        <property name="margin_right">5</property>
+        <property name="halign">start</property>
+        <property name="label" translatable="yes">Select Application to Launch:</property>
+        <attributes>
+          <attribute name="weight" value="bold"/>
+        </attributes>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkScrolledWindow" id="scroll">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
         <property name="margin_top">10</property>
-        <property name="margin_bottom">10</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">5</property>
-        <child>
-          <object class="GtkLabel" id="lblSelect">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="halign">start</property>
-            <property name="label" translatable="yes">Select Application to Launch:</property>
-            <attributes>
-              <attribute name="weight" value="bold"/>
-            </attributes>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
+        <property name="shadow_type">in</property>
         <child>
           <object class="GtkIconView" id="iconsApplications">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="margin">6</property>
+            <property name="vexpand">True</property>
             <property name="hscroll_policy">natural</property>
             <property name="vscroll_policy">natural</property>
             <property name="columns">3</property>
             <property name="column_spacing">20</property>
             <property name="activate_on_single_click">True</property>
+            <signal name="item-activated" handler="select_item" swapped="no"/>
           </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
+      <packing>
+        <property name="expand">True</property>
+        <property name="fill">True</property>
+        <property name="position">1</property>
+      </packing>
     </child>
   </object>
 </interface>
