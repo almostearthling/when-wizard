@@ -9,7 +9,7 @@
 import pickle
 
 
-class Datastore(object):
+class PicklingDatastore(object):
 
     def __init__(self):
         self._data = {}
@@ -24,6 +24,10 @@ class Datastore(object):
         if self.filename is not None:
             with open(filename, 'b') as f:
                 self._data = pickle.load(f)
+
+    def __iter__(self):
+        for k in self._data:
+            yield k
 
     def get(self, unique_id):
         if not self._data:

@@ -10,11 +10,11 @@ from plugin import TaskPlugin, CONST
 import os
 import sys
 
-from gi.repository import GLib, Gio
-from gi.repository import GObject
-from gi.repository import Gtk
-from gi.repository import Gdk
-from gi.repository import GdkPixbuf
+# from gi.repository import GLib, Gio
+# from gi.repository import GObject
+# from gi.repository import Gtk
+# from gi.repository import Gdk
+# from gi.repository import GdkPixbuf
 
 
 HELP = """\
@@ -54,11 +54,10 @@ class Plugin(TaskPlugin):
             self.builder.connect_signals(self)
         return self.plugin_panel
 
-    def select_application(self, o, p):
-        # model = o.get_model()
-        # item = model[idx]
-        # self.command_line = item[2]
-        print(o, p)
+    def select_application(self, o, desktop_app):
+        desktop_filename = desktop_app.get_filename()
+        self.command_line = '%s run-desktop %s' % (
+            os.path.join(APP_BIN_FOLDER, 'when-wizard'), desktop_filename)
 
 
 # end.

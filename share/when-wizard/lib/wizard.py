@@ -8,6 +8,11 @@
 import os
 import os.path
 
+import gi
+gi.require_version('Gtk', '3.0')
+gi.require_version('AppIndicator3', '0.1')
+gi.require_version('Notify', '0.7')
+
 from gi.repository import GLib, Gio
 from gi.repository import GObject
 from gi.repository import Gtk
@@ -92,7 +97,10 @@ class WizardAppWindow(object):
         self.current_pane = None
         self.plugin_task = None
         self.plugin_cond = None
+        self.enable_next = False
+        self.enable_prev = True
         self.change_pane()
+        self.refresh_buttons()
 
     def get_view_TaskSel(self):
         p = self.builder_panes.get_object
@@ -135,7 +143,8 @@ class WizardAppWindow(object):
         store = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str)
         store.append([app_pixbuf_from_name('clock'), P.CATEGORY_COND_TIME,
                       R.UI_COMBO_CATEGORY_COND_TIME])
-        store.append([app_pixbuf_from_name('clapperboard'), P.CATEGORY_COND_EVENT,
+        store.append([app_pixbuf_from_name('clapperboard'),
+                      P.CATEGORY_COND_EVENT,
                       R.UI_COMBO_CATEGORY_COND_EVENT])
         store.append([app_pixbuf_from_name('mind_map'), P.CATEGORY_COND_MISC,
                       R.UI_COMBO_CATEGORY_COND_MISC])
@@ -167,11 +176,11 @@ class WizardAppWindow(object):
         o = self.builder.get_object
         btn_next = o('btnForward')
         btn_prev = o('btnBack')
-        if self.step_index > 0:
+        if self.step_index > 0 and self.enable_prev:
             btn_prev.set_sensitive(True)
         else:
             btn_prev.set_sensitive(False)
-        if self.step_index < len(WIZARD_STEPS) - 1:
+        if self.step_index < len(WIZARD_STEPS) - 1 and self.enable_next:
             btn_next.set_sensitive(True)
         else:
             btn_next.set_sensitive(False)
@@ -221,6 +230,8 @@ class WizardAppWindow(object):
             store.append(elem)
         l = p('listActions')
         l.set_model(store)
+        self.enable_next = False
+        self.refresh_buttons()
 
     def changed_cbCondType(self, cb):
         p = self.builder_panes.get_object
@@ -245,6 +256,8 @@ class WizardAppWindow(object):
             store.append(elem)
         l = p('listConditions')
         l.set_model(store)
+        self.enable_next = False
+        self.refresh_buttons()
 
     def changed_listActions(self, sel):
         p = self.builder_panes.get_object
@@ -256,10 +269,14 @@ class WizardAppWindow(object):
             t.set_text(item_plugin.desc_string_gui())
             self.plugin_task = item_plugin
             self.pane_TaskDef = item_plugin.get_pane()
+            self.enable_next = True
+            self.refresh_buttons()
         else:
             t.set_text('')
             self.plugin_task = None
             self.pane_TaskDef = None
+            self.enable_next = False
+            self.refresh_buttons()
 
     def changed_listConditions(self, sel):
         p = self.builder_panes.get_object
@@ -271,10 +288,14 @@ class WizardAppWindow(object):
             t.set_text(item_plugin.desc_string_gui())
             self.plugin_cond = item_plugin
             self.pane_CondDef = item_plugin.get_pane()
+            self.enable_next = True
+            self.refresh_buttons()
         else:
             t.set_text('')
             self.plugin_cond = None
             self.pane_CondDef = None
+            self.enable_next = False
+            self.refresh_buttons()
 
     def click_Next(self, o):
         if self.step_index < len(WIZARD_STEPS) - 1:

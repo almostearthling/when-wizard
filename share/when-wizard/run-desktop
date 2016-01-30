@@ -1,0 +1,20 @@
+# file: share/when-wizard/lib/wizard.py
+# -*- coding: utf-8 -*-
+#
+# Desktop file launcher
+# Copyright (c) 2015-2016 Francesco Garosi
+# Released under the BSD License (see LICENSE file)
+# see: http://askubuntu.com/a/239883/466738 for the source
+
+
+import os
+import sys
+from gi.repository import Gio
+
+
+def main():
+    launcher = Gio.DesktopAppInfo.new_from_filename(sys.argv[1])
+    launcher.launch()
+
+
+# end.

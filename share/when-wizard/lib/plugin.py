@@ -15,6 +15,7 @@ import textwrap
 import subprocess
 
 from utility import load_icon, load_pixbuf, load_dialog, build_dialog
+from utility import datastore
 
 
 class PluginConstants(object):
@@ -74,7 +75,6 @@ class BasePlugin(object):
                  copyright,
                  icon=None,
                  help_string=None):
-        global _PLUGIN_UNIQUE_ID_INDEX
         if self.__class__.__name__ == 'BasePlugin':
             raise TypeError("cannot instantiate abstract class")
         self.basename = basename
@@ -119,6 +119,9 @@ class BasePlugin(object):
         s = json.dumps(d, separators=(',', ':'))
         return s
 
+    def save(self):
+        datastore.put(self.unique_id, self.to_store())
+
     def from_dict(self, d):
         self.unique_id = d['unique_id']
         self.basename = d['basename']
@@ -137,6 +140,10 @@ class BasePlugin(object):
     def from_store(self, s):
         d = json.loads(s)
         self.from_dict(d)
+
+    def load(self, unique_id):
+        s = datastore.get()
+        self.from_store(s)
 
     def to_itemdef_dict(self):
         return {}

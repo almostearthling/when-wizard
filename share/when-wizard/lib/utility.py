@@ -16,6 +16,13 @@ from gi.repository import Gdk
 from gi.repository import Pango
 
 
+from datastore import PicklingDatastore
+
+
+datastore = PicklingDatastore()
+datastore.filename = os.path.join(USER_STORE_FOLDER, 'when-wizard.datastore')
+
+
 # format an exception for logging purposes
 def _x(e):
     t, v, tb = sys.exc_info()
