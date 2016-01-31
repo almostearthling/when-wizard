@@ -15,13 +15,10 @@ from plugin import load_plugin_module, retrieve_plugin
 
 # the main entry point can just return an exit value
 def main():
-    print(sys.argv[1])
     mod = load_plugin_module(sys.argv[1], True)
-    print(mod)
     if mod:
         p = mod.Plugin()
         retrieve_plugin(p, sys.argv[2])
-        print(p.to_itemdef())
         if hasattr(p, 'run') and p.run():
             return 0
         else:
