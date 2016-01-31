@@ -6,15 +6,12 @@
 # Released under the BSD License (see LICENSE file)
 
 import os
-import os.path
+import time
 
 import gi
 gi.require_version('Gtk', '3.0')
-gi.require_version('AppIndicator3', '0.1')
-gi.require_version('Notify', '0.7')
 
-from gi.repository import GLib, Gio
-from gi.repository import GObject
+from gi.repository import Gio
 from gi.repository import Gtk
 from gi.repository import Gdk
 from gi.repository import GdkPixbuf
@@ -24,7 +21,7 @@ from utility import app_dialog_from_name
 from utility import app_pixbuf_from_name
 
 from resources import RESOURCES as R
-from plugin import CONST as P
+from plugin import PLUGIN_CONST
 from plugin import stock_plugins_names, user_plugins_names, load_plugin_module
 
 # NOTE: all APP_... constants are builtins from the main script
@@ -55,6 +52,7 @@ WIZARD_STEPS = [
     'cond_sel',
     'cond_def',
     'summary',
+    'finish',
 ]
 
 
@@ -91,7 +89,8 @@ class WizardAppWindow(object):
         self.pane_TaskDef = None
         self.pane_CondSel = self.get_view_CondSel()
         self.pane_CondDef = None
-        self.pane_Summary = None
+        self.pane_Summary = self.get_view_Summary()
+        self.pane_Finish = self.get_view_Finish()
 
         self.step_index = 0
         self.current_pane = None
@@ -102,24 +101,33 @@ class WizardAppWindow(object):
         self.change_pane()
         self.refresh_buttons()
 
+        # configuration
+        self.direct_register = False        # directly register to When
+
     def get_view_TaskSel(self):
         p = self.builder_panes.get_object
         store = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str)
-        store.append([app_pixbuf_from_name('process'), P.CATEGORY_TASK_APPS,
+        store.append([app_pixbuf_from_name('process'),
+                      PLUGIN_CONST.CATEGORY_TASK_APPS,
                       R.UI_COMBO_CATEGORY_APPLICATIONS])
         store.append([app_pixbuf_from_name('settings'),
-                      P.CATEGORY_TASK_SETTINGS,
+                      PLUGIN_CONST.CATEGORY_TASK_SETTINGS,
                       R.UI_COMBO_CATEGORY_SETTINGS])
-        store.append([app_pixbuf_from_name('key'), P.CATEGORY_TASK_SESSION,
+        store.append([app_pixbuf_from_name('key'),
+                      PLUGIN_CONST.CATEGORY_TASK_SESSION,
                       R.UI_COMBO_CATEGORY_SESSION])
         store.append([app_pixbuf_from_name('electricity'),
-                      P.CATEGORY_TASK_POWER,
+                      PLUGIN_CONST.CATEGORY_TASK_POWER,
                       R.UI_COMBO_CATEGORY_POWER])
-        store.append([app_pixbuf_from_name('folder'), P.CATEGORY_TASK_FILEOPS,
+        store.append([app_pixbuf_from_name('folder'),
+                      PLUGIN_CONST.CATEGORY_TASK_FILEOPS,
                       R.UI_COMBO_CATEGORY_FILEOPS])
-        store.append([app_pixbuf_from_name('mind_map'), P.CATEGORY_TASK_MISC,
+        store.append([app_pixbuf_from_name('mind_map'),
+                      PLUGIN_CONST.CATEGORY_TASK_MISC,
                       R.UI_COMBO_CATEGORY_MISC])
         r_text = Gtk.CellRendererText()
+        r_text_e = Gtk.CellRendererText()
+        r_text_e.set_property("ellipsize", Pango.EllipsizeMode.MIDDLE)
         r_pixbuf = Gtk.CellRendererPixbuf()
         cb = p('cbCategory')
         cb.pack_start(r_text, True)
@@ -128,11 +136,9 @@ class WizardAppWindow(object):
         cb.add_attribute(r_pixbuf, 'pixbuf', 0)
         cb.set_model(store)
         l = p('listActions')
-        # column_id = Gtk.TreeViewColumn("ID", r_text, text=0)
         column_icon = Gtk.TreeViewColumn("Icon", r_pixbuf, pixbuf=1)
         column_name = Gtk.TreeViewColumn("Name", r_text, text=2)
-        column_desc = Gtk.TreeViewColumn("Description", r_text, text=3)
-        # l.append_column(column_id)
+        column_desc = Gtk.TreeViewColumn("Description", r_text_e, text=3)
         l.append_column(column_icon)
         l.append_column(column_name)
         l.append_column(column_desc)
@@ -141,14 +147,18 @@ class WizardAppWindow(object):
     def get_view_CondSel(self):
         p = self.builder_panes.get_object
         store = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str)
-        store.append([app_pixbuf_from_name('clock'), P.CATEGORY_COND_TIME,
+        store.append([app_pixbuf_from_name('clock'),
+                      PLUGIN_CONST.CATEGORY_COND_TIME,
                       R.UI_COMBO_CATEGORY_COND_TIME])
         store.append([app_pixbuf_from_name('clapperboard'),
-                      P.CATEGORY_COND_EVENT,
+                      PLUGIN_CONST.CATEGORY_COND_EVENT,
                       R.UI_COMBO_CATEGORY_COND_EVENT])
-        store.append([app_pixbuf_from_name('mind_map'), P.CATEGORY_COND_MISC,
+        store.append([app_pixbuf_from_name('mind_map'),
+                      PLUGIN_CONST.CATEGORY_COND_MISC,
                       R.UI_COMBO_CATEGORY_COND_MISC])
         r_text = Gtk.CellRendererText()
+        r_text_e = Gtk.CellRendererText()
+        r_text_e.set_property("ellipsize", Pango.EllipsizeMode.MIDDLE)
         r_pixbuf = Gtk.CellRendererPixbuf()
         cb = p('cbCondType')
         cb.pack_start(r_text, True)
@@ -157,15 +167,32 @@ class WizardAppWindow(object):
         cb.add_attribute(r_pixbuf, 'pixbuf', 0)
         cb.set_model(store)
         l = p('listConditions')
-        # column_id = Gtk.TreeViewColumn("ID", r_text, text=0)
         column_icon = Gtk.TreeViewColumn("Icon", r_pixbuf, pixbuf=1)
         column_name = Gtk.TreeViewColumn("Name", r_text, text=2)
-        column_desc = Gtk.TreeViewColumn("Description", r_text, text=3)
-        # l.append_column(column_id)
+        column_desc = Gtk.TreeViewColumn("Description", r_text_e, text=3)
         l.append_column(column_icon)
         l.append_column(column_name)
         l.append_column(column_desc)
         return p('viewCondSel')
+
+    def get_view_Summary(self):
+        p = self.builder_panes.get_object
+        r_text = Gtk.CellRendererText()
+        r_text_e = Gtk.CellRendererText()
+        r_text_e.set_property("ellipsize", Pango.EllipsizeMode.MIDDLE)
+        r_pixbuf = Gtk.CellRendererPixbuf()
+        column_icon = Gtk.TreeViewColumn("Icon", r_pixbuf, pixbuf=0)
+        column_name = Gtk.TreeViewColumn("Item", r_text, text=1)
+        column_desc = Gtk.TreeViewColumn("Description", r_text_e, text=2)
+        l = p('listSummary')
+        l.append_column(column_icon)
+        l.append_column(column_name)
+        l.append_column(column_desc)
+        return p('viewSummary')
+
+    def get_view_Finish(self):
+        p = self.builder_panes.get_object
+        return p('viewFinish')
 
     def show_about(self, *data):
         self.dialog_about.present()
@@ -180,7 +207,7 @@ class WizardAppWindow(object):
             btn_prev.set_sensitive(True)
         else:
             btn_prev.set_sensitive(False)
-        if self.step_index < len(WIZARD_STEPS) - 1 and self.enable_next:
+        if self.step_index < len(WIZARD_STEPS) and self.enable_next:
             btn_next.set_sensitive(True)
         else:
             btn_next.set_sensitive(False)
@@ -204,7 +231,10 @@ class WizardAppWindow(object):
         elif step == 'cond_def':
             self.set_pane(self.pane_CondDef)
         elif step == 'summary':
+            self.refresh_Summary()
             self.set_pane(self.pane_Summary)
+        elif step == 'finish':
+            self.set_pane(self.pane_Finish)
 
     # control reactions
     def changed_cbCategory(self, cb):
@@ -216,7 +246,7 @@ class WizardAppWindow(object):
         related_plugins = (
             m for m in all_plugins if
             all_plugins[m].category == category and
-            all_plugins[m].plugin_type == P.PLUGIN_TYPE_TASK)
+            all_plugins[m].plugin_type == PLUGIN_CONST.PLUGIN_TYPE_TASK)
         sorted_plugins = [(all_plugins[m].name, m) for m in related_plugins]
         sorted_plugins.sort()
         for x in sorted_plugins:
@@ -242,7 +272,7 @@ class WizardAppWindow(object):
         related_plugins = (
             m for m in all_plugins if
             all_plugins[m].category == category and
-            all_plugins[m].plugin_type == P.PLUGIN_TYPE_CONDITION)
+            all_plugins[m].plugin_type == PLUGIN_CONST.PLUGIN_TYPE_CONDITION)
         sorted_plugins = [(all_plugins[m].name, m) for m in related_plugins]
         sorted_plugins.sort()
         for x in sorted_plugins:
@@ -297,17 +327,67 @@ class WizardAppWindow(object):
             self.enable_next = False
             self.refresh_buttons()
 
+    def refresh_Summary(self):
+        p = self.builder_panes.get_object
+        store = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str)
+        description = self.plugin_cond.summary_description()
+        if description:
+            store.append([app_pixbuf_from_name(self.plugin_cond.icon),
+                          R.UI_SUMMARY_CONDITION, description])
+        description = self.plugin_task.summary_description()
+        if description:
+            store.append([app_pixbuf_from_name(self.plugin_task.icon),
+                          R.UI_SUMMARY_CONSEQUENCE, description])
+        l = p('listSummary')
+        l.set_model(store)
+
     def click_Next(self, o):
-        if self.step_index < len(WIZARD_STEPS) - 1:
+        if WIZARD_STEPS[self.step_index] == 'finish':
+            self.dialog.hide()
+            Gtk.main_quit()
+        elif WIZARD_STEPS[self.step_index] == 'summary':
+            self.plugin_cond.set_task(self.plugin_task.unique_id)
+            self.register_action()
+            self.step_index += 1
+            self.change_pane()
+            self.refresh_buttons()
+        elif self.step_index < len(WIZARD_STEPS) - 1:
             self.step_index += 1
             self.change_pane()
             self.refresh_buttons()
 
     def click_Previous(self, o):
-        if self.step_index > 0:
+        if WIZARD_STEPS[self.step_index] == 'finish':
+            self.step_index = 0
+            self.change_pane()
+            refresh_buttons()
+        elif self.step_index > 0:
             self.step_index -= 1
             self.change_pane()
             self.refresh_buttons()
+
+    # register action to the system
+    def register_action(self):
+        if self.direct_register:
+            task_item_dict = self.plugin_task.to_itemdef_dict()
+            cond_item_dict = self.plugin_cond.to_itemdef_dict()
+            # register to running isinstance
+            print(task_item_dict)
+            print(cond_item_dict)
+        else:
+            t = time.localtime()
+            l = (self.plugin_task.basename, self.plugin_cond.basename)
+            filename = time.strftime(R.IDF_FILENAME_FORMAT, t)
+            s = R.IDF_PREAMBLE_START % time.strftime(R.FORMAT_TIMESTAMP, t)
+            s += R.IDF_PREAMBLE_EXPLAIN_TASK % self.plugin_task.summary_description()
+            s += R.IDF_PREAMBLE_EXPLAIN_CONDITION % self.plugin_cond.summary_description()
+            s += R.IDF_PREAMBLE_EXPLAIN_PLUGINS % ", ".join(l)
+            s += R.IDF_PREAMBLE_END % filename
+            s += self.plugin_task.to_itemdef()
+            s += self.plugin_cond.to_itemdef()
+            s += R.IDF_FOOTER
+            with open(filename, 'w') as f:
+                f.write(s)
 
     # wizard window main function
     def run(self):

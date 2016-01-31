@@ -7,7 +7,6 @@
 # see: http://askubuntu.com/a/239883/466738 for the source
 
 
-import os
 import sys
 from gi.repository import Gio
 

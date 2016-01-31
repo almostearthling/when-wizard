@@ -122,6 +122,120 @@
       </packing>
     </child>
   </object>
+  <object class="GtkBox" id="viewFinish">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="margin_left">5</property>
+    <property name="margin_right">5</property>
+    <property name="orientation">vertical</property>
+    <child>
+      <object class="GtkLabel" id="lblFinish">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="halign">start</property>
+        <property name="margin_top">10</property>
+        <property name="margin_bottom">10</property>
+        <property name="label" translatable="yes">Your action has been registered!</property>
+        <attributes>
+          <attribute name="weight" value="bold"/>
+        </attributes>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkFixed" id="fixFinish">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="hexpand">True</property>
+        <property name="vexpand">True</property>
+      </object>
+      <packing>
+        <property name="expand">True</property>
+        <property name="fill">True</property>
+        <property name="position">1</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel" id="lblFinishNext">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="halign">start</property>
+        <property name="margin_top">10</property>
+        <property name="margin_bottom">10</property>
+        <property name="label" translatable="yes">Click Next to exit, or click Previous to start over.</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">2</property>
+      </packing>
+    </child>
+  </object>
+  <object class="GtkBox" id="viewSummary">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="margin_left">5</property>
+    <property name="margin_right">5</property>
+    <property name="orientation">vertical</property>
+    <child>
+      <object class="GtkLabel" id="lblSummary">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="halign">start</property>
+        <property name="margin_top">10</property>
+        <property name="margin_bottom">10</property>
+        <property name="label" translatable="yes">Please review your choice:</property>
+        <attributes>
+          <attribute name="weight" value="bold"/>
+        </attributes>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">0</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkTreeView" id="listSummary">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="hexpand">True</property>
+        <property name="vexpand">True</property>
+        <property name="headers_visible">False</property>
+        <property name="headers_clickable">False</property>
+        <property name="enable_search">False</property>
+        <child internal-child="selection">
+          <object class="GtkTreeSelection" id="listSummary_Selection">
+            <property name="mode">none</property>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="expand">True</property>
+        <property name="fill">True</property>
+        <property name="position">1</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkLabel" id="lblSummaryNext">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="halign">start</property>
+        <property name="margin_top">10</property>
+        <property name="margin_bottom">10</property>
+        <property name="label" translatable="yes">Click the Next button to continue or hit Esc to abort.</property>
+      </object>
+      <packing>
+        <property name="expand">False</property>
+        <property name="fill">True</property>
+        <property name="position">2</property>
+      </packing>
+    </child>
+  </object>
   <object class="GtkBox" id="viewTaskSel">
     <property name="visible">True</property>
     <property name="can_focus">False</property>

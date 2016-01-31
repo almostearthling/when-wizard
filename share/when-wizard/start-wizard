@@ -17,11 +17,6 @@ import argparse
 import configparser
 import locale
 
-from gi.repository import GLib, Gio
-from gi.repository import GObject
-from gi.repository import Gtk
-from gi.repository import Pango
-
 from utility import verify_user_folders, datastore
 
 

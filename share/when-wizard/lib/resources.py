@@ -31,7 +31,18 @@ UI_INTERVALS_HOURS = [1, 2, 3, 4, 6, 8, 12, 24]
 
 class Resources(object):
 
-    # Step 1: Deal With ComboBox entries
+    # Non-UI related resources
+    FORMAT_TIMESTAMP = '%Y-%m-%d %H:%M:%S'
+
+    IDF_PREAMBLE_START = _("# Item definition file created on %s\n")
+    IDF_PREAMBLE_EXPLAIN_CONDITION = _("# Action condition: %s\n")
+    IDF_PREAMBLE_EXPLAIN_TASK = _("# Action task: %s\n")
+    IDF_PREAMBLE_EXPLAIN_PLUGINS = _("# Plugins: %s\n")
+    IDF_PREAMBLE_END = _("# import this file using 'when-command --item-add %s'\n\n")
+    IDF_FOOTER = "# end.\n"
+    IDF_FILENAME_FORMAT = 'itemdefs_%Y%m%d_%H%M%S.when'
+
+    # ComboBox entries
     UI_COMBO_CATEGORY_APPLICATIONS = _("Applications")
     UI_COMBO_CATEGORY_SETTINGS = _("Desktop and System Settings")
     UI_COMBO_CATEGORY_SESSION = _("Session Management")
@@ -42,6 +53,10 @@ class Resources(object):
     UI_COMBO_CATEGORY_COND_TIME = _("Time Related")
     UI_COMBO_CATEGORY_COND_EVENT = _("Session or System Event")
     UI_COMBO_CATEGORY_COND_MISC = _("Miscellaneous")
+
+    # Fill summary list with meaningful entries
+    UI_SUMMARY_CONDITION = _("Condition:")
+    UI_SUMMARY_CONSEQUENCE = _("Consequence:")
 
 
 # a single instance of the class will contain all resource strings

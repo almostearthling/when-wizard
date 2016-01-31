@@ -34,7 +34,7 @@ class PluginConstants(object):
     CATEGORY_COND_MISC = 'misc'
 
 
-CONST = PluginConstants()
+PLUGIN_CONST = PluginConstants()
 
 
 _PLUGIN_DESC_FORMAT_CONSOLE = """\
@@ -112,6 +112,7 @@ class BasePlugin(object):
             'stock': self.stock,
             'module_basename': self.module_basename,
             'module_path': self.module_path,
+            'plugin_class': self.__class__.__name__,
         }
 
     def to_store(self):
@@ -153,34 +154,35 @@ class BasePlugin(object):
         res = '[%s]\n' % self.unique_id
         for key in d:
             v = d[key]
-            if isinstance(v, tuple):
-                sv = ', '.join(map(str, v))
-            elif isinstance(v, list):
-                sv = '\n'
-                for x in v:
-                    if isinstance(x, tuple):
-                        s = ', '.join(map(str, x))
-                    else:
-                        s = str(x)
-                    sv += '    %s' % s
-            elif isinstance(v, dict):
-                sv = '\n'
-                for x in v:
-                    sv += '    %s=%s\n' % (x, str(v[x]))
-            else:
-                sv = str(v)
-            res += '%s: %s' % (key, sv)
+            if v is not None:
+                if isinstance(v, tuple):
+                    sv = ', '.join(map(str, v))
+                elif isinstance(v, list):
+                    sv = '\n'
+                    for x in v:
+                        if isinstance(x, tuple):
+                            s = ', '.join(map(str, x))
+                        else:
+                            s = str(x)
+                        sv += '    %s' % s
+                elif isinstance(v, dict):
+                    sv = '\n'
+                    for x in v:
+                        sv += '    %s=%s\n' % (x, str(v[x]))
+                else:
+                    sv = str(v)
+                res += '%s: %s\n' % (key, sv)
         res += '\n'
         return res
 
-    def register(self):
-        filename = os.tmpnam()
-        with open(filename, 'w') as f:
-            f.write(self.to_itemdef())
-        return subprocess.call(['when-command', '--item-add', filename])
-
-    def unregister(self):
-        return subprocess.call(['when-command', '--item-del', self.unique_id])
+    # def register(self):
+    #     filename = os.tmpnam()
+    #     with open(filename, 'w') as f:
+    #         f.write(self.to_itemdef())
+    #     return subprocess.call(['when-command', '--item-add', filename])
+    #
+    # def unregister(self):
+    #     return subprocess.call(['when-command', '--item-del', self.unique_id])
 
     # descriptive strings
     def desc_string_console(self):
@@ -205,6 +207,10 @@ class BasePlugin(object):
     def get_image(self, name):
         return load_icon(name, reverse_order=not self.stock)
 
+    # return the description of what/when will be done, or None if not set
+    def summary_description(self):
+        return None
+
     # virtual pane interface
     def get_pane(self):
         return None
@@ -226,10 +232,12 @@ class TaskPlugin(BasePlugin):
             raise TypeError("cannot instantiate abstract class")
         BasePlugin.__init__(self, basename, name, description,
                             author, copyright, icon, help_string)
-        self.plugin_type = CONST.PLUGIN_TYPE_TASK
+        self.plugin_type = PLUGIN_CONST.PLUGIN_TYPE_TASK
         self.category = category
         self.command_line = None
         self.process_wait = False
+        # TODO: add other task related data, such as outcome control and its
+        #       modifiers (case sensitivity, RE, etc), environment variables
 
     def command(self):
         loader_path = os.path.join(APP_BIN_FOLDER, _WIZARD_LOADER)
@@ -239,12 +247,14 @@ class TaskPlugin(BasePlugin):
         d = BasePlugin.to_dict(self)
         d['command_line'] = self.command_line
         d['process_wait'] = self.process_wait
+        # TODO: add here common data from further specifications
         return d
 
     def to_itemdef_dict(self):
         d = BasePlugin.to_itemdef_dict(self)
         d['type'] = 'task'
         d['command'] = self.command()
+        # TODO: add here common data from further specifications
         return d
 
     def from_dict(self, d):
@@ -272,17 +282,37 @@ class ConditionPlugin(BasePlugin):
                  copyright,
                  icon=None,
                  help_string=None):
-        # if self.__class__.__name__ == 'ConditionPlugin':
-        #     raise TypeError("cannot instantiate abstract class")
+        if self.__class__.__name__ == 'ConditionPlugin':
+            raise TypeError("cannot instantiate abstract class")
         BasePlugin.__init__(self, basename, name, description,
                             author, copyright, icon, help_string)
-        self.plugin_type = CONST.PLUGIN_TYPE_CONDITION
+        self.plugin_type = PLUGIN_CONST.PLUGIN_TYPE_CONDITION
         self.category = category
+        self.task_list = []
 
     def to_itemdef_dict(self):
-        d = BasePlugin.to_itemdef_dict()
+        d = BasePlugin.to_itemdef_dict(self)
         d['type'] = 'condition'
+        d['task names'] = tuple(self.task_list)
         return d
+
+    def to_dict(self):
+        d = BasePlugin.to_dict(self)
+        d['task_names'] = self.task_list
+        return d
+
+    def from_dict(self, d):
+        ConditionPlugin.from_dict(self, d)
+        self.task_list = d['task_names']
+
+    def set_task(self, taskname):
+        self.task_list = [taskname]
+
+    def reset_tasks(self):
+        self.task_list = []
+
+    def add_task(self, taskname):
+        self.task_list.append(taskname)
 
     def startup_check(self):
         return False
@@ -298,10 +328,33 @@ class TimeConditionPlugin(ConditionPlugin):
                  copyright,
                  icon=None,
                  help_string=None):
-        ConditionPlugin.__init__(self, CONST.CATEGORY_COND_TIME, basename,
-                                 name, description, author, copyright,
-                                 icon, help_string)
-        self.time_spec = None
+        ConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_TIME,
+                                 basename, name, description, author,
+                                 copyright, icon, help_string)
+        self.timespec = {
+            'year': None,
+            'month': None,
+            'day': None,
+            'hour': None,
+            'minute': None,
+            'weekday': None,
+        }
+
+    def to_dict(self):
+        d = ConditionPlugin.to_dict(self)
+        d['timespec'] = self.timespec
+        return d
+
+    def from_dict(self, d):
+        ConditionPlugin.from_dict(self, d)
+        self.timespec = d['timespec']
+
+    def to_itemdef_dict(self):
+        d = ConditionPlugin.to_itemdef_dict(self)
+        d['based on'] = 'time'
+        for k in self.timespec:
+            d[k] = self.timespec[k]
+        return d
 
 
 # function to load a plugin as a module
