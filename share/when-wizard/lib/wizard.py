@@ -20,9 +20,10 @@ from gi.repository import Pango
 from utility import app_dialog_from_name
 from utility import app_pixbuf_from_name
 
-from resources import RESOURCES as R
+from resources import *
 from plugin import PLUGIN_CONST
 from plugin import stock_plugins_names, user_plugins_names, load_plugin_module
+from plugin import store_plugin, store_association, add_to_file
 
 # NOTE: all APP_... constants are builtins from the main script
 
@@ -109,22 +110,22 @@ class WizardAppWindow(object):
         store = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str)
         store.append([app_pixbuf_from_name('process'),
                       PLUGIN_CONST.CATEGORY_TASK_APPS,
-                      R.UI_COMBO_CATEGORY_APPLICATIONS])
+                      RESOURCES.UI_COMBO_CATEGORY_APPLICATIONS])
         store.append([app_pixbuf_from_name('settings'),
                       PLUGIN_CONST.CATEGORY_TASK_SETTINGS,
-                      R.UI_COMBO_CATEGORY_SETTINGS])
+                      RESOURCES.UI_COMBO_CATEGORY_SETTINGS])
         store.append([app_pixbuf_from_name('key'),
                       PLUGIN_CONST.CATEGORY_TASK_SESSION,
-                      R.UI_COMBO_CATEGORY_SESSION])
+                      RESOURCES.UI_COMBO_CATEGORY_SESSION])
         store.append([app_pixbuf_from_name('electricity'),
                       PLUGIN_CONST.CATEGORY_TASK_POWER,
-                      R.UI_COMBO_CATEGORY_POWER])
+                      RESOURCES.UI_COMBO_CATEGORY_POWER])
         store.append([app_pixbuf_from_name('folder'),
                       PLUGIN_CONST.CATEGORY_TASK_FILEOPS,
-                      R.UI_COMBO_CATEGORY_FILEOPS])
+                      RESOURCES.UI_COMBO_CATEGORY_FILEOPS])
         store.append([app_pixbuf_from_name('mind_map'),
                       PLUGIN_CONST.CATEGORY_TASK_MISC,
-                      R.UI_COMBO_CATEGORY_MISC])
+                      RESOURCES.UI_COMBO_CATEGORY_MISC])
         r_text = Gtk.CellRendererText()
         r_text_e = Gtk.CellRendererText()
         r_text_e.set_property("ellipsize", Pango.EllipsizeMode.MIDDLE)
@@ -149,13 +150,13 @@ class WizardAppWindow(object):
         store = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str)
         store.append([app_pixbuf_from_name('clock'),
                       PLUGIN_CONST.CATEGORY_COND_TIME,
-                      R.UI_COMBO_CATEGORY_COND_TIME])
+                      RESOURCES.UI_COMBO_CATEGORY_COND_TIME])
         store.append([app_pixbuf_from_name('clapperboard'),
                       PLUGIN_CONST.CATEGORY_COND_EVENT,
-                      R.UI_COMBO_CATEGORY_COND_EVENT])
+                      RESOURCES.UI_COMBO_CATEGORY_COND_EVENT])
         store.append([app_pixbuf_from_name('mind_map'),
                       PLUGIN_CONST.CATEGORY_COND_MISC,
-                      R.UI_COMBO_CATEGORY_COND_MISC])
+                      RESOURCES.UI_COMBO_CATEGORY_COND_MISC])
         r_text = Gtk.CellRendererText()
         r_text_e = Gtk.CellRendererText()
         r_text_e.set_property("ellipsize", Pango.EllipsizeMode.MIDDLE)
@@ -333,11 +334,11 @@ class WizardAppWindow(object):
         description = self.plugin_cond.summary_description()
         if description:
             store.append([app_pixbuf_from_name(self.plugin_cond.icon),
-                          R.UI_SUMMARY_CONDITION, description])
+                          RESOURCES.UI_SUMMARY_CONDITION, description])
         description = self.plugin_task.summary_description()
         if description:
             store.append([app_pixbuf_from_name(self.plugin_task.icon),
-                          R.UI_SUMMARY_CONSEQUENCE, description])
+                          RESOURCES.UI_SUMMARY_CONSEQUENCE, description])
         l = p('listSummary')
         l.set_model(store)
 
@@ -368,6 +369,9 @@ class WizardAppWindow(object):
 
     # register action to the system
     def register_action(self):
+        # TODO: this has to be replaced with more generic code, maybe
+        #       it has to be included in specific functions for both
+        #       plugin data registration and datastore operations
         if self.direct_register:
             task_item_dict = self.plugin_task.to_itemdef_dict()
             cond_item_dict = self.plugin_cond.to_itemdef_dict()
@@ -377,17 +381,22 @@ class WizardAppWindow(object):
         else:
             t = time.localtime()
             l = (self.plugin_task.basename, self.plugin_cond.basename)
-            filename = time.strftime(R.IDF_FILENAME_FORMAT, t)
-            s = R.IDF_PREAMBLE_START % time.strftime(R.FORMAT_TIMESTAMP, t)
-            s += R.IDF_PREAMBLE_EXPLAIN_TASK % self.plugin_task.summary_description()
-            s += R.IDF_PREAMBLE_EXPLAIN_CONDITION % self.plugin_cond.summary_description()
-            s += R.IDF_PREAMBLE_EXPLAIN_PLUGINS % ", ".join(l)
-            s += R.IDF_PREAMBLE_END % filename
-            s += self.plugin_task.to_itemdef()
-            s += self.plugin_cond.to_itemdef()
-            s += R.IDF_FOOTER
+            filename = time.strftime(RESOURCES.IDF_FILENAME_FORMAT, t)
             with open(filename, 'w') as f:
-                f.write(s)
+                f.write(RESOURCES.IDF_PREAMBLE_START %
+                        time.strftime(RESOURCES.FORMAT_TIMESTAMP, t))
+                f.write(RESOURCES.IDF_PREAMBLE_EXPLAIN_TASK %
+                        self.plugin_task.summary_description())
+                f.write(RESOURCES.IDF_PREAMBLE_EXPLAIN_CONDITION %
+                        self.plugin_cond.summary_description())
+                f.write(RESOURCES.IDF_PREAMBLE_EXPLAIN_PLUGINS % ", ".join(l))
+                f.write(RESOURCES.IDF_PREAMBLE_END % filename)
+                add_to_file(self.plugin_cond, f)
+                add_to_file(self.plugin_task, f)
+                f.write(RESOURCES.IDF_FOOTER)
+        store_plugin(self.plugin_cond)
+        store_plugin(self.plugin_task)
+        store_association(self.plugin_cond, self.plugin_task)
 
     # wizard window main function
     def run(self):
@@ -397,6 +406,7 @@ class WizardAppWindow(object):
         return ret
 
 
+# The main application loader
 class WizardApplication(Gtk.Application):
 
     def __init__(self):

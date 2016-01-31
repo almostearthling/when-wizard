@@ -9,15 +9,19 @@
 # Task launcher: stub to run a task implemented as a task plugin
 # Usage: when-wizard launcher plugin_name instance_id
 
-from plugin import load_plugin_module
+import sys
+from plugin import load_plugin_module, retrieve_plugin
 
 
 # the main entry point can just return an exit value
 def main():
-    mod = load_plugin_module(sys.argv[1])
+    print(sys.argv[1])
+    mod = load_plugin_module(sys.argv[1], True)
+    print(mod)
     if mod:
         p = mod.Plugin()
-        p.load(sys.argv[2])
+        retrieve_plugin(p, sys.argv[2])
+        print(p.to_itemdef())
         if hasattr(p, 'run') and p.run():
             return 0
         else:

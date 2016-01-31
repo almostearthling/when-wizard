@@ -15,7 +15,7 @@ import textwrap
 import subprocess
 
 from utility import load_icon, load_pixbuf, load_dialog, build_dialog
-from utility import datastore
+from utility import datastore, unique_str
 
 
 class PluginConstants(object):
@@ -57,6 +57,7 @@ _PLUGIN_DESC_FORMAT_GUI_COPYRIGHT = """\n{copyright}, {author}"""
 
 _PLUGIN_FILE_EXTENSIONS = ['.py']
 _PLUGIN_UNIQUE_ID_MAGIC = '00wiz99_'
+_PLUGIN_ASSOCIATION_ID_MAGIC = '00act99_'   # ACT = associate condittion + task
 
 
 # all external task commands will be launched using a stub launcher
@@ -93,8 +94,14 @@ class BasePlugin(object):
         self.plugin_type = None
         self.stock = False
         self.module_path = None
-        self.unique_id = _PLUGIN_UNIQUE_ID_MAGIC + '%s_%s' % (
-            self.basename, hex(int(time.time() * 10000000))[2:])
+        self.unique_id = _PLUGIN_UNIQUE_ID_MAGIC + '%s_%s' % (self.basename,
+                                                              unique_str())
+
+    @classmethod
+    def factory(cls, d):
+        plugin = cls(None, None, None, None, None)
+        plugin.from_dict(d)
+        return plugin
 
     # prepare for JSON
     def to_dict(self):
@@ -115,14 +122,6 @@ class BasePlugin(object):
             'plugin_class': self.__class__.__name__,
         }
 
-    def to_store(self):
-        d = self.to_dict()
-        s = json.dumps(d, separators=(',', ':'))
-        return s
-
-    def save(self):
-        datastore.put(self.unique_id, self.to_store())
-
     def from_dict(self, d):
         self.unique_id = d['unique_id']
         self.basename = d['basename']
@@ -137,14 +136,6 @@ class BasePlugin(object):
         self.stock = d['stock']
         self.module_basename = d['module_basename']
         self.module_path = d['module_path']
-
-    def from_store(self, s):
-        d = json.loads(s)
-        self.from_dict(d)
-
-    def load(self, unique_id):
-        s = datastore.get()
-        self.from_store(s)
 
     def to_itemdef_dict(self):
         return {}
@@ -174,15 +165,6 @@ class BasePlugin(object):
                 res += '%s: %s\n' % (key, sv)
         res += '\n'
         return res
-
-    # def register(self):
-    #     filename = os.tmpnam()
-    #     with open(filename, 'w') as f:
-    #         f.write(self.to_itemdef())
-    #     return subprocess.call(['when-command', '--item-add', filename])
-    #
-    # def unregister(self):
-    #     return subprocess.call(['when-command', '--item-del', self.unique_id])
 
     # descriptive strings
     def desc_string_console(self):
@@ -239,9 +221,16 @@ class TaskPlugin(BasePlugin):
         # TODO: add other task related data, such as outcome control and its
         #       modifiers (case sensitivity, RE, etc), environment variables
 
+    @classmethod
+    def factory(cls, d):
+        plugin = cls(None, None, None, None, None, None)
+        plugin.from_dict(self)
+        return plugin
+
     def command(self):
         loader_path = os.path.join(APP_BIN_FOLDER, _WIZARD_LOADER)
-        return '%s %s %s' % (loader_path, _WIZARD_SUBCOMMAND, self.unique_id)
+        return '%s %s %s %s' % (loader_path, _WIZARD_SUBCOMMAND,
+                                self.module_basename, self.unique_id)
 
     def to_dict(self):
         d = BasePlugin.to_dict(self)
@@ -265,7 +254,8 @@ class TaskPlugin(BasePlugin):
     def run(self):
         new_session = not self.process_wait
         if self.command_line:
-            subprocess.call(self.command_line, start_new_session=new_session)
+            subprocess.call(self.command_line,
+                            start_new_session=new_session, shell=True)
             return True
         else:
             return False
@@ -289,6 +279,12 @@ class ConditionPlugin(BasePlugin):
         self.plugin_type = PLUGIN_CONST.PLUGIN_TYPE_CONDITION
         self.category = category
         self.task_list = []
+
+    @classmethod
+    def factory(cls, d):
+        plugin = cls(None, None, None, None, None, None)
+        plugin.from_dict(self)
+        return plugin
 
     def to_itemdef_dict(self):
         d = BasePlugin.to_itemdef_dict(self)
@@ -340,6 +336,12 @@ class TimeConditionPlugin(ConditionPlugin):
             'weekday': None,
         }
 
+    @classmethod
+    def factory(cls, d):
+        plugin = cls(None, None, None, None, None)
+        plugin.from_dict(self)
+        return plugin
+
     def to_dict(self):
         d = ConditionPlugin.to_dict(self)
         d['timespec'] = self.timespec
@@ -373,6 +375,71 @@ def load_plugin_module(basename, stock=False):
         return module
     else:
         return None
+
+
+# plugin data and registration management
+def add_to_file(plugin, f):
+    f.write(plugin.to_itemdef())
+    return True
+
+
+def direct_register(plugin):
+    # TODO: write DBus code to directly register the plugin
+    return False
+
+
+def store_plugin(plugin):
+    datastore.put(plugin.unique_id, json.dumps(plugin.to_dict()))
+    return plugin.unique_id
+
+
+def store_association(cond_plugin, *task_plugins):
+    if len(task_plugins) < 1:
+        raise ValueError("expected at least one task plugin")
+    l = []
+    if not isinstance(cond_plugin, ConditionPlugin):
+        raise TypeError("expected a ConditionPlugin")
+    else:
+        l.append(cond_plugin.unique_id)
+    for p in task_plugins:
+        if not isinstance(p, TaskPlugin):
+            raise TypeError("expected a TaskPlugin")
+        else:
+            l.append(p.unique_id)
+    association_id = _PLUGIN_ASSOCIATION_ID_MAGIC + unique_str()
+    datastore.put(association_id, json.dumps(l))
+    return association_id
+
+
+def retrieve_plugin(plugin, unique_id):
+    d = json.loads(datastore.get(unique_id))
+    # class_ = {
+    #     'TaskPlugin': TaskPlugin,
+    #     'TimeConditionPlugin': TimeConditionPlugin,
+    #     # TODO: add remaining concrete plugin types here
+    # }[d['plugin_class']]
+    plugin.from_dict(d)
+    return plugin
+
+
+def retrieve_association(association_id):
+    return json.loads(datastore.get(association_id))
+
+
+def retrieve_plugin_ids():
+    l = []
+    for unique_id in datastore:
+        if unique_id.startswith(_PLUGIN_UNIQUE_ID_MAGIC):
+            l.append(unique_id)
+    return l
+
+
+def retrieve_association_ids():
+    l = []
+    for unique_id in datastore:
+        if unique_id.startswith(_PLUGIN_ASSOCIATION_ID_MAGIC):
+            l.append(unique_id)
+    return l
 
 
 # find plugins dynamically

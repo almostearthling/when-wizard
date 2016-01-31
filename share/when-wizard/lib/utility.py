@@ -8,6 +8,7 @@
 
 import os
 import sys
+import time
 
 from gi.repository import Gtk
 
@@ -111,6 +112,11 @@ def app_pixbuf_from_name(name, size=24):
         return image.get_pixbuf()
     else:
         return None
+
+
+# an utility function that creates an unique string of fixed length
+def unique_str():
+    return hex(int(time.time() * 1000000000))[2:]
 
 
 # end.

@@ -34,13 +34,13 @@ class Resources(object):
     # Non-UI related resources
     FORMAT_TIMESTAMP = '%Y-%m-%d %H:%M:%S'
 
-    IDF_PREAMBLE_START = _("# Item definition file created on %s\n")
-    IDF_PREAMBLE_EXPLAIN_CONDITION = _("# Action condition: %s\n")
-    IDF_PREAMBLE_EXPLAIN_TASK = _("# Action task: %s\n")
-    IDF_PREAMBLE_EXPLAIN_PLUGINS = _("# Plugins: %s\n")
-    IDF_PREAMBLE_END = _("# import this file using 'when-command --item-add %s'\n\n")
+    IDF_PREAMBLE_START = "# Item definition file created on %s\n"
+    IDF_PREAMBLE_EXPLAIN_CONDITION = "# Action condition: %s\n"
+    IDF_PREAMBLE_EXPLAIN_TASK = "# Action task: %s\n"
+    IDF_PREAMBLE_EXPLAIN_PLUGINS = "# Plugins: %s\n"
+    IDF_PREAMBLE_END = "# import this file using 'when-command --item-add %s'\n\n"
     IDF_FOOTER = "# end.\n"
-    IDF_FILENAME_FORMAT = 'itemdefs_%Y%m%d_%H%M%S.when'
+    IDF_FILENAME_FORMAT = 'itemdefs-%Y%m%d_%H%M%S.when'
 
     # ComboBox entries
     UI_COMBO_CATEGORY_APPLICATIONS = _("Applications")
