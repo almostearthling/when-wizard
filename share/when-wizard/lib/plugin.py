@@ -17,7 +17,11 @@ import subprocess
 from utility import load_icon, load_pixbuf, load_dialog, build_dialog
 from utility import datastore, unique_str
 
+##############################################################################
+# plugin related inner constants
 
+
+# public constants, to import: 'from plugin import ConcretePlugin, PLUGIN_CONST'
 class PluginConstants(object):
     PLUGIN_TYPE_TASK = 'task'
     PLUGIN_TYPE_CONDITION = 'condition'
@@ -37,6 +41,7 @@ class PluginConstants(object):
 PLUGIN_CONST = PluginConstants()
 
 
+# private internals
 _PLUGIN_DESC_FORMAT_CONSOLE = """\
 basename: {basename}
 name: {name}
@@ -65,6 +70,7 @@ _WIZARD_LOADER = 'when-wizard'
 _WIZARD_SUBCOMMAND = 'launcher'
 
 
+##############################################################################
 # base for all plugins
 class BasePlugin(object):
 
@@ -96,12 +102,6 @@ class BasePlugin(object):
         self.module_path = None
         self.unique_id = _PLUGIN_UNIQUE_ID_MAGIC + '%s_%s' % (self.basename,
                                                               unique_str())
-
-    @classmethod
-    def factory(cls, d):
-        plugin = cls(None, None, None, None, None)
-        plugin.from_dict(d)
-        return plugin
 
     # prepare for JSON
     def to_dict(self):
@@ -136,6 +136,9 @@ class BasePlugin(object):
         self.stock = d['stock']
         self.module_basename = d['module_basename']
         self.module_path = d['module_path']
+
+    def to_item_dict(self):
+        return {}
 
     def to_itemdef_dict(self):
         return {}
@@ -198,7 +201,13 @@ class BasePlugin(object):
         return None
 
 
-# main abstract base classes
+##############################################################################
+# the following are all abstract base classes: real plugins have to derive
+# from these, and in turn expose a constructor that requires no arguments,
+# of course except self: this allows the other parts of the program to
+# instantiate real plugins whenever it's needed and initialize them on the
+# fly upon retrieval (via, for instance, from_dict and retrieve_plugin)
+
 class TaskPlugin(BasePlugin):
 
     def __init__(self,
@@ -221,22 +230,36 @@ class TaskPlugin(BasePlugin):
         # TODO: add other task related data, such as outcome control and its
         #       modifiers (case sensitivity, RE, etc), environment variables
 
-    @classmethod
-    def factory(cls, d):
-        plugin = cls(None, None, None, None, None, None)
-        plugin.from_dict(self)
-        return plugin
-
-    def command(self):
-        loader_path = os.path.join(APP_BIN_FOLDER, _WIZARD_LOADER)
-        return '%s %s %s %s' % (loader_path, _WIZARD_SUBCOMMAND,
-                                self.module_basename, self.unique_id)
-
     def to_dict(self):
         d = BasePlugin.to_dict(self)
         d['command_line'] = self.command_line
         d['process_wait'] = self.process_wait
         # TODO: add here common data from further specifications
+        return d
+
+    def from_dict(self, d):
+        BasePlugin.from_dict(self, d)
+        self.command_line = d['command_line']
+        self.process_wait = d['process_wait']
+
+    def to_item_dict(self):
+        d = BasePlugin.to_item_dict(self)
+        d['type'] = 'task'
+        d['task_id'] = 1
+        d['task_name'] = self.unique_id
+        d['environment_vars'] = []
+        d['include_env'] = True
+        d['success_stdout'] = None
+        d['success_stderr'] = None
+        d['success_status'] = 0
+        d['failure_stdout'] = None
+        d['failure_stderr'] = None
+        d['failure_status'] = None
+        d['match_exact'] = False
+        d['case_sensitive'] = False
+        d['command'] = self.command()
+        d['startup_dir'] = None
+        d['match_regexp'] = False
         return d
 
     def to_itemdef_dict(self):
@@ -246,10 +269,10 @@ class TaskPlugin(BasePlugin):
         # TODO: add here common data from further specifications
         return d
 
-    def from_dict(self, d):
-        BasePlugin.from_dict(self, d)
-        self.command_line = d['command_line']
-        self.process_wait = d['process_wait']
+    def command(self):
+        loader_path = os.path.join(APP_BIN_FOLDER, _WIZARD_LOADER)
+        return '%s %s %s %s' % (loader_path, _WIZARD_SUBCOMMAND,
+                                self.module_basename, self.unique_id)
 
     def run(self):
         new_session = not self.process_wait
@@ -261,7 +284,8 @@ class TaskPlugin(BasePlugin):
             return False
 
 
-class ConditionPlugin(BasePlugin):
+# this class is not meant to be directly derived from (thus Base... prefix)
+class BaseConditionPlugin(BasePlugin):
 
     def __init__(self,
                  category,
@@ -280,18 +304,6 @@ class ConditionPlugin(BasePlugin):
         self.category = category
         self.task_list = []
 
-    @classmethod
-    def factory(cls, d):
-        plugin = cls(None, None, None, None, None, None)
-        plugin.from_dict(self)
-        return plugin
-
-    def to_itemdef_dict(self):
-        d = BasePlugin.to_itemdef_dict(self)
-        d['type'] = 'condition'
-        d['task names'] = tuple(self.task_list)
-        return d
-
     def to_dict(self):
         d = BasePlugin.to_dict(self)
         d['task_names'] = self.task_list
@@ -300,6 +312,27 @@ class ConditionPlugin(BasePlugin):
     def from_dict(self, d):
         ConditionPlugin.from_dict(self, d)
         self.task_list = d['task_names']
+
+    def to_item_dict(self):
+        d = BasePlugin.to_item_dict(self)
+        d['type'] = 'condition'
+        d['subtype'] = None
+        d['cond_id'] = 1
+        d['cond_name'] = self.unique_id
+        d['type'] = 'condition'
+        d['task_names'] = self.task_list
+        d['repeat'] = True
+        d['exec_sequence'] = True
+        d['suspended'] = False
+        d['break_failure'] = False
+        d['break_success'] = False
+        return d
+
+    def to_itemdef_dict(self):
+        d = BasePlugin.to_itemdef_dict(self)
+        d['type'] = 'condition'
+        d['task names'] = tuple(self.task_list)
+        return d
 
     def set_task(self, taskname):
         self.task_list = [taskname]
@@ -314,7 +347,8 @@ class ConditionPlugin(BasePlugin):
         return False
 
 
-class TimeConditionPlugin(ConditionPlugin):
+# NOTE: the following are the actual base classes to derive from
+class IntervalConditionPlugin(BaseConditionPlugin):
 
     def __init__(self,
                  basename,
@@ -324,9 +358,50 @@ class TimeConditionPlugin(ConditionPlugin):
                  copyright,
                  icon=None,
                  help_string=None):
-        ConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_TIME,
-                                 basename, name, description, author,
-                                 copyright, icon, help_string)
+        if self.__class__.__name__ == 'IntervalConditionPlugin':
+            raise TypeError("cannot instantiate abstract class")
+        BaseConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_TIME,
+                                     basename, name, description, author,
+                                     copyright, icon, help_string)
+        self.interval = 0
+
+    def to_dict(self):
+        d = BaseConditionPlugin.to_dict(self)
+        d['interval'] = self.interval
+        return d
+
+    def from_dict(self, d):
+        BaseConditionPlugin.from_dict(self, d)
+        self.interval = d['interval']
+
+    def to_itemdef_dict(self):
+        d = BaseConditionPlugin.to_itemdef_dict(self)
+        d['based on'] = 'interval'
+        d['interval minutes'] = self.interval
+        return d
+
+    def to_item_dict(self):
+        d = BaseConditionPlugin.to_item_dict(self)
+        d['subtype'] = 'IntervalBasedCondition'
+        d['interval'] = self.interval * 60
+        return d
+
+
+class TimeConditionPlugin(BaseConditionPlugin):
+
+    def __init__(self,
+                 basename,
+                 name,
+                 description,
+                 author,
+                 copyright,
+                 icon=None,
+                 help_string=None):
+        if self.__class__.__name__ == 'TimeConditionPlugin':
+            raise TypeError("cannot instantiate abstract class")
+        BaseConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_TIME,
+                                     basename, name, description, author,
+                                     copyright, icon, help_string)
         self.timespec = {
             'year': None,
             'month': None,
@@ -336,28 +411,129 @@ class TimeConditionPlugin(ConditionPlugin):
             'weekday': None,
         }
 
-    @classmethod
-    def factory(cls, d):
-        plugin = cls(None, None, None, None, None)
-        plugin.from_dict(self)
-        return plugin
-
     def to_dict(self):
-        d = ConditionPlugin.to_dict(self)
+        d = BaseConditionPlugin.to_dict(self)
         d['timespec'] = self.timespec
         return d
 
     def from_dict(self, d):
-        ConditionPlugin.from_dict(self, d)
+        BaseConditionPlugin.from_dict(self, d)
         self.timespec = d['timespec']
 
     def to_itemdef_dict(self):
-        d = ConditionPlugin.to_itemdef_dict(self)
+        d = BaseConditionPlugin.to_itemdef_dict(self)
         d['based on'] = 'time'
+        for k in self.timespec:
+            if k != 'weekday' or self.timespec[k] is None:
+                d[k] = self.timespec[k]
+            else:
+                d[k] = [
+                    'monday',
+                    'tuesday',
+                    'wednesday',
+                    'thursday',
+                    'friday',
+                    'saturday',
+                    'sunday',
+                ][self.timespec[k]]
+        return d
+
+    def to_item_dict(self):
+        d = BaseConditionPlugin.to_item_dict(self)
+        d['subtype'] = 'TimeBasedCondition'
         for k in self.timespec:
             d[k] = self.timespec[k]
         return d
 
+
+class IdleConditionPlugin(BaseConditionPlugin):
+
+    def __init__(self,
+                 basename,
+                 name,
+                 description,
+                 author,
+                 copyright,
+                 icon=None,
+                 help_string=None):
+        if self.__class__.__name__ == 'IdleConditionPlugin':
+            raise TypeError("cannot instantiate abstract class")
+        BaseConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_TIME,
+                                     basename, name, description, author,
+                                     copyright, icon, help_string)
+        self.idlemins = 0
+
+    def to_dict(self):
+        d = BaseConditionPlugin.to_dict(self)
+        d['idlemins'] = self.idlemins
+        return d
+
+    def from_dict(self, d):
+        BaseConditionPlugin.from_dict(self, d)
+        self.idlemins = d['idlemins']
+
+    def to_itemdef_dict(self):
+        d = BaseConditionPlugin.to_itemdef_dict(self)
+        d['based on'] = 'idle_session'
+        d['idle minutes'] = self.idlemins
+        return d
+
+    def to_item_dict(self):
+        d = BaseConditionPlugin.to_item_dict(self)
+        d['subtype'] = 'IdleTimeBasedCondition'
+        d['idle_secs'] = self.idlemins * 60
+        return d
+
+
+class CommandConditionPlugin(BaseConditionPlugin):
+
+    def __init__(self,
+                 basename,
+                 name,
+                 description,
+                 author,
+                 copyright,
+                 icon=None,
+                 help_string=None):
+        if self.__class__.__name__ == 'CommandConditionPlugin':
+            raise TypeError("cannot instantiate abstract class")
+        BaseConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_TIME,
+                                     basename, name, description, author,
+                                     copyright, icon, help_string)
+        self.command_line = None
+
+    def to_dict(self):
+        d = BaseConditionPlugin.to_dict(self)
+        d['command_line'] = self.command_line
+        return d
+
+    def from_dict(self, d):
+        BaseConditionPlugin.from_dict(self, d)
+        self.command_line = d['command_line']
+
+    def to_itemdef_dict(self):
+        d = BaseConditionPlugin.to_itemdef_dict(self)
+        d['based on'] = 'command'
+        d['command'] = self.command_line
+        return d
+
+    def to_item_dict(self):
+        d = BaseConditionPlugin.to_item_dict(self)
+        d['subtype'] = 'CommandBasedCondition'
+        d['match_exact'] = False
+        d['match_regexp'] = False
+        d['case_sensitive'] = False
+        d['command'] = self.command_line
+        d['expected_status'] = 0
+        d['expected_stdout'] = None
+        d['expected_stderr'] = None
+        return d
+
+
+##############################################################################
+# utility functions: these can be used to manage plugin instances (the ones
+# that have been created through concrete plugin classes) and for storage
+# and retrieval; kept here because the scope is plugin related anyway
 
 # function to load a plugin as a module
 def load_plugin_module(basename, stock=False):
@@ -385,6 +561,7 @@ def add_to_file(plugin, f):
 
 def direct_register(plugin):
     # TODO: write DBus code to directly register the plugin
+    #       using the plugin.to_item_dict() functions
     return False
 
 
@@ -397,8 +574,8 @@ def store_association(cond_plugin, *task_plugins):
     if len(task_plugins) < 1:
         raise ValueError("expected at least one task plugin")
     l = []
-    if not isinstance(cond_plugin, ConditionPlugin):
-        raise TypeError("expected a ConditionPlugin")
+    if not isinstance(cond_plugin, BaseConditionPlugin):
+        raise TypeError("expected a ...ConditionPlugin")
     else:
         l.append(cond_plugin.unique_id)
     for p in task_plugins:
@@ -411,13 +588,12 @@ def store_association(cond_plugin, *task_plugins):
     return association_id
 
 
+# this expects that the provided plugin reference is of the correct type
+# it returns the plugin object for symmetry with the association based one
 def retrieve_plugin(plugin, unique_id):
     d = json.loads(datastore.get(unique_id))
-    # class_ = {
-    #     'TaskPlugin': TaskPlugin,
-    #     'TimeConditionPlugin': TimeConditionPlugin,
-    #     # TODO: add remaining concrete plugin types here
-    # }[d['plugin_class']]
+    if plugin.__class__.__name__ != d['plugin_class']:
+        raise ValueError("plugin of class %s expected" % d['plugin_class'])
     plugin.from_dict(d)
     return plugin
 

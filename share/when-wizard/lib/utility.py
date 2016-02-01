@@ -42,6 +42,8 @@ def verify_user_folders():
         os.makedirs(USER_PLUGIN_FOLDER, exist_ok=True)
     if not os.path.exists(USER_RESOURCE_FOLDER):
         os.makedirs(USER_RESOURCE_FOLDER, exist_ok=True)
+    if not os.path.exists(USER_SCRIPT_FOLDER):
+        os.makedirs(USER_SCRIPT_FOLDER, exist_ok=True)
 
 
 # retrieve dialog design resources using a custom directory search order

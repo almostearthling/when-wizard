@@ -17,8 +17,7 @@ from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import Pango
 
-from utility import app_dialog_from_name
-from utility import app_pixbuf_from_name
+from utility import app_dialog_from_name, app_pixbuf_from_name
 
 from resources import *
 from plugin import PLUGIN_CONST

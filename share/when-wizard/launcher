@@ -15,10 +15,19 @@ from plugin import load_plugin_module, retrieve_plugin
 
 # the main entry point can just return an exit value
 def main():
+    if len(sys.argv) != 3:
+        return 1
     mod = load_plugin_module(sys.argv[1], True)
     if mod:
         p = mod.Plugin()
-        retrieve_plugin(p, sys.argv[2])
+        try:
+            # use of retrieve_plugin is possible just because concrete
+            # plugin classes should be created in a way that no argument
+            # is needed for the constructor
+            # TODO: remove comment and add to developer docs
+            retrieve_plugin(p, sys.argv[2])
+        except:
+            return 2
         if hasattr(p, 'run') and p.run():
             return 0
         else:
