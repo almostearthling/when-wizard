@@ -5,6 +5,7 @@
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
+import os
 import locale
 from plugin import TaskPlugin, PLUGIN_CONST
 
@@ -31,13 +32,38 @@ class Plugin(TaskPlugin):
             category=PLUGIN_CONST.CATEGORY_TASK_APPS,
             basename='apps-command',
             name=_("Command Launcher"),
-            description=_("Start a System Command"),
+            description=_("Run a Command using the default Shell"),
             author="Francesco Garosi",
             copyright="Copyright (c) 2016",
             icon='start',
             help_string=HELP,
         )
         self.stock = True
+        self.command_line = None
+        self.plugin_panel = None
+        self.builder = self.get_dialog('plugin_apps-command')
+        self.command_name = None
+
+    def get_pane(self, index=None):
+        if self.plugin_panel is None:
+            o = self.builder.get_object
+            self.plugin_panel = o('viewPlugin')
+            self.builder.connect_signals(self)
+        return self.plugin_panel
+
+    def summary_description(self):
+        if self.command_name:
+            return _("A command based on '%s' will be run" % self.command_name)
+        else:
+            return None
+
+    def change_command(self, obj):
+        o = self.builder.get_object
+        self.command_line = o('txtCommand').get_text()
+        if self.command_line:
+            self.command_name = os.path.basename(self.command_line.split()[0])
+        else:
+            self.command_name = None
 
 
 # end.

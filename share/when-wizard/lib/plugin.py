@@ -192,6 +192,18 @@ class BasePlugin(object):
     def get_image(self, name):
         return load_icon(name, reverse_order=not self.stock)
 
+    # retrieve a script in the correct folder and return its full path
+    def get_script(self, filename):
+        if self.stock:
+            folder = os.path.join(APP_DATA_FOLDER, 'scripts')
+        else:
+            folder = USER_SCRIPT_FOLDER
+        path = os.path.join(folder, filename)
+        if os.path.exists(path) and os.path.isfile(path):
+            return path
+        else:
+            return None
+
     # return the description of what/when will be done, or None if not set
     def summary_description(self):
         return None
@@ -497,7 +509,7 @@ class CommandConditionPlugin(BaseConditionPlugin):
                  help_string=None):
         if self.__class__.__name__ == 'CommandConditionPlugin':
             raise TypeError("cannot instantiate abstract class")
-        BaseConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_TIME,
+        BaseConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_MISC,
                                      basename, name, description, author,
                                      copyright, icon, help_string)
         self.command_line = None
@@ -527,6 +539,126 @@ class CommandConditionPlugin(BaseConditionPlugin):
         d['expected_status'] = 0
         d['expected_stdout'] = None
         d['expected_stderr'] = None
+        return d
+
+
+class EventConditionPlugin(BaseConditionPlugin):
+
+    def __init__(self,
+                 basename,
+                 name,
+                 description,
+                 author,
+                 copyright,
+                 icon=None,
+                 help_string=None):
+        if self.__class__.__name__ == 'EventConditionPlugin':
+            raise TypeError("cannot instantiate abstract class")
+        BaseConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_EVENT,
+                                     basename, name, description, author,
+                                     copyright, icon, help_string)
+        self.event = None
+
+    def to_dict(self):
+        d = BaseConditionPlugin.to_dict(self)
+        d['event'] = self.event
+        return d
+
+    def from_dict(self, d):
+        BaseConditionPlugin.from_dict(self, d)
+        self.event = d['event']
+
+    def to_itemdef_dict(self):
+        d = BaseConditionPlugin.to_itemdef_dict(self)
+        d['based on'] = 'event'
+        d['event type'] = self.event
+        return d
+
+    def to_item_dict(self):
+        d = BaseConditionPlugin.to_item_dict(self)
+        d['subtype'] = 'EventBasedCondition'
+        d['event'] = self.event
+        d['no_skip'] = False
+        return d
+
+
+class UserEventConditionPlugin(BaseConditionPlugin):
+
+    def __init__(self,
+                 basename,
+                 name,
+                 description,
+                 author,
+                 copyright,
+                 icon=None,
+                 help_string=None):
+        if self.__class__.__name__ == 'UserEventConditionPlugin':
+            raise TypeError("cannot instantiate abstract class")
+        BaseConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_EVENT,
+                                     basename, name, description, author,
+                                     copyright, icon, help_string)
+        self.event_name = None
+
+    def to_dict(self):
+        d = BaseConditionPlugin.to_dict(self)
+        d['event_name'] = self.event_name
+        return d
+
+    def from_dict(self, d):
+        BaseConditionPlugin.from_dict(self, d)
+        self.event_name = d['event_name']
+
+    def to_itemdef_dict(self):
+        d = BaseConditionPlugin.to_itemdef_dict(self)
+        d['based on'] = 'user_event'
+        d['event name'] = self.event_name
+        return d
+
+    def to_item_dict(self):
+        d = BaseConditionPlugin.to_item_dict(self)
+        d['subtype'] = 'EventBasedCondition'
+        d['event'] = 'dbus_signal:%s' % self.event_name
+        d['no_skip'] = False
+        return d
+
+
+class FileChangeConditionPlugin(BaseConditionPlugin):
+
+    def __init__(self,
+                 basename,
+                 name,
+                 description,
+                 author,
+                 copyright,
+                 icon=None,
+                 help_string=None):
+        if self.__class__.__name__ == 'FileChangeConditionPlugin':
+            raise TypeError("cannot instantiate abstract class")
+        BaseConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_EVENT,
+                                     basename, name, description, author,
+                                     copyright, icon, help_string)
+        self.watched_path = None
+
+    def to_dict(self):
+        d = BaseConditionPlugin.to_dict(self)
+        d['watched_path'] = self.watched_path
+        return d
+
+    def from_dict(self, d):
+        BaseConditionPlugin.from_dict(self, d)
+        self.event = d['watched_path']
+
+    def to_itemdef_dict(self):
+        d = BaseConditionPlugin.to_itemdef_dict(self)
+        d['based on'] = 'file_change'
+        d['watched path'] = self.watched_path
+        return d
+
+    def to_item_dict(self):
+        d = BaseConditionPlugin.to_item_dict(self)
+        d['subtype'] = 'PathNotifyBasedCondition'
+        d['watched_paths'] = [self.watched_path]
+        d['no_skip'] = False
         return d
 
 
@@ -575,7 +707,7 @@ def store_association(cond_plugin, *task_plugins):
         raise ValueError("expected at least one task plugin")
     l = []
     if not isinstance(cond_plugin, BaseConditionPlugin):
-        raise TypeError("expected a ...ConditionPlugin")
+        raise TypeError("expected a ConditionPlugin")
     else:
         l.append(cond_plugin.unique_id)
     for p in task_plugins:

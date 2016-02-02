@@ -220,16 +220,35 @@ class WizardAppWindow(object):
             o('paneWizard').add(pane)
         self.current_pane = pane
 
-    def change_pane(self):
+    # simpler plugins have no config pane: in such cases pane is skipped
+    def change_pane(self, forward=True):
         step = WIZARD_STEPS[self.step_index]
         if step == 'task_sel':
             self.set_pane(self.pane_TaskSel)
         elif step == 'task_def':
-            self.set_pane(self.pane_TaskDef)
+            pane = self.pane_TaskDef
+            if pane is not None:
+                self.set_pane(pane)
+            else:
+                if forward:
+                    self.step_index += 1
+                    self.set_pane(self.pane_CondSel)
+                else:
+                    self.step_index -= 1
+                    self.set_pane(self.pane_TaskSel)
         elif step == 'cond_sel':
             self.set_pane(self.pane_CondSel)
         elif step == 'cond_def':
-            self.set_pane(self.pane_CondDef)
+            pane = self.pane_CondDef
+            if pane is not None:
+                self.set_pane(pane)
+            else:
+                if forward:
+                    self.step_index += 1
+                    self.set_pane(self.pane_Summary)
+                else:
+                    self.step_index -= 1
+                    self.set_pane(self.pane_CondSel)
         elif step == 'summary':
             self.refresh_Summary()
             self.set_pane(self.pane_Summary)
@@ -341,7 +360,7 @@ class WizardAppWindow(object):
         l = p('listSummary')
         l.set_model(store)
 
-    def click_Next(self, o):
+    def click_Next(self, obj):
         if WIZARD_STEPS[self.step_index] == 'finish':
             self.dialog.hide()
             Gtk.main_quit()
@@ -349,21 +368,21 @@ class WizardAppWindow(object):
             self.plugin_cond.set_task(self.plugin_task.unique_id)
             self.register_action()
             self.step_index += 1
-            self.change_pane()
+            self.change_pane(forward=True)
             self.refresh_buttons()
         elif self.step_index < len(WIZARD_STEPS) - 1:
             self.step_index += 1
-            self.change_pane()
+            self.change_pane(forward=True)
             self.refresh_buttons()
 
-    def click_Previous(self, o):
+    def click_Previous(self, obj):
         if WIZARD_STEPS[self.step_index] == 'finish':
             self.step_index = 0
-            self.change_pane()
+            self.change_pane(forward=False)
             refresh_buttons()
         elif self.step_index > 0:
             self.step_index -= 1
-            self.change_pane()
+            self.change_pane(forward=False)
             self.refresh_buttons()
 
     # register action to the system

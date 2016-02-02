@@ -16,12 +16,6 @@ locale.bindtextdomain(APP_NAME, APP_LOCALE_FOLDER)
 locale.textdomain(APP_NAME)
 _ = locale.gettext
 
-# from gi.repository import GLib, Gio
-# from gi.repository import GObject
-# from gi.repository import Gtk
-# from gi.repository import Gdk
-# from gi.repository import GdkPixbuf
-
 
 HELP = _("""\
 Use this action to launch a desktop application: choose one from the list
@@ -67,7 +61,7 @@ class Plugin(TaskPlugin):
         else:
             return None
 
-    def select_application(self, o, desktop_app):
+    def select_application(self, obj, desktop_app):
         desktop_filename = desktop_app.get_filename()
         self.command_line = '%s run-desktop %s' % (
             os.path.join(APP_BIN_FOLDER, 'when-wizard'), desktop_filename)

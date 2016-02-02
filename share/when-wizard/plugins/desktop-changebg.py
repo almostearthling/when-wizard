@@ -5,8 +5,11 @@
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
+import os
 import locale
 from plugin import TaskPlugin, PLUGIN_CONST
+
+from gi.repository import Gtk
 
 # setup i18n for both applet text and dialogs
 locale.setlocale(locale.LC_ALL, locale.getlocale())
@@ -22,7 +25,7 @@ useful to provide a strong alert when some event occurs.
 """)
 
 
-CHANGEBG_COMMAND = ""
+cmd_template = 'gsettings set org.gnome.desktop.background picture-uri "file://%s"'
 
 
 # the name should always be Plugin
@@ -42,7 +45,48 @@ class Plugin(TaskPlugin):
         )
         self.stock = True
         self.background_image = None
-        self.command_line = ''
+        self.command_line = None
+        self.plugin_panel = None
+        self.builder = self.get_dialog('plugin_desktop-changebg')
+
+    def get_pane(self):
+        if self.plugin_panel is None:
+            o = self.builder.get_object
+            self.plugin_panel = o('viewPlugin')
+            self.builder.connect_signals(self)
+        return self.plugin_panel
+
+    def summary_description(self):
+        if self.background_image:
+            name = os.path.basename(self.background_image)
+            return _("Background image will be changed to '%s'" % name)
+        else:
+            return None
+
+    def click_btnChoose(self, obj):
+        o = self.builder.get_object
+        filter_img = Gtk.FileFilter()
+        filter_img.set_name("Image files")
+        filter_img.add_mime_type("image/jpeg")
+        filter_img.add_mime_type("image/png")
+        dlg = Gtk.FileChooserDialog(
+            _("Choose an image file"), None,
+            Gtk.FileChooserAction.OPEN,
+            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+             Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+        dlg.add_filter(filter_img)
+        res = dlg.run()
+        filename = None
+        if res == Gtk.ResponseType.OK:
+            filename = dlg.get_filename()
+        dlg.destroy()
+        if filename:
+            o('txtFilename').set_text(filename)
+
+    def change_filename(self, obj):
+        o = self.builder.get_object
+        self.background_image = os.path.realpath(o('txtFilename').get_text())
+        self.command_line = cmd_template % self.background_image
 
 
 # end.
