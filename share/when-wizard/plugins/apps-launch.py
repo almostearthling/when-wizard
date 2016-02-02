@@ -47,7 +47,7 @@ class Plugin(TaskPlugin):
         self.app_name = None
 
     # see http://python-gtk-3-tutorial.readthedocs.org/en/latest/iconview.html
-    def get_pane(self, index=None):
+    def get_pane(self):
         if self.plugin_panel is None:
             o = self.builder.get_object
             o('appChooser').set_show_all(True)
@@ -57,7 +57,7 @@ class Plugin(TaskPlugin):
 
     def summary_description(self):
         if self.app_name:
-            return _("The application '%s' will be started" % self.app_name)
+            return _("The application '%s' will be started") % self.app_name
         else:
             return None
 

@@ -44,7 +44,7 @@ class Plugin(TaskPlugin):
         self.builder = self.get_dialog('plugin_apps-command')
         self.command_name = None
 
-    def get_pane(self, index=None):
+    def get_pane(self):
         if self.plugin_panel is None:
             o = self.builder.get_object
             self.plugin_panel = o('viewPlugin')
@@ -53,7 +53,7 @@ class Plugin(TaskPlugin):
 
     def summary_description(self):
         if self.command_name:
-            return _("A command based on '%s' will be run" % self.command_name)
+            return _("A command based on '%s' will be run") % self.command_name
         else:
             return None
 

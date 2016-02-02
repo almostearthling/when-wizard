@@ -40,7 +40,7 @@ class Plugin(TimeConditionPlugin):
         self.timespec['hour'] = 0
         self.timespec['minute'] = 0
 
-    def get_pane(self, index=None):
+    def get_pane(self):
         if self.plugin_panel is None:
             o = self.builder.get_object
             o('spinHour').set_text(str(self.timespec['hour']))
@@ -57,7 +57,7 @@ class Plugin(TimeConditionPlugin):
     def summary_description(self):
         shr = ("00" + str(self.timespec['hour']))[-2:]
         smin = ("00" + str(self.timespec['minute']))[-2:]
-        return _("The event will occur at %s:%s o'clock" % (shr, smin))
+        return _("The event will occur at %s:%s o'clock") % (shr, smin)
 
 
 # end.
