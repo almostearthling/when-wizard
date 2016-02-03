@@ -23,9 +23,7 @@ data is saved (or at least auto-saved) before letting the computer restart.
 """)
 
 
-# TODO: find the suitable command to reboot
-REBOOT_COMMAND = """dbus-send --system --dest=org.freedesktop.login1 \
-/org/freedesktop/login1 org.freedesktop.login1.Manager.Reboot"""
+REBOOT_COMMAND = "gnome-session-quit --no-prompt --reboot"
 
 
 class Plugin(TaskPlugin):

@@ -23,9 +23,7 @@ data is saved (or at least auto-saved) before letting the computer shut down.
 """)
 
 
-# TODO: find the suitable command to shut down
-SHUTDOWN_COMMAND = """dbus-send --system --dest=org.freedesktop.login1 \
-/org/freedesktop/login1 org.freedesktop.login1.Manager.Shutdown"""
+SHUTDOWN_COMMAND = "gnome-session-quit --no-prompt --force --power-off"
 
 
 class Plugin(TaskPlugin):
