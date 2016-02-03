@@ -28,7 +28,6 @@ useful to provide a strong alert when some event occurs.
 cmd_template = 'gsettings set org.gnome.desktop.background picture-uri "file://%s"'
 
 
-# the name should always be Plugin
 class Plugin(TaskPlugin):
 
     def __init__(self):
@@ -44,10 +43,9 @@ class Plugin(TaskPlugin):
             help_string=HELP,
         )
         self.stock = True
-        self.background_image = None
-        self.command_line = None
-        self.plugin_panel = None
         self.builder = self.get_dialog('plugin_desktop-changebg')
+        self.plugin_panel = None
+        self.background_image = None
 
     def get_pane(self):
         if self.plugin_panel is None:
@@ -55,13 +53,6 @@ class Plugin(TaskPlugin):
             self.plugin_panel = o('viewPlugin')
             self.builder.connect_signals(self)
         return self.plugin_panel
-
-    def summary_description(self):
-        if self.background_image:
-            name = os.path.basename(self.background_image)
-            return _("Background image will be changed to '%s'" % name)
-        else:
-            return None
 
     def click_btnChoose(self, obj):
         o = self.builder.get_object
@@ -85,8 +76,17 @@ class Plugin(TaskPlugin):
 
     def change_filename(self, obj):
         o = self.builder.get_object
-        self.background_image = os.path.realpath(o('txtFilename').get_text())
-        self.command_line = cmd_template % self.background_image
+        path = o('txtFilename').get_text()
+        if path:
+            name = os.path.basename(path)
+            self.background_image = os.path.realpath(path)
+            self.command_line = cmd_template % self.background_image
+            self.summary_description = _(
+                "Background image will be changed to '%s'") % name
+        else:
+            self.background_image = None
+            self.command_line = None
+            self.summary_description = None
 
 
 # end.

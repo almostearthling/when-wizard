@@ -23,10 +23,11 @@ data is saved (or at least auto-saved) before letting the computer shut down.
 """)
 
 
-SHUTDOWN_COMMAND = ""
+# TODO: find the suitable command to shut down
+SHUTDOWN_COMMAND = """dbus-send --system --dest=org.freedesktop.login1 \
+/org/freedesktop/login1 org.freedesktop.login1.Manager.Shutdown"""
 
 
-# the name should always be Plugin
 class Plugin(TaskPlugin):
 
     def __init__(self):
@@ -43,6 +44,7 @@ class Plugin(TaskPlugin):
         )
         self.stock = True
         self.command_line = SHUTDOWN_COMMAND
+        self.summary_description = _("The system will be shut down")
 
 
 # end.

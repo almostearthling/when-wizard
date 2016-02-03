@@ -349,11 +349,11 @@ class WizardAppWindow(object):
     def refresh_Summary(self):
         p = self.builder_panes.get_object
         store = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str)
-        description = self.plugin_cond.summary_description()
+        description = self.plugin_cond.summary_description
         if description:
             store.append([app_pixbuf_from_name(self.plugin_cond.icon),
                           RESOURCES.UI_SUMMARY_CONDITION, description])
-        description = self.plugin_task.summary_description()
+        description = self.plugin_task.summary_description
         if description:
             store.append([app_pixbuf_from_name(self.plugin_task.icon),
                           RESOURCES.UI_SUMMARY_CONSEQUENCE, description])
@@ -404,9 +404,9 @@ class WizardAppWindow(object):
                 f.write(RESOURCES.IDF_PREAMBLE_START %
                         time.strftime(RESOURCES.FORMAT_TIMESTAMP, t))
                 f.write(RESOURCES.IDF_PREAMBLE_EXPLAIN_TASK %
-                        self.plugin_task.summary_description())
+                        self.plugin_task.summary_description)
                 f.write(RESOURCES.IDF_PREAMBLE_EXPLAIN_CONDITION %
-                        self.plugin_cond.summary_description())
+                        self.plugin_cond.summary_description)
                 f.write(RESOURCES.IDF_PREAMBLE_EXPLAIN_PLUGINS % ", ".join(l))
                 f.write(RESOURCES.IDF_PREAMBLE_END % filename)
                 add_to_file(self.plugin_cond, f)

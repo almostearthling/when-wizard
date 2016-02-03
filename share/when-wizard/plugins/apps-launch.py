@@ -5,10 +5,9 @@
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
+import os
 import locale
 from plugin import TaskPlugin, PLUGIN_CONST
-
-import os
 
 # setup i18n for both applet text and dialogs
 locale.setlocale(locale.LC_ALL, locale.getlocale())
@@ -25,7 +24,6 @@ when you finished using it.
 """)
 
 
-# the name should always be Plugin
 class Plugin(TaskPlugin):
 
     def __init__(self):
@@ -41,9 +39,8 @@ class Plugin(TaskPlugin):
             help_string=HELP,
         )
         self.stock = True
-        self.command_line = None
-        self.plugin_panel = None
         self.builder = self.get_dialog('plugin_apps-launch')
+        self.plugin_panel = None
         self.app_name = None
 
     # see http://python-gtk-3-tutorial.readthedocs.org/en/latest/iconview.html
@@ -55,17 +52,13 @@ class Plugin(TaskPlugin):
             self.builder.connect_signals(self)
         return self.plugin_panel
 
-    def summary_description(self):
-        if self.app_name:
-            return _("The application '%s' will be started") % self.app_name
-        else:
-            return None
-
     def select_application(self, obj, desktop_app):
         desktop_filename = desktop_app.get_filename()
+        self.app_name = desktop_app.get_string("Name")
         self.command_line = '%s run-desktop %s' % (
             os.path.join(APP_BIN_FOLDER, 'when-wizard'), desktop_filename)
-        self.app_name = desktop_app.get_string("Name")
+        self.summary_description = _(
+            "The application '%s' will be started") % self.app_name
 
 
 # end.

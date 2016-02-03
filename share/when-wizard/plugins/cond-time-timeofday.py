@@ -35,8 +35,8 @@ class Plugin(TimeConditionPlugin):
             help_string=HELP,
         )
         self.stock = True
-        self.plugin_panel = None
         self.builder = self.get_dialog('plugin_cond-time-timeofday')
+        self.plugin_panel = None
         self.timespec['hour'] = 0
         self.timespec['minute'] = 0
 
@@ -53,11 +53,10 @@ class Plugin(TimeConditionPlugin):
         o = self.builder.get_object
         self.timespec['hour'] = int(o('spinHour').get_text())
         self.timespec['minute'] = int(o('spinMinute').get_text())
-
-    def summary_description(self):
         shr = ("00" + str(self.timespec['hour']))[-2:]
         smin = ("00" + str(self.timespec['minute']))[-2:]
-        return _("The event will occur at %s:%s o'clock") % (shr, smin)
+        self.summary_description = _(
+            "The event will occur at %s:%s o'clock") % (shr, smin)
 
 
 # end.

@@ -102,6 +102,7 @@ class BasePlugin(object):
         self.module_path = None
         self.unique_id = _PLUGIN_UNIQUE_ID_MAGIC + '%s_%s' % (self.basename,
                                                               unique_str())
+        self.summary_description = None
 
     # prepare for JSON
     def to_dict(self):
@@ -199,14 +200,10 @@ class BasePlugin(object):
         else:
             folder = USER_SCRIPT_FOLDER
         path = os.path.join(folder, filename)
-        if os.path.exists(path) and os.path.isfile(path):
+        if os.path.isfile(path):
             return path
         else:
             return None
-
-    # return the description of what/when will be done, or None if not set
-    def summary_description(self):
-        return None
 
     # virtual pane interface
     def get_pane(self):

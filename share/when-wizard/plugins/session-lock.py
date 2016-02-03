@@ -22,7 +22,9 @@ close any application.
 """)
 
 
-# the name should always be Plugin
+LOCK_COMMAND = "dm-tool lock"
+
+
 class Plugin(TaskPlugin):
 
     def __init__(self):
@@ -38,6 +40,8 @@ class Plugin(TaskPlugin):
             help_string=HELP,
         )
         self.stock = True
+        self.command_line = LOCK_COMMAND
+        self.summary_description = _("The session will be locked")
 
 
 # end.

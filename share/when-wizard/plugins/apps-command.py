@@ -23,7 +23,6 @@ interaction.
 """)
 
 
-# the name should always be Plugin
 class Plugin(TaskPlugin):
 
     def __init__(self):
@@ -39,9 +38,8 @@ class Plugin(TaskPlugin):
             help_string=HELP,
         )
         self.stock = True
-        self.command_line = None
-        self.plugin_panel = None
         self.builder = self.get_dialog('plugin_apps-command')
+        self.plugin_panel = None
         self.command_name = None
 
     def get_pane(self):
@@ -51,19 +49,16 @@ class Plugin(TaskPlugin):
             self.builder.connect_signals(self)
         return self.plugin_panel
 
-    def summary_description(self):
-        if self.command_name:
-            return _("A command based on '%s' will be run") % self.command_name
-        else:
-            return None
-
     def change_command(self, obj):
         o = self.builder.get_object
         self.command_line = o('txtCommand').get_text()
         if self.command_line:
             self.command_name = os.path.basename(self.command_line.split()[0])
+            self.summary_description = _(
+                "A command based on '%s' will be run") % self.command_name
         else:
             self.command_name = None
+            self.summary_description = None
 
 
 # end.

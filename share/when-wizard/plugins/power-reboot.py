@@ -23,10 +23,11 @@ data is saved (or at least auto-saved) before letting the computer restart.
 """)
 
 
-REBOOT_COMMAND = ""
+# TODO: find the suitable command to reboot
+REBOOT_COMMAND = """dbus-send --system --dest=org.freedesktop.login1 \
+/org/freedesktop/login1 org.freedesktop.login1.Manager.Reboot"""
 
 
-# the name should always be Plugin
 class Plugin(TaskPlugin):
 
     def __init__(self):
@@ -43,6 +44,7 @@ class Plugin(TaskPlugin):
         )
         self.stock = True
         self.command_line = REBOOT_COMMAND
+        self.summary_description = _("The system will be rebooted")
 
 
 # end.

@@ -22,7 +22,10 @@ this task, because when it occurs you are likely to loose any unsaved work.
 """)
 
 
-# the name should always be Plugin
+# TODO: find the suitable command to log out
+LOCK_COMMAND = "dm-tool switch-to-greeter"
+
+
 class Plugin(TaskPlugin):
 
     def __init__(self):
@@ -38,6 +41,8 @@ class Plugin(TaskPlugin):
             help_string=HELP,
         )
         self.stock = True
+        self.command_line = LOCK_COMMAND
+        self.summary_description = _("The session will be terminated")
 
 
 # end.

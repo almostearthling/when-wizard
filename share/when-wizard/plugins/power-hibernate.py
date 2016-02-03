@@ -23,10 +23,12 @@ power button. In some cases network activity could cause a wakeup.
 """)
 
 
-HIBERNATE_COMMAND = ""
+HIBERNATE_COMMAND = """dbus-send --system --dest=org.freedesktop.UPower \
+/org/freedesktop/UPower org.freedesktop.UPower.Suspend"""
+# HIBERNATE_COMMAND = """dbus-send --system --dest=org.freedesktop.UPower \
+# /org/freedesktop/UPower org.freedesktop.UPower.Hibernate"""
 
 
-# the name should always be Plugin
 class Plugin(TaskPlugin):
 
     def __init__(self):
@@ -43,6 +45,7 @@ class Plugin(TaskPlugin):
         )
         self.stock = True
         self.command_line = HIBERNATE_COMMAND
+        self.summary_description = _("The system will be suspended/hibernated")
 
 
 # end.
