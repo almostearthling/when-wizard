@@ -1,0 +1,48 @@
+# file: share/when-wizard/templates/template-cond-userevent-plugin.py
+# -*- coding: utf-8 -*-
+#
+# Condition plugin template
+# Copyright (c) 2015-2016 Francesco Garosi
+# Released under the BSD License (see LICENSE file)
+
+import locale
+from plugin import UserEventConditionPlugin, PLUGIN_CONST
+
+# Gtk might be needed: uncomment if this is the case
+# from gi.repository import Gtk
+
+# setup i18n for both applet text and dialogs
+locale.setlocale(locale.LC_ALL, locale.getlocale())
+locale.bindtextdomain(APP_NAME, APP_LOCALE_FOLDER)
+locale.textdomain(APP_NAME)
+_ = locale.gettext
+
+
+HELP = _("""\
+This is a template for an user event condition plugin: it can be expanded
+suitably to the needs of the plugin. Such event condition plugin must only
+provide the observed event name as imported into the applet. Conditions
+that watch events have no configuration, thus they show no pane.
+""")
+
+
+# class for a plugin: the derived class name should always be Plugin
+class Plugin(UserEventConditionPlugin):
+
+    def __init__(self):
+        UserEventConditionPlugin.__init__(
+            self,
+            basename='template-cond-userevent-plugin',
+            name=_("Template"),
+            description=_("Explain here what it does"),
+            author="John Smith",
+            copyright="Copyright (c) 2016",
+            icon='puzzle',
+            help_string=HELP,
+        )
+        # mandatory or anyway structural variables and object values follow:
+        self.event_name = None              # this has to be changed
+        self.summary_description = None     # has to be set to a fixed string
+
+
+# end.

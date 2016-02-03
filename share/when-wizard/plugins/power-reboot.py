@@ -23,6 +23,7 @@ data is saved (or at least auto-saved) before letting the computer restart.
 """)
 
 
+# TODO: find the suitable command to reboot
 REBOOT_COMMAND = "gnome-session-quit --no-prompt --reboot"
 
 

@@ -245,6 +245,7 @@ class WizardAppWindow(object):
             else:
                 if forward:
                     self.step_index += 1
+                    self.refresh_Summary()
                     self.set_pane(self.pane_Summary)
                 else:
                     self.step_index -= 1

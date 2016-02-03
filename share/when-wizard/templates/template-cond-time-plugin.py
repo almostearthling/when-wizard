@@ -1,12 +1,12 @@
-# file: share/when-wizard/templates/template-task-plugin.py
+# file: share/when-wizard/templates/template-cond-time-plugin.py
 # -*- coding: utf-8 -*-
 #
-# Template for a generic task plugin
+# Task plugin to launch an application
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
 import locale
-from plugin import TaskPlugin, PLUGIN_CONST
+from plugin import TimeConditionPlugin, PLUGIN_CONST
 
 # Gtk might be needed: uncomment if this is the case
 # from gi.repository import Gtk
@@ -19,24 +19,19 @@ _ = locale.gettext
 
 
 HELP = _("""\
-This is a template for a generic task plugin: it can be expanded suitably to
-the needs of the plugin. A task plugin must provide a command line, a summary
-description, the fixed construction data and nothing more: everything else is
-optional, including the configuration panel, and can be left out.
+This is a template for a generic time plugin: it can be expanded suitably to
+the needs of the plugin. A time plugin must provide a time specification that
+specifies when in time the event should occur.
 """)
 
 
-cmd_template = 'do-something-with "%s"'
-
-
 # class for a plugin: the derived class name should always be Plugin
-class Plugin(TaskPlugin):
+class Plugin(TimeConditionPlugin):
 
     def __init__(self):
-        TaskPlugin.__init__(
+        TimeConditionPlugin.__init__(
             self,
-            category=PLUGIN_CONST.CATEGORY_TASK_MISC,
-            basename='template-task-plugin',
+            basename='template-cond-time-plugin',
             name=_("Template"),
             description=_("Explain here what it does"),
             author="John Smith",
@@ -50,18 +45,22 @@ class Plugin(TaskPlugin):
         self.plugin_panel = None
 
         # mandatory or anyway structural variables and object values follow:
-        self.command_line = None            # must be set for task plugins
+        # some of the timespec entries should be removed: if all are defined
+        # the event will occur when time matches the whole definition, for
+        # example, if a condition has to occur avery time that minute is 15
+        # at every hour, the entries for year, month, day, hour and weekday
+        # must be commented out or deleted
+        self.timespec['year'] = 0
+        self.timespec['month'] = 0
+        self.timespec['day'] = 0
+        self.timespec['hour'] = 0
+        self.timespec['minute'] = 0
+        self.timespec['weekday'] = 0
         self.summary_description = None     # must be set for all plugins
 
         # this variable is defined here only for demonstrational purposes
         self.value = None
 
-    # the get_pane method can be skipped if the plugin needs no configuration:
-    # in such cases just comment it out or delete it and it will be skipped.
-    # When get_pane is not defined, no configuration pane is generated, thus
-    # all related data (including the builder and plugin_panel variables and
-    # the signal reaction methods below) can be removed and the command line
-    # and summary description can be defined in the constructor
     def get_pane(self):
         if self.plugin_panel is None:
             o = self.builder.get_object
@@ -79,11 +78,9 @@ class Plugin(TaskPlugin):
         o = self.builder.get_object
         self.value = o('txtEntry').get_text()
         if self.value:
-            self.command_line = cmd_template % self.value
             self.summary_description = _(
                 "Something will be done with %s") % self.value
         else:
-            self.command_line = None
             self.summary_description = None
 
 

@@ -1,4 +1,4 @@
-# file: share/when-wizard/modules/plugin.py
+# file: share/when-wizard/lib/plugin.py
 # -*- coding: utf-8 -*-
 #
 # Base classes for When Wizard plugin containers

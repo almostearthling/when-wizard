@@ -23,7 +23,7 @@ this task, because when it occurs you are likely to loose any unsaved work.
 
 
 # TODO: find the suitable command to log out
-LOCK_COMMAND = "dm-tool switch-to-greeter"
+LOGOUT_COMMAND = "dm-tool switch-to-greeter"
 
 
 class Plugin(TaskPlugin):
@@ -41,7 +41,7 @@ class Plugin(TaskPlugin):
             help_string=HELP,
         )
         self.stock = True
-        self.command_line = LOCK_COMMAND
+        self.command_line = LOGOUT_COMMAND
         self.summary_description = _("The session will be terminated")
 
 
