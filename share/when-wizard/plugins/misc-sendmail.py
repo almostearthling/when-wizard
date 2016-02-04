@@ -22,6 +22,8 @@ parameters necessary to correctly perform the operation. This is useful if
 you want to be notified of a certain event when you are away.
 """)
 
+cmd_template = '{script} "{mailto}" "{title}" "{message}"'
+
 
 # the name should always be Plugin
 class Plugin(TaskPlugin):
@@ -39,6 +41,35 @@ class Plugin(TaskPlugin):
             help_string=HELP,
         )
         self.stock = True
+        self.builder = self.get_dialog('plugin_misc-sendmail')
+        self.plugin_panel = None
+        self.message = None
+        self.title = None
+        self.mailto = None
+
+    def get_pane(self):
+        if self.plugin_panel is None:
+            o = self.builder.get_object
+            self.plugin_panel = o('viewPlugin')
+            self.builder.connect_signals(self)
+        return self.plugin_panel
+
+    def change_entry(self, obj):
+        o = self.builder.get_object
+        message = o('txtMessage').get_text()
+        title = o('txtTitle').get_text()
+        mailto = o('txtMailTo').get_text()
+        if message and title and mailto:
+            self.message = message
+            self.title = title
+            self.command_line = cmd_template.format(
+                script=self.get_script('plugin_misc-sendmail.sh'),
+                title=title, message=message, mailto=mailto)
+            self.summary_description = _(
+                "An email will be sent to %s") % mailto
+        else:
+            self.command_line = None
+            self.summary_description = None
 
 
 # end.

@@ -1,7 +1,7 @@
 # file: share/when-wizard/templates/template-cond-command-plugin.py
 # -*- coding: utf-8 -*-
 #
-# Task plugin to launch an application
+# Condition plugin template
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 

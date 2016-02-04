@@ -310,6 +310,7 @@ class WizardAppWindow(object):
         self.refresh_buttons()
 
     def changed_listActions(self, sel):
+        o = self.builder.get_object
         p = self.builder_panes.get_object
         m, i = sel.get_selected()
         t = p('txtHint').get_buffer()
@@ -318,6 +319,7 @@ class WizardAppWindow(object):
             item_plugin = all_plugins[item]
             t.set_text(item_plugin.desc_string_gui())
             self.plugin_task = item_plugin
+            self.plugin_task.set_forward_button(o('btnForward'))
             self.pane_TaskDef = item_plugin.get_pane()
             self.enable_next = True
             self.refresh_buttons()
@@ -329,6 +331,7 @@ class WizardAppWindow(object):
             self.refresh_buttons()
 
     def changed_listConditions(self, sel):
+        o = self.builder.get_object
         p = self.builder_panes.get_object
         m, i = sel.get_selected()
         t = p('txtCondHint').get_buffer()
@@ -337,6 +340,7 @@ class WizardAppWindow(object):
             item_plugin = all_plugins[item]
             t.set_text(item_plugin.desc_string_gui())
             self.plugin_cond = item_plugin
+            self.plugin_cond.set_forward_button(o('btnForward'))
             self.pane_CondDef = item_plugin.get_pane()
             self.enable_next = True
             self.refresh_buttons()

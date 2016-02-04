@@ -55,13 +55,6 @@ class Plugin(TaskPlugin):
             self.builder.connect_signals(self)
         return self.plugin_panel
 
-    def summary_description(self):
-        if self.path:
-            name = os.path.basename(self.path)
-            return _("The '%s' file will be open") % name
-        else:
-            return None
-
     def click_btnChoose(self, obj):
         o = self.builder.get_object
         dlg = Gtk.FileChooserDialog(
@@ -85,7 +78,7 @@ class Plugin(TaskPlugin):
             self.path = os.path.realpath(path)
             self.command_line = cmd_template % self.path
             self.summary_description = _(
-                "The '%s' directory will be open") % name
+                "The file '%s' will be open") % name
         else:
             self.path = None
             self.command_line = None

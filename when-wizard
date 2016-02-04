@@ -91,6 +91,7 @@ USER_RESOURCE_FOLDER = os.path.join(USER_STORE_BASE_FOLDER, 'resource')
 USER_SCRIPT_FOLDER = os.path.join(USER_STORE_BASE_FOLDER, 'scripts')
 
 USER_CONFIG_FILE = os.path.join(USER_CONFIG_FOLDER, '%s.conf' % APP_NAME)
+USER_CONFIG = None
 
 
 # the above pseudo-connstants should be available to all modules
@@ -126,11 +127,15 @@ __builtins__.USER_SCRIPT_FOLDER = USER_SCRIPT_FOLDER
 
 __builtins__.APP_LOADER_SCRIPT = INVOKED_CMD
 __builtins__.USER_CONFIG_FILE = USER_CONFIG_FILE
+__builtins__.USER_CONFIG = USER_CONFIG
 
 
 # update Python path
 sys.path.insert(0, APP_DATA_FOLDER)
 sys.path.insert(0, APP_LIB_FOLDER)
+
+import config
+USER_CONFIG = config.Config()
 
 
 # the code below is used to load a script that has a main() function: this

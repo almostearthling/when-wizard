@@ -85,6 +85,8 @@ class BasePlugin(object):
         if self.__class__.__name__ == 'BasePlugin':
             raise TypeError("cannot instantiate abstract class")
         self.basename = basename
+        self.unique_id = _PLUGIN_UNIQUE_ID_MAGIC + '%s_%s' % (
+            self.basename, unique_str())
         self.module_basename = basename
         self.name = name
         self.description = description
@@ -94,15 +96,14 @@ class BasePlugin(object):
             icon = 'puzzle'
         if help_string is None:
             help_string = description
+        self.summary_description = self.description
         self.icon = icon
         self.help_string = ' '.join(help_string.split('\n'))
         self.category = None
         self.plugin_type = None
         self.stock = False
         self.module_path = None
-        self.unique_id = _PLUGIN_UNIQUE_ID_MAGIC + '%s_%s' % (self.basename,
-                                                              unique_str())
-        self.summary_description = None
+        self._forward_button = None
 
     # prepare for JSON
     def to_dict(self):
@@ -193,6 +194,25 @@ class BasePlugin(object):
     def get_image(self, name):
         return load_icon(name, reverse_order=not self.stock)
 
+    # plugin level persistent data
+    def data_store(self, data_dic):
+        if self.stock:
+            key = 's:%s' % self.basename
+        else:
+            key = 'u:%s' % self.basename
+        datastore.put(json.dumps(key, data_dic))
+
+    def data_retrieve(self):
+        if self.stock:
+            key = 's:%s' % self.basename
+        else:
+            key = 'u:%s' % self.basename
+        return json.loads(datastore.get(key))
+
+    # configuration retrieval utility
+    def get_config(self, section, entry, default=None):
+        return USER_CONFIG.get(section, entry, default)
+
     # retrieve a script in the correct folder and return its full path
     def get_script(self, filename):
         if self.stock:
@@ -208,6 +228,13 @@ class BasePlugin(object):
     # virtual pane interface
     def get_pane(self):
         return None
+
+    def set_forward_button(self, btn=None):
+        self._forward_button = btn
+
+    def allow_forward(self, allow=True):
+        if self._forward_button is not None:
+            self._forward_button.set_sensitive(allow)
 
 
 ##############################################################################
