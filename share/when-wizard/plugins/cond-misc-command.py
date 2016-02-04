@@ -1,13 +1,11 @@
-# file: share/when-wizard/modules/apps-command.py
+# file: share/when-wizard/templates/cond-misc-command.py
 # -*- coding: utf-8 -*-
 #
-# Task plugin to start a command
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
-import os
 import locale
-from plugin import TaskPlugin, PLUGIN_CONST
+from plugin import CommandConditionPlugin, PLUGIN_CONST
 
 # setup i18n for both applet text and dialogs
 locale.setlocale(locale.LC_ALL, locale.getlocale())
@@ -17,29 +15,36 @@ _ = locale.gettext
 
 
 HELP = _("""\
-This task is used to start a non-interactive system command: you can provide
-the whole command line that will be executed in the background without user
-interaction.
+This tests a command by periodically running it in the background, and if
+it succeeds (that is, it has an exit status of zero) the associated task
+is run as a consequence. It can also run specially crafted scripts so that
+virtually everything in the system can be checked.
 """)
 
 
-class Plugin(TaskPlugin):
+# class for a plugin: the derived class name should always be Plugin
+class Plugin(CommandConditionPlugin):
 
     def __init__(self):
-        TaskPlugin.__init__(
+        CommandConditionPlugin.__init__(
             self,
-            category=PLUGIN_CONST.CATEGORY_TASK_APPS,
-            basename='apps-command',
-            name=_("Command Launcher"),
-            description=_("Run a Command using the default Shell"),
+            basename='cond-misc-command',
+            name=_("Command"),
+            description=_("Check successful execution of command"),
             author="Francesco Garosi",
             copyright="Copyright (c) 2016",
             icon='start',
             help_string=HELP,
         )
+        # the items below might be not needed and can be deleted if the
+        # plugin does not have a configuration panel
         self.stock = True
-        self.builder = self.get_dialog('plugin_apps-command')
+        self.builder = self.get_dialog('plugin_cond-misc-command')
         self.plugin_panel = None
+
+        # mandatory or anyway structural variables and object values follow:
+        self.command_line = None            # full command line to run
+        self.summary_description = None     # must be set for all plugins
 
     def get_pane(self):
         if self.plugin_panel is None:
@@ -48,10 +53,12 @@ class Plugin(TaskPlugin):
             self.builder.connect_signals(self)
         return self.plugin_panel
 
-    def change_command(self, obj):
+    # all following methods are optional
+
+    def change_entry(self, obj):
         o = self.builder.get_object
         self.command_line = o('txtCommand').get_text()
-        if self.command_line:
+        if value:
             command_name = os.path.basename(self.command_line.split()[0])
             self.summary_description = _(
                 "A command based on '%s' will be run") % command_name

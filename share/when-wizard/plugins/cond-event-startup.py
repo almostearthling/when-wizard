@@ -1,7 +1,6 @@
 # file: share/when-wizard/templates/cond-event-startup.py
 # -*- coding: utf-8 -*-
 #
-# Condition plugin template
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 

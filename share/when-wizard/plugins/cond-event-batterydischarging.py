@@ -1,4 +1,4 @@
-# file: share/when-wizard/templates/cond-event-shutdown.py
+# file: share/when-wizard/templates/cond-event-batterydischarging.py
 # -*- coding: utf-8 -*-
 #
 # Copyright (c) 2015-2016 Francesco Garosi
@@ -6,9 +6,6 @@
 
 import locale
 from plugin import EventConditionPlugin, PLUGIN_CONST
-
-# Gtk might be needed: uncomment if this is the case
-# from gi.repository import Gtk
 
 # setup i18n for both applet text and dialogs
 locale.setlocale(locale.LC_ALL, locale.getlocale())
@@ -18,12 +15,12 @@ _ = locale.gettext
 
 
 HELP = _("""\
-This event will occur as soon as the applet is closed, normally when the
-session itself finishes, at logout or when the computer is shut down.
+This event will occur when the battery is discharging, for example when you
+use a notebook and plug it off the mains socket.
 """)
 
 
-EVENT_APPLET_SHUTDOWN = 'shutdown'
+EVENT_SYSTEM_BATTERY_DISCHARGING = 'battery_discharging'
 
 
 # class for a plugin: the derived class name should always be Plugin
@@ -32,18 +29,18 @@ class Plugin(EventConditionPlugin):
     def __init__(self):
         EventConditionPlugin.__init__(
             self,
-            basename='cond-event-shutdown',
-            name=_("Session End"),
-            description=_("End of the User Session"),
+            basename='cond-event-batterydischarging',
+            name=_("Discharging"),
+            description=_("The Battery is Discharging"),
             author="Francesco Garosi",
             copyright="Copyright (c) 2016",
-            icon='no_idea',
+            icon='high_battery',
             help_string=HELP,
         )
         # mandatory or anyway structural variables and object values follow:
         self.stock = True
-        self.event = EVENT_APPLET_SHUTDOWN
-        self.summary_description = _("When the session is ending")
+        self.event = EVENT_SYSTEM_BATTERY_DISCHARGING
+        self.summary_description = _("When the battery is discharging")
 
 
 # end.

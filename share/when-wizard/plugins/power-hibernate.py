@@ -40,7 +40,7 @@ class Plugin(TaskPlugin):
             description=_("Hibernate your Workstation"),
             author="Francesco Garosi",
             copyright="Copyright (c) 2016",
-            icon='download',
+            icon='night_landscape',
             help_string=HELP,
         )
         self.stock = True

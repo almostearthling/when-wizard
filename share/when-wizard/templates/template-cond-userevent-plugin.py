@@ -8,9 +8,6 @@
 import locale
 from plugin import UserEventConditionPlugin, PLUGIN_CONST
 
-# Gtk might be needed: uncomment if this is the case
-# from gi.repository import Gtk
-
 # setup i18n for both applet text and dialogs
 locale.setlocale(locale.LC_ALL, locale.getlocale())
 locale.bindtextdomain(APP_NAME, APP_LOCALE_FOLDER)
