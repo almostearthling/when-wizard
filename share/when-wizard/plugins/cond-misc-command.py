@@ -4,6 +4,7 @@
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
+import os
 import locale
 from plugin import CommandConditionPlugin, PLUGIN_CONST
 
@@ -57,8 +58,8 @@ class Plugin(CommandConditionPlugin):
 
     def change_entry(self, obj):
         o = self.builder.get_object
-        self.command_line = o('txtCommand').get_text()
-        if value:
+        self.command_line = o('txtEntry').get_text()
+        if self.command_line:
             command_name = os.path.basename(self.command_line.split()[0])
             self.summary_description = _(
                 "A command based on '%s' will be run") % command_name
