@@ -7,9 +7,12 @@
 
 import os
 import time
+import subprocess
 
 import gi
 gi.require_version('Gtk', '3.0')
+
+import dbus
 
 from gi.repository import Gio
 from gi.repository import Gtk
@@ -46,7 +49,7 @@ ui_app_wizard_panes = app_dialog_from_name('app-wizard-panes')
 
 
 # wizard steps
-WIZARD_STEPS = [
+_WIZARD_STEPS = [
     'task_sel',
     'task_def',
     'cond_sel',
@@ -56,6 +59,31 @@ WIZARD_STEPS = [
 ]
 
 
+_WHEN_COMMAND_ID = 'it.jks.WhenCommand'
+_WHEN_COMMAND_BUS_NAME = '%s.BusService' % _WHEN_COMMAND_ID
+_WHEN_COMMAND_BUS_PATH = '/' + _WHEN_COMMAND_BUS_NAME.replace('.', '/')
+
+
+# this function registers data from a plugin into a running instance of When
+def register_plugin_data(plugin):
+    try:
+        bus = dbus.SessionBus()
+        proxy = bus.get_object(_WHEN_COMMAND_BUS_NAME, _WHEN_COMMAND_BUS_PATH)
+    except dbus.exceptions.DBusException:
+        return False
+    data = plugin.to_item_dict()
+    data = dbus.Dictionary({
+        key: data[key] for key in data
+        if data[key] is not None and not
+            ((isinstance(data[key], dict) or
+              isinstance(data[key], list)) and not data[key])}, 'sv')
+    try:
+        proxy.AddItemByDefinition(data, True)
+    except dbus.exceptions.DBusException:
+        return False
+
+
+# the main wizard window
 class WizardAppWindow(object):
 
     def __init__(self):
@@ -105,7 +133,7 @@ class WizardAppWindow(object):
         self.refresh_buttons()
 
         # configuration
-        self.direct_register = False        # directly register to When
+        self.direct_register = True
 
     def get_view_TaskSel(self):
         p = self.builder_panes.get_object
@@ -206,12 +234,12 @@ class WizardAppWindow(object):
         o = self.builder.get_object
         btn_next = o('btnForward')
         btn_prev = o('btnBack')
-        step = WIZARD_STEPS[self.step_index]
+        step = _WIZARD_STEPS[self.step_index]
         if self.step_index > 0 and self.enable_prev:
             btn_prev.set_sensitive(True)
         else:
             btn_prev.set_sensitive(False)
-        if self.step_index < len(WIZARD_STEPS) and self.enable_next:
+        if self.step_index < len(_WIZARD_STEPS) and self.enable_next:
             if step == 'task_def' and self.pane_TaskDef_changed:
                 btn_next.set_sensitive(self.plugin_task.forward_allowed)
             elif step == 'cond_def' and self.pane_CondDef_changed:
@@ -233,7 +261,7 @@ class WizardAppWindow(object):
 
     # simpler plugins have no config pane: in such cases pane is skipped
     def change_pane(self, forward=True):
-        step = WIZARD_STEPS[self.step_index]
+        step = _WIZARD_STEPS[self.step_index]
         if step == 'task_sel':
             self.set_pane(self.pane_TaskSel)
         elif step == 'task_def':
@@ -382,22 +410,22 @@ class WizardAppWindow(object):
         l.set_model(store)
 
     def click_Next(self, obj):
-        if WIZARD_STEPS[self.step_index] == 'finish':
+        if _WIZARD_STEPS[self.step_index] == 'finish':
             self.dialog.hide()
             Gtk.main_quit()
-        elif WIZARD_STEPS[self.step_index] == 'summary':
+        elif _WIZARD_STEPS[self.step_index] == 'summary':
             self.plugin_cond.set_task(self.plugin_task.unique_id)
             self.register_action()
             self.step_index += 1
             self.change_pane(forward=True)
             self.refresh_buttons()
-        elif self.step_index < len(WIZARD_STEPS) - 1:
+        elif self.step_index < len(_WIZARD_STEPS) - 1:
             self.step_index += 1
             self.change_pane(forward=True)
             self.refresh_buttons()
 
     def click_Previous(self, obj):
-        if WIZARD_STEPS[self.step_index] == 'finish':
+        if _WIZARD_STEPS[self.step_index] == 'finish':
             self.step_index = 0
             self.change_pane(forward=False)
             self.refresh_buttons()
@@ -408,20 +436,18 @@ class WizardAppWindow(object):
 
     # register action to the system
     def register_action(self):
-        # TODO: this has to be replaced with more generic code, maybe
-        #       it has to be included in specific functions for both
-        #       plugin data registration and datastore operations
         if self.direct_register:
-            task_item_dict = self.plugin_task.to_itemdef_dict()
-            cond_item_dict = self.plugin_cond.to_itemdef_dict()
-            # register to running isinstance
-            print(task_item_dict)
-            print(cond_item_dict)
+            # task_item_dict = self.plugin_task.to_itemdef_dict()
+            # cond_item_dict = self.plugin_cond.to_itemdef_dict()
+            # register to running instance
+            register_plugin_data(self.plugin_task)
+            register_plugin_data(self.plugin_cond)
         else:
             t = time.localtime()
             l = (self.plugin_task.basename, self.plugin_cond.basename)
             filename = time.strftime(RESOURCES.IDF_FILENAME_FORMAT, t)
-            with open(filename, 'w') as f:
+            filepath = os.path.join(USER_STORE_FOLDER, filename)
+            with open(filepath, 'w') as f:
                 f.write(RESOURCES.IDF_PREAMBLE_START %
                         time.strftime(RESOURCES.FORMAT_TIMESTAMP, t))
                 f.write(RESOURCES.IDF_PREAMBLE_EXPLAIN_TASK %
@@ -433,6 +459,8 @@ class WizardAppWindow(object):
                 add_to_file(self.plugin_cond, f)
                 add_to_file(self.plugin_task, f)
                 f.write(RESOURCES.IDF_FOOTER)
+            subprocess.call(
+                '%s --item-add %s' % (APP_WHEN, filepath), shell=True)
         store_plugin(self.plugin_cond)
         store_plugin(self.plugin_task)
         store_association(self.plugin_cond, self.plugin_task)

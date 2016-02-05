@@ -211,8 +211,8 @@ class BasePlugin(object):
         return json.loads(datastore.get(key))
 
     # configuration retrieval utility
-    def get_config(self, section, entry, default=None):
-        return USER_CONFIG.get(section, entry, default)
+    # def get_config(self, section, entry, default=None):
+    #     return USER_CONFIG.get(section, entry, default)
 
     # retrieve a script in the correct folder and return its full path
     def get_script(self, filename):
