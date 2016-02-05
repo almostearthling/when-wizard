@@ -40,6 +40,7 @@ class Plugin(TaskPlugin):
         self.stock = True
         self.builder = self.get_dialog('plugin_apps-command')
         self.plugin_panel = None
+        self.forward_allowed = False
 
     def get_pane(self):
         if self.plugin_panel is None:
@@ -55,9 +56,11 @@ class Plugin(TaskPlugin):
             command_name = os.path.basename(self.command_line.split()[0])
             self.summary_description = _(
                 "A command based on '%s' will be run") % command_name
+            self.allow_forward(True)
         else:
             self.command_line = None
             self.summary_description = None
+            self.allow_forward(False)
 
 
 # end.

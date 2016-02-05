@@ -43,6 +43,7 @@ class Plugin(TaskPlugin):
         self.script = self.get_script('plugin_fileops-mediacopy.sh')
         self.builder = self.get_dialog('plugin_fileops-mediacopy')
         self.plugin_panel = None
+        self.forward_allowed = False
         self.media_label = None
         self.destination = None
 
@@ -88,6 +89,11 @@ class Plugin(TaskPlugin):
                 self.summary_description = _(
                     "Files from %s will be copied to %s") % (
                     self.media_label, destname)
+            self.allow_forward(True)
+        else:
+            self.command_line = None
+            self.summary_description = None
+            self.allow_forward(False)
 
 
 # end.

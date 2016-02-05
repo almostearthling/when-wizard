@@ -103,6 +103,7 @@ class BasePlugin(object):
         self.plugin_type = None
         self.stock = False
         self.module_path = None
+        self.forward_allowed = True
         self._forward_button = None
 
     # prepare for JSON

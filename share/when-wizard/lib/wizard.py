@@ -91,6 +91,9 @@ class WizardAppWindow(object):
         self.pane_CondDef = None
         self.pane_Summary = self.get_view_Summary()
         self.pane_Finish = self.get_view_Finish()
+        self.pane_TaskDef_changed = False
+        self.pane_CondDef_changed = False
+        self.pane_CondSel_selected = False
 
         self.step_index = 0
         self.current_pane = None
@@ -203,12 +206,20 @@ class WizardAppWindow(object):
         o = self.builder.get_object
         btn_next = o('btnForward')
         btn_prev = o('btnBack')
+        step = WIZARD_STEPS[self.step_index]
         if self.step_index > 0 and self.enable_prev:
             btn_prev.set_sensitive(True)
         else:
             btn_prev.set_sensitive(False)
         if self.step_index < len(WIZARD_STEPS) and self.enable_next:
-            btn_next.set_sensitive(True)
+            if step == 'task_def' and self.pane_TaskDef_changed:
+                btn_next.set_sensitive(self.plugin_task.forward_allowed)
+            elif step == 'cond_def' and self.pane_CondDef_changed:
+                btn_next.set_sensitive(self.plugin_cond.forward_allowed)
+            elif step == 'cond_sel' and not self.pane_CondSel_selected:
+                btn_next.set_sensitive(False)
+            else:
+                btn_next.set_sensitive(True)
         else:
             btn_next.set_sensitive(False)
 
@@ -306,6 +317,7 @@ class WizardAppWindow(object):
             store.append(elem)
         l = p('listConditions')
         l.set_model(store)
+        self.pane_CondSel_selected = True
         self.enable_next = False
         self.refresh_buttons()
 
@@ -314,6 +326,7 @@ class WizardAppWindow(object):
         p = self.builder_panes.get_object
         m, i = sel.get_selected()
         t = p('txtHint').get_buffer()
+        self.plugin_task_changed = True
         if i is not None:
             item = m[i][0]
             item_plugin = all_plugins[item]
@@ -321,6 +334,7 @@ class WizardAppWindow(object):
             self.plugin_task = item_plugin
             self.plugin_task.set_forward_button(o('btnForward'))
             self.pane_TaskDef = item_plugin.get_pane()
+            self.pane_TaskDef_changed = True
             self.enable_next = True
             self.refresh_buttons()
         else:
@@ -335,6 +349,8 @@ class WizardAppWindow(object):
         p = self.builder_panes.get_object
         m, i = sel.get_selected()
         t = p('txtCondHint').get_buffer()
+        self.plugin_cond_changed = True
+        self.pane_CondDef_changed = True
         if i is not None:
             item = m[i][0]
             item_plugin = all_plugins[item]
@@ -384,7 +400,7 @@ class WizardAppWindow(object):
         if WIZARD_STEPS[self.step_index] == 'finish':
             self.step_index = 0
             self.change_pane(forward=False)
-            refresh_buttons()
+            self.refresh_buttons()
         elif self.step_index > 0:
             self.step_index -= 1
             self.change_pane(forward=False)
@@ -439,7 +455,7 @@ class WizardApplication(Gtk.Application):
         self.register(None)
         self.connect('activate', self.app_activate)
 
-    def app_activate(self, applet_instance):
+    def app_activate(self, app_instance):
         self.main()
 
     def main(self):

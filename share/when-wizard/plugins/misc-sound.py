@@ -25,6 +25,9 @@ about a certain event.
 """)
 
 
+cmd_template = 'xdg-open "%s"'
+
+
 class Plugin(TaskPlugin):
 
     def __init__(self):
@@ -65,6 +68,7 @@ class Plugin(TaskPlugin):
             Gtk.FileChooserAction.OPEN,
             (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
              Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+        dlg.add_filter(filter_img)
         res = dlg.run()
         filename = None
         if res == Gtk.ResponseType.OK:

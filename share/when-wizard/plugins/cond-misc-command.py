@@ -37,15 +37,11 @@ class Plugin(CommandConditionPlugin):
             icon='start',
             help_string=HELP,
         )
-        # the items below might be not needed and can be deleted if the
-        # plugin does not have a configuration panel
         self.stock = True
         self.builder = self.get_dialog('plugin_cond-misc-command')
         self.plugin_panel = None
-
-        # mandatory or anyway structural variables and object values follow:
-        self.command_line = None            # full command line to run
-        self.summary_description = None     # must be set for all plugins
+        self.forward_allowed = False
+        self.command_line = None
 
     def get_pane(self):
         if self.plugin_panel is None:
@@ -63,9 +59,11 @@ class Plugin(CommandConditionPlugin):
             command_name = os.path.basename(self.command_line.split()[0])
             self.summary_description = _(
                 "A command based on '%s' will be run") % command_name
+            self.allow_forward(True)
         else:
             self.command_line = None
             self.summary_description = None
+            self.allow_forward(False)
 
 
 # end.

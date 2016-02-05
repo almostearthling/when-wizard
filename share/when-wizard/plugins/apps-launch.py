@@ -59,6 +59,7 @@ class Plugin(TaskPlugin):
             os.path.join(APP_BIN_FOLDER, 'when-wizard'), desktop_filename)
         self.summary_description = _(
             "The application '%s' will be started") % self.app_name
+        self.allow_forward(True)
 
 
 # end.

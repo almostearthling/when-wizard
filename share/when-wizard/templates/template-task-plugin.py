@@ -48,6 +48,7 @@ class Plugin(TaskPlugin):
         # plugin does not have a configuration panel
         self.builder = self.get_dialog('plugin_template')
         self.plugin_panel = None
+        self.forward_allowed = False        # forward not enabled by default
 
         # mandatory or anyway structural variables and object values follow:
         self.command_line = None            # must be set for task plugins
@@ -82,9 +83,11 @@ class Plugin(TaskPlugin):
             self.command_line = cmd_template % self.value
             self.summary_description = _(
                 "Something will be done with %s") % self.value
+            self.allow_forward(True)
         else:
             self.command_line = None
             self.summary_description = None
+            self.allow_forward(False)
 
 
 # end.

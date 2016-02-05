@@ -45,6 +45,7 @@ class Plugin(TaskPlugin):
         self.stock = True
         self.builder = self.get_dialog('plugin_fileops-opendir')
         self.plugin_panel = None
+        self.forward_allowed = False
         self.path = None
 
     def get_pane(self):
@@ -78,10 +79,11 @@ class Plugin(TaskPlugin):
             self.command_line = cmd_template % self.path
             self.summary_description = _(
                 "The '%s' directory will be open") % name
+            self.allow_forward(True)
         else:
-            self.path = None
             self.command_line = None
             self.summary_description = None
+            self.allow_forward(False)
 
 
 # end.

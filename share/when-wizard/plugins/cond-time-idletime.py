@@ -38,8 +38,8 @@ class Plugin(IdleConditionPlugin):
         self.stock = True
         self.builder = self.get_dialog('plugin_cond-time-idletime')
         self.plugin_panel = None
+        self.forward_allowed = False
         self.idlemins = None
-        self.summary_description = None
 
     def get_pane(self):
         if self.plugin_panel is None:
@@ -80,8 +80,10 @@ class Plugin(IdleConditionPlugin):
                 spec = str(self.idlemins / 60) + _(" hours")
             self.summary_description = _(
                 "The event will occur after being idle for %s") % spec
+            self.allow_forward(True)
         else:
             self.summary_description = None
+            self.allow_forward(False)
 
 
 # end.

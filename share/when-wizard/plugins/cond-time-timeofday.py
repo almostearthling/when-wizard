@@ -37,6 +37,7 @@ class Plugin(TimeConditionPlugin):
         self.stock = True
         self.builder = self.get_dialog('plugin_cond-time-timeofday')
         self.plugin_panel = None
+        self.forward_allowed = True
         self.timespec['hour'] = 0
         self.timespec['minute'] = 0
 
@@ -57,6 +58,7 @@ class Plugin(TimeConditionPlugin):
         smin = ("00" + str(self.timespec['minute']))[-2:]
         self.summary_description = _(
             "The event will occur at %s:%s o'clock") % (shr, smin)
+        self.allow_forward(True)
 
 
 # end.

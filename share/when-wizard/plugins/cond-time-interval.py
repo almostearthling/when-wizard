@@ -40,8 +40,8 @@ class Plugin(IntervalConditionPlugin):
         self.stock = True
         self.builder = self.get_dialog('plugin_cond-time-interval')
         self.plugin_panel = None
+        self.forward_allowed = False
         self.interval = None
-        self.summary_description = None
 
     def get_pane(self):
         if self.plugin_panel is None:
@@ -82,8 +82,10 @@ class Plugin(IntervalConditionPlugin):
                 spec = str(self.interval / 60) + _(" hours")
             self.summary_description = _(
                 "The event will occur every %s") % spec
+            self.allow_forward(True)
         else:
             self.summary_description = None
+            self.allow_forward(False)
 
 
 # end.

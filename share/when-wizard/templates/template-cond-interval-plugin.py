@@ -43,6 +43,7 @@ class Plugin(IntervalConditionPlugin):
         # plugin does not have a configuration panel
         self.builder = self.get_dialog('plugin_template')
         self.plugin_panel = None
+        self.forward_allowed = False        # forward not enabled by default
 
         # mandatory or anyway structural variables and object values follow:
         self.interval = None                # interval in minutes
@@ -70,8 +71,10 @@ class Plugin(IntervalConditionPlugin):
         if self.value:
             self.summary_description = _(
                 "Something will be done with %s") % self.value
+            self.allow_forward(True)
         else:
             self.summary_description = None
+            self.allow_forward(False)
 
 
 # end.

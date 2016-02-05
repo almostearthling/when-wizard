@@ -44,6 +44,7 @@ class Plugin(TaskPlugin):
         self.script = self.get_script('plugin_fileops-sync.sh')
         self.builder = self.get_dialog('plugin_fileops-sync')
         self.plugin_panel = None
+        self.forward_allowed = False
         self.source = None
         self.destination = None
 
@@ -99,6 +100,11 @@ class Plugin(TaskPlugin):
                 self.script, self.source, self.destination)
             self.summary_description = _(
                 "Files from %s will be copied to %s") % (sourcename, destname)
+            self.allow_forward(True)
+        else:
+            self.command_line = None
+            self.summary_description = None
+            self.allow_forward(False)
 
 
 # end.

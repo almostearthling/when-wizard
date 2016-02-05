@@ -46,6 +46,7 @@ class Plugin(TaskPlugin):
         self.stock = True
         self.builder = self.get_dialog('plugin_misc-badge')
         self.plugin_panel = None
+        self.forward_allowed = False
         self.message = None
         self.title = None
         self.iconname = None
@@ -96,8 +97,10 @@ class Plugin(TaskPlugin):
                 icon_spec = ''
             self.command_line = cmd_template.format(
                 icon_spec=icon_spec, title=title, message=message)
+            self.allow_forward(True)
         else:
             self.command_line = None
+            self.allow_forward(False)
 
 
 # end.

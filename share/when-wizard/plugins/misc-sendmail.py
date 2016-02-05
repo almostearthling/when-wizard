@@ -43,6 +43,7 @@ class Plugin(TaskPlugin):
         self.stock = True
         self.builder = self.get_dialog('plugin_misc-sendmail')
         self.plugin_panel = None
+        self.forward_allowed = False
         self.message = None
         self.title = None
         self.mailto = None
@@ -67,9 +68,11 @@ class Plugin(TaskPlugin):
                 title=title, message=message, mailto=mailto)
             self.summary_description = _(
                 "An email will be sent to %s") % mailto
+            self.allow_forward(True)
         else:
             self.command_line = None
             self.summary_description = None
+            self.allow_forward(False)
 
 
 # end.

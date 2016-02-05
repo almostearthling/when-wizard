@@ -45,6 +45,7 @@ class Plugin(TaskPlugin):
         self.stock = True
         self.builder = self.get_dialog('plugin_desktop-changebg')
         self.plugin_panel = None
+        self.forward_allowed = False
         self.background_image = None
 
     def get_pane(self):
@@ -83,10 +84,12 @@ class Plugin(TaskPlugin):
             self.command_line = cmd_template % self.background_image
             self.summary_description = _(
                 "Background image will be changed to '%s'") % name
+            self.allow_forward(True)
         else:
             self.background_image = None
             self.command_line = None
             self.summary_description = None
+            self.allow_forward(False)
 
 
 # end.
