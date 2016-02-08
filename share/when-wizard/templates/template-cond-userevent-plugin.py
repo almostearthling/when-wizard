@@ -1,7 +1,7 @@
 # file: share/when-wizard/templates/template-cond-userevent-plugin.py
 # -*- coding: utf-8 -*-
 #
-# Condition plugin template
+# Template for an user defined event condition plugin
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
@@ -36,6 +36,7 @@ class Plugin(UserEventConditionPlugin):
             copyright="Copyright (c) 2016",
             icon='puzzle',
             help_string=HELP,
+            version="0.1.0",
         )
         # mandatory or anyway structural variables and object values follow:
         self.event_name = None              # this has to be changed

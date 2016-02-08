@@ -34,6 +34,7 @@ class Plugin(IdleConditionPlugin):
             copyright="Copyright (c) 2016",
             icon='night_portrait',
             help_string=HELP,
+            version="0.1~alpha.0",
         )
         self.stock = True
         self.builder = self.get_dialog('plugin_cond-time-idletime')

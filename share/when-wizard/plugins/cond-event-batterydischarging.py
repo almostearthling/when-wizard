@@ -1,6 +1,7 @@
 # file: share/when-wizard/templates/cond-event-batterydischarging.py
 # -*- coding: utf-8 -*-
 #
+# Condition plugin for the battery discharging event
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
@@ -36,6 +37,7 @@ class Plugin(EventConditionPlugin):
             copyright="Copyright (c) 2016",
             icon='high_battery',
             help_string=HELP,
+            version="0.1~alpha.0",
         )
         # mandatory or anyway structural variables and object values follow:
         self.stock = True

@@ -1,7 +1,7 @@
 # file: share/when-wizard/modules/cond-time-timeofday.py
 # -*- coding: utf-8 -*-
 #
-# Task plugin to launch an application
+# Plugin for time based condition
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
@@ -33,6 +33,7 @@ class Plugin(TimeConditionPlugin):
             copyright="Copyright (c) 2016",
             icon='alarm_clock',
             help_string=HELP,
+            version="0.1~alpha.0",
         )
         self.stock = True
         self.builder = self.get_dialog('plugin_cond-time-timeofday')

@@ -1,7 +1,7 @@
 # file: share/when-wizard/templates/template-cond-interval-plugin.py
 # -*- coding: utf-8 -*-
 #
-# Condition plugin template
+# Template for an interval based condition plugin
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
@@ -38,6 +38,7 @@ class Plugin(IntervalConditionPlugin):
             copyright="Copyright (c) 2016",
             icon='puzzle',
             help_string=HELP,
+            version="0.1.0",
         )
         # the items below might be not needed and can be deleted if the
         # plugin does not have a configuration panel

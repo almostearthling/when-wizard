@@ -463,8 +463,12 @@ class WizardAppWindow(object):
                 add_to_file(self.plugin_cond, f)
                 add_to_file(self.plugin_task, f)
                 f.write(RESOURCES.IDF_FOOTER)
-            if not subprocess.call('%s --item-add %s' % (APP_WHEN, filepath),
-                                   shell=True):
+            try:
+                ret = subprocess.call('%s --item-add %s' % (APP_WHEN, filepath),
+                                      shell=True)
+                if ret != 0:
+                    return False
+            except OSError:
                 return False
         store_plugin(self.plugin_cond)
         store_plugin(self.plugin_task)

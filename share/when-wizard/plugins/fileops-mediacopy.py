@@ -1,7 +1,7 @@
 # file: share/when-wizard/modules/fileops-mediacopy.py
 # -*- coding: utf-8 -*-
 #
-# Task plugin to synchronize directories
+# Task plugin to copy from storage media
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
@@ -38,6 +38,7 @@ class Plugin(TaskPlugin):
             copyright="Copyright (c) 2016",
             icon='briefcase',
             help_string=HELP,
+            version="0.1~alpha.0",
         )
         self.stock = True
         self.script = self.get_script('plugin_fileops-mediacopy.sh')

@@ -43,6 +43,7 @@ class Plugin(TaskPlugin):
             copyright="Copyright (c) 2016",
             icon='puzzle',
             help_string=HELP,
+            version="0.1.0",
         )
         # the items below might be not needed and can be deleted if the
         # plugin does not have a configuration panel

@@ -42,6 +42,7 @@ class Plugin(TaskPlugin):
             copyright="Copyright (c) 2016",
             icon='night_landscape',
             help_string=HELP,
+            version="0.1~alpha.0",
         )
         self.stock = True
         self.command_line = HIBERNATE_COMMAND

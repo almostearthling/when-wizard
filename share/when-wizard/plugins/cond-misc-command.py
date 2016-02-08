@@ -1,6 +1,7 @@
 # file: share/when-wizard/templates/cond-misc-command.py
 # -*- coding: utf-8 -*-
 #
+# Condition plugin for command result
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
@@ -36,6 +37,7 @@ class Plugin(CommandConditionPlugin):
             copyright="Copyright (c) 2016",
             icon='start',
             help_string=HELP,
+            version="0.1~alpha.0",
         )
         self.stock = True
         self.builder = self.get_dialog('plugin_cond-misc-command')

@@ -42,6 +42,7 @@ class Plugin(TaskPlugin):
             copyright="Copyright (c) 2016",
             icon='sms',
             help_string=HELP,
+            version="0.1~alpha.0",
         )
         self.stock = True
         self.builder = self.get_dialog('plugin_misc-badge')

@@ -40,6 +40,7 @@ class Plugin(TaskPlugin):
             copyright="Copyright (c) 2016",
             icon='no_idea',
             help_string=HELP,
+            version="0.1~alpha.0",
         )
         self.stock = True
         self.command_line = SHUTDOWN_COMMAND

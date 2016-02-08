@@ -81,9 +81,11 @@ class BasePlugin(object):
                  author,
                  copyright,
                  icon=None,
-                 help_string=None):
+                 help_string=None,
+                 version=None):
         if self.__class__.__name__ == 'BasePlugin':
             raise TypeError("cannot instantiate abstract class")
+        self.version = version
         self.basename = basename
         self.unique_id = _PLUGIN_UNIQUE_ID_MAGIC + '%s_%s' % (
             self.basename, unique_str())
@@ -714,12 +716,6 @@ def load_plugin_module(basename, stock=False):
 def add_to_file(plugin, f):
     f.write(plugin.to_itemdef())
     return True
-
-
-def direct_register(plugin):
-    # TODO: write DBus code to directly register the plugin
-    #       using the plugin.to_item_dict() functions
-    return False
 
 
 def store_plugin(plugin):

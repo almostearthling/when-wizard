@@ -37,6 +37,7 @@ class Plugin(TaskPlugin):
             copyright="Copyright (c) 2016",
             icon='electro_devices',
             help_string=HELP,
+            version="0.1~alpha.0",
         )
         self.stock = True
         self.builder = self.get_dialog('plugin_apps-launch')
