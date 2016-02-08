@@ -74,11 +74,13 @@ def register_plugin_data(plugin):
     data = plugin.to_item_dict()
     data = dbus.Dictionary({
         key: data[key] for key in data
-        if data[key] is not None and not
-            ((isinstance(data[key], dict) or
-              isinstance(data[key], list)) and not data[key])}, 'sv')
+        if data[key] is not None and not (
+            (isinstance(data[key], dict) or
+             isinstance(data[key], list)) and not data[key])}, 'sv')
     try:
-        proxy.AddItemByDefinition(data, True)
+        if not proxy.AddItemByDefinition(data, True):
+            return False
+        return True
     except dbus.exceptions.DBusException:
         return False
 
@@ -440,8 +442,10 @@ class WizardAppWindow(object):
             # task_item_dict = self.plugin_task.to_itemdef_dict()
             # cond_item_dict = self.plugin_cond.to_itemdef_dict()
             # register to running instance
-            register_plugin_data(self.plugin_task)
-            register_plugin_data(self.plugin_cond)
+            if not register_plugin_data(self.plugin_task):
+                return False
+            if not register_plugin_data(self.plugin_cond):
+                return False
         else:
             t = time.localtime()
             l = (self.plugin_task.basename, self.plugin_cond.basename)
@@ -459,11 +463,13 @@ class WizardAppWindow(object):
                 add_to_file(self.plugin_cond, f)
                 add_to_file(self.plugin_task, f)
                 f.write(RESOURCES.IDF_FOOTER)
-            subprocess.call(
-                '%s --item-add %s' % (APP_WHEN, filepath), shell=True)
+            if not subprocess.call('%s --item-add %s' % (APP_WHEN, filepath),
+                                   shell=True):
+                return False
         store_plugin(self.plugin_cond)
         store_plugin(self.plugin_task)
         store_association(self.plugin_cond, self.plugin_task)
+        return True
 
     # wizard window main function
     def run(self):
