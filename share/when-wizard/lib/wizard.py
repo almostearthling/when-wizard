@@ -23,9 +23,9 @@ from gi.repository import Pango
 from utility import app_dialog_from_name, app_pixbuf_from_name
 
 from resources import *
-from plugin import PLUGIN_CONST
-from plugin import stock_plugins_names, user_plugins_names, load_plugin_module
-from plugin import store_plugin, store_association, add_to_file
+from plugin import PLUGIN_CONST, stock_plugins_names, user_plugins_names, \
+    load_plugin_module, add_to_file, store_plugin, store_association, \
+    register_plugin_data, unregister_plugin_data
 
 # NOTE: all APP_... constants are builtins from the main script
 
@@ -59,32 +59,6 @@ _WIZARD_STEPS = [
 ]
 
 
-_WHEN_COMMAND_ID = 'it.jks.WhenCommand'
-_WHEN_COMMAND_BUS_NAME = '%s.BusService' % _WHEN_COMMAND_ID
-_WHEN_COMMAND_BUS_PATH = '/' + _WHEN_COMMAND_BUS_NAME.replace('.', '/')
-
-
-# this function registers data from a plugin into a running instance of When
-def register_plugin_data(plugin):
-    try:
-        bus = dbus.SessionBus()
-        proxy = bus.get_object(_WHEN_COMMAND_BUS_NAME, _WHEN_COMMAND_BUS_PATH)
-    except dbus.exceptions.DBusException:
-        return False
-    data = plugin.to_item_dict()
-    data = dbus.Dictionary({
-        key: data[key] for key in data
-        if data[key] is not None and not (
-            (isinstance(data[key], dict) or
-             isinstance(data[key], list)) and not data[key])}, 'sv')
-    try:
-        if not proxy.AddItemByDefinition(data, True):
-            return False
-        return True
-    except dbus.exceptions.DBusException:
-        return False
-
-
 # the main wizard window
 class WizardAppWindow(object):
 
@@ -92,7 +66,8 @@ class WizardAppWindow(object):
         self.builder = Gtk.Builder().new_from_string(ui_app_wizard_master, -1)
         self.builder.connect_signals(self)
         self.builder.set_translation_domain(APP_NAME)
-        self.builder_panes = Gtk.Builder().new_from_string(ui_app_wizard_panes, -1)
+        self.builder_panes = Gtk.Builder().new_from_string(
+            ui_app_wizard_panes, -1)
         self.builder_panes.connect_signals(self)
         self.builder_panes.set_translation_domain(APP_NAME)
         o = self.builder.get_object
@@ -131,6 +106,7 @@ class WizardAppWindow(object):
         self.plugin_cond = None
         self.enable_next = False
         self.enable_prev = True
+        self.register_error = False
         self.change_pane()
         self.refresh_buttons()
 
@@ -295,7 +271,14 @@ class WizardAppWindow(object):
             self.refresh_Summary()
             self.set_pane(self.pane_Summary)
         elif step == 'finish':
+            if self.register_error:
+                self.pane_Finish.get_object(
+                    'lblFinish').set_text(resources.UI_FINISH_OPERATION_FAIL)
+            else:
+                self.pane_Finish.get_object(
+                    'lblFinish').set_text(resources.UI_FINISH_OPERATION_OK)
             self.set_pane(self.pane_Finish)
+            self.register_error = False
 
     # control reactions
     def changed_cbCategory(self, cb):
@@ -348,7 +331,8 @@ class WizardAppWindow(object):
         l = p('listConditions')
         l.set_model(store)
         self.pane_CondSel_selected = True
-        self.enable_next = False
+        self.enable_next = False    # register action to the system
+
         self.refresh_buttons()
 
     def changed_listActions(self, sel):
@@ -417,7 +401,7 @@ class WizardAppWindow(object):
             Gtk.main_quit()
         elif _WIZARD_STEPS[self.step_index] == 'summary':
             self.plugin_cond.set_task(self.plugin_task.unique_id)
-            self.register_action()
+            self.register_error = not self.register_action()
             self.step_index += 1
             self.change_pane(forward=True)
             self.refresh_buttons()
@@ -436,15 +420,13 @@ class WizardAppWindow(object):
             self.change_pane(forward=False)
             self.refresh_buttons()
 
-    # register action to the system
     def register_action(self):
         if self.direct_register:
-            # task_item_dict = self.plugin_task.to_itemdef_dict()
-            # cond_item_dict = self.plugin_cond.to_itemdef_dict()
             # register to running instance
             if not register_plugin_data(self.plugin_task):
                 return False
             if not register_plugin_data(self.plugin_cond):
+                unregister_plugin_data(self.plugin_task)
                 return False
         else:
             t = time.localtime()

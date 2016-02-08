@@ -135,7 +135,6 @@
         <property name="halign">start</property>
         <property name="margin_top">10</property>
         <property name="margin_bottom">10</property>
-        <property name="label" translatable="yes">Your action has been registered!</property>
         <attributes>
           <attribute name="weight" value="bold"/>
         </attributes>

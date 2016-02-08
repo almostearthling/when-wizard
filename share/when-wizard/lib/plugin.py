@@ -14,14 +14,15 @@ import glob
 import textwrap
 import subprocess
 
-from utility import load_icon, load_pixbuf, load_dialog, build_dialog
-from utility import datastore, unique_str
+from utility import load_icon, load_pixbuf, load_dialog, build_dialog, \
+    datastore, unique_str
 
 ##############################################################################
 # plugin related inner constants
 
 
-# public constants, to import: 'from plugin import ConcretePlugin, PLUGIN_CONST'
+# public constants, to import: 'from plugin import ConcretePlugin,
+# PLUGIN_CONST'
 class PluginConstants(object):
     PLUGIN_TYPE_TASK = 'task'
     PLUGIN_TYPE_CONDITION = 'condition'
@@ -47,6 +48,7 @@ basename: {basename}
 name: {name}
 type: {plugin_type}
 description: {description}
+version: {version}
 copyright: {author}, {copyright}
 information: {help_string}"""
 
@@ -56,7 +58,7 @@ _PLUGIN_HELP_LINE_LENGTH_CONSOLE = 78 - _PLUGIN_HELP_HEADER_LENGTH_CONSOLE
 _PLUGIN_DESC_FORMAT_GUI = """\
 {help_string}
 
-({plugin_type}: {basename})\
+({plugin_type}: {basename}, {version})\
 """
 _PLUGIN_DESC_FORMAT_GUI_COPYRIGHT = """\n{copyright}, {author}"""
 
@@ -68,6 +70,12 @@ _PLUGIN_ASSOCIATION_ID_MAGIC = '00act99_'   # ACT = associate condittion + task
 # all external task commands will be launched using a stub launcher
 _WIZARD_LOADER = 'when-wizard'
 _WIZARD_SUBCOMMAND = 'launcher'
+
+
+# constants for DBus communication
+_WHEN_COMMAND_ID = 'it.jks.WhenCommand'
+_WHEN_COMMAND_BUS_NAME = '%s.BusService' % _WHEN_COMMAND_ID
+_WHEN_COMMAND_BUS_PATH = '/' + _WHEN_COMMAND_BUS_NAME.replace('.', '/')
 
 
 ##############################################################################
@@ -182,14 +190,19 @@ class BasePlugin(object):
                              width=_PLUGIN_HELP_LINE_LENGTH_CONSOLE)
         hs = ('\n' + _PLUGIN_HELP_HEADER_LENGTH_CONSOLE * ' ').join(l_hs)
         kw = self.to_dict()
+        if not kw['version']:
+            kw['version'] = 'unknown version'
         kw['help_string'] = hs
         s = _PLUGIN_DESC_FORMAT_CONSOLE.format(**kw)
         return s
 
     def desc_string_gui(self):
-        s = _PLUGIN_DESC_FORMAT_GUI.format(**self.to_dict())
+        d = self.to_dict()
+        if not d['version']:
+            d['version'] = 'unknown version'
+        s = _PLUGIN_DESC_FORMAT_GUI.format(**d)
         if not self.stock:
-            s += _PLUGIN_DESC_FORMAT_GUI_COPYRIGHT.format(**self.to_dict())
+            s += _PLUGIN_DESC_FORMAT_GUI_COPYRIGHT.format(**d)
         return s
 
     # utility resource functions
@@ -264,7 +277,7 @@ class TaskPlugin(BasePlugin):
         if self.__class__.__name__ == 'TaskPlugin':
             raise TypeError("cannot instantiate abstract class")
         BasePlugin.__init__(self, basename, name, description,
-                            author, copyright, icon, help_string)
+                            author, copyright, icon, help_string, version)
         self.plugin_type = PLUGIN_CONST.PLUGIN_TYPE_TASK
         self.category = category
         self.command_line = None
@@ -342,7 +355,7 @@ class BaseConditionPlugin(BasePlugin):
         if self.__class__.__name__ == 'ConditionPlugin':
             raise TypeError("cannot instantiate abstract class")
         BasePlugin.__init__(self, basename, name, description,
-                            author, copyright, icon, help_string)
+                            author, copyright, icon, help_string, version)
         self.plugin_type = PLUGIN_CONST.PLUGIN_TYPE_CONDITION
         self.category = category
         self.task_list = []
@@ -406,7 +419,7 @@ class IntervalConditionPlugin(BaseConditionPlugin):
             raise TypeError("cannot instantiate abstract class")
         BaseConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_TIME,
                                      basename, name, description, author,
-                                     copyright, icon, help_string)
+                                     copyright, icon, help_string, version)
         self.interval = 0
 
     def to_dict(self):
@@ -446,7 +459,7 @@ class TimeConditionPlugin(BaseConditionPlugin):
             raise TypeError("cannot instantiate abstract class")
         BaseConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_TIME,
                                      basename, name, description, author,
-                                     copyright, icon, help_string)
+                                     copyright, icon, help_string, version)
         self.timespec = {
             'year': None,
             'month': None,
@@ -506,7 +519,7 @@ class IdleConditionPlugin(BaseConditionPlugin):
             raise TypeError("cannot instantiate abstract class")
         BaseConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_TIME,
                                      basename, name, description, author,
-                                     copyright, icon, help_string)
+                                     copyright, icon, help_string, version)
         self.idlemins = 0
 
     def to_dict(self):
@@ -546,7 +559,7 @@ class CommandConditionPlugin(BaseConditionPlugin):
             raise TypeError("cannot instantiate abstract class")
         BaseConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_MISC,
                                      basename, name, description, author,
-                                     copyright, icon, help_string)
+                                     copyright, icon, help_string, version)
         self.command_line = None
 
     def to_dict(self):
@@ -592,7 +605,7 @@ class EventConditionPlugin(BaseConditionPlugin):
             raise TypeError("cannot instantiate abstract class")
         BaseConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_EVENT,
                                      basename, name, description, author,
-                                     copyright, icon, help_string)
+                                     copyright, icon, help_string, version)
         self.event = None
 
     def to_dict(self):
@@ -633,7 +646,7 @@ class UserEventConditionPlugin(BaseConditionPlugin):
             raise TypeError("cannot instantiate abstract class")
         BaseConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_EVENT,
                                      basename, name, description, author,
-                                     copyright, icon, help_string)
+                                     copyright, icon, help_string, version)
         self.event_name = None
 
     def to_dict(self):
@@ -674,7 +687,7 @@ class FileChangeConditionPlugin(BaseConditionPlugin):
             raise TypeError("cannot instantiate abstract class")
         BaseConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_EVENT,
                                      basename, name, description, author,
-                                     copyright, icon, help_string)
+                                     copyright, icon, help_string, version)
         self.watched_path = None
 
     def to_dict(self):
@@ -750,6 +763,42 @@ def store_association(cond_plugin, *task_plugins):
     association_id = _PLUGIN_ASSOCIATION_ID_MAGIC + unique_str()
     datastore.put(association_id, json.dumps(l))
     return association_id
+
+
+# this function registers data from a plugin into a running instance of When
+def register_plugin_data(plugin):
+    try:
+        bus = dbus.SessionBus()
+        proxy = bus.get_object(_WHEN_COMMAND_BUS_NAME, _WHEN_COMMAND_BUS_PATH)
+    except dbus.exceptions.DBusException:
+        return False
+    data = plugin.to_item_dict()
+    data = dbus.Dictionary({
+        key: data[key] for key in data
+        if data[key] is not None and not (
+            (isinstance(data[key], dict) or
+             isinstance(data[key], list)) and not data[key])}, 'sv')
+    try:
+        if not proxy.AddItemByDefinition(data, True):
+            return False
+        return True
+    except dbus.exceptions.DBusException:
+        return False
+
+
+def unregister_plugin_data(plugin):
+    try:
+        bus = dbus.SessionBus()
+        proxy = bus.get_object(_WHEN_COMMAND_BUS_NAME, _WHEN_COMMAND_BUS_PATH)
+    except dbus.exceptions.DBusException:
+        return False
+    item_spec = '%s:%s' % (plugin.plugin_type, plugin.unique_id)
+    try:
+        if not proxy.RemoveItem(item_spec):
+            return False
+        return True
+    except dbus.exceptions.DBusException:
+        return False
 
 
 # this expects that the provided plugin reference is of the correct type

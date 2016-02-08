@@ -38,7 +38,8 @@ class Resources(object):
     IDF_PREAMBLE_EXPLAIN_CONDITION = "# Action condition: %s\n"
     IDF_PREAMBLE_EXPLAIN_TASK = "# Action task: %s\n"
     IDF_PREAMBLE_EXPLAIN_PLUGINS = "# Plugins: %s\n"
-    IDF_PREAMBLE_END = "# import this file using 'when-command --item-add %s'\n\n"
+    IDF_PREAMBLE_END = "# Import this file using 'when-command --item-add %s'\n\n"
+    IDF_COMMENT = "# %s"
     IDF_FOOTER = "# end.\n"
     IDF_FILENAME_FORMAT = 'itemdefs-%Y%m%d_%H%M%S.when'
 
@@ -57,6 +58,10 @@ class Resources(object):
     # Fill summary list with meaningful entries
     UI_SUMMARY_CONDITION = _("Condition:")
     UI_SUMMARY_CONSEQUENCE = _("Consequence:")
+
+    # Messages for when the wizard finishes
+    UI_FINISH_OPERATION_OK = _("The action was correctly registered!")
+    UI_FINISH_OPERATION_FAIL = _("The action could not be registered: please try again.")
 
 
 # a single instance of the class will contain all resource strings
