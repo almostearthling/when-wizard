@@ -4,6 +4,7 @@ It turns out that [**When**](https://github.com/almostearthling/when-command) co
 - provide a simpler, intuitive and wizard-based interface to hide the parts that require knowledge of the shell, scripting and maybe even some programming.
 
 Instead of boiling everything together, which would make **When** too heavy to both use and develop, I thought that a different approach could be taken that allows both aspects to coexist. On the applet side these features have been implemented:
+
 1. the ability to manage _tasks_, _conditions_ and _signal handlers_ without directly accessing the configuration dialog boxes, that is using specific command line arguments and specially crafted text files and/or a generic [Remote API](http://contributing-to-when.readthedocs.org/en/latest/dbusapi.html) to interact with a running instance of **When**
 2. the possibility to completely hide the _tasks_, _conditions_, _signal handlers_ and _task history_ dialog boxes from both menu and command line access
 
