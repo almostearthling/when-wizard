@@ -114,6 +114,7 @@ class BasePlugin(object):
             'unique_id': self.unique_id,
             'basename': self.basename,
             'name': self.name,
+            'version': self.version,
             'description': self.description,
             'author': self.author,
             'copyright': self.copyright,
@@ -131,6 +132,7 @@ class BasePlugin(object):
         self.unique_id = d['unique_id']
         self.basename = d['basename']
         self.name = d['name']
+        self.version = d['version']
         self.description = d['description']
         self.author = d['author']
         self.copyright = d['copyright']
@@ -257,7 +259,8 @@ class TaskPlugin(BasePlugin):
                  author,
                  copyright,
                  icon=None,
-                 help_string=None):
+                 help_string=None,
+                 version=None):
         if self.__class__.__name__ == 'TaskPlugin':
             raise TypeError("cannot instantiate abstract class")
         BasePlugin.__init__(self, basename, name, description,
@@ -334,7 +337,8 @@ class BaseConditionPlugin(BasePlugin):
                  author,
                  copyright,
                  icon=None,
-                 help_string=None):
+                 help_string=None,
+                 version=None):
         if self.__class__.__name__ == 'ConditionPlugin':
             raise TypeError("cannot instantiate abstract class")
         BasePlugin.__init__(self, basename, name, description,
@@ -396,7 +400,8 @@ class IntervalConditionPlugin(BaseConditionPlugin):
                  author,
                  copyright,
                  icon=None,
-                 help_string=None):
+                 help_string=None,
+                 version=None):
         if self.__class__.__name__ == 'IntervalConditionPlugin':
             raise TypeError("cannot instantiate abstract class")
         BaseConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_TIME,
@@ -435,7 +440,8 @@ class TimeConditionPlugin(BaseConditionPlugin):
                  author,
                  copyright,
                  icon=None,
-                 help_string=None):
+                 help_string=None,
+                 version=None):
         if self.__class__.__name__ == 'TimeConditionPlugin':
             raise TypeError("cannot instantiate abstract class")
         BaseConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_TIME,
@@ -494,7 +500,8 @@ class IdleConditionPlugin(BaseConditionPlugin):
                  author,
                  copyright,
                  icon=None,
-                 help_string=None):
+                 help_string=None,
+                 version=None):
         if self.__class__.__name__ == 'IdleConditionPlugin':
             raise TypeError("cannot instantiate abstract class")
         BaseConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_TIME,
@@ -533,7 +540,8 @@ class CommandConditionPlugin(BaseConditionPlugin):
                  author,
                  copyright,
                  icon=None,
-                 help_string=None):
+                 help_string=None,
+                 version=None):
         if self.__class__.__name__ == 'CommandConditionPlugin':
             raise TypeError("cannot instantiate abstract class")
         BaseConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_MISC,
@@ -578,7 +586,8 @@ class EventConditionPlugin(BaseConditionPlugin):
                  author,
                  copyright,
                  icon=None,
-                 help_string=None):
+                 help_string=None,
+                 version=None):
         if self.__class__.__name__ == 'EventConditionPlugin':
             raise TypeError("cannot instantiate abstract class")
         BaseConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_EVENT,
@@ -618,7 +627,8 @@ class UserEventConditionPlugin(BaseConditionPlugin):
                  author,
                  copyright,
                  icon=None,
-                 help_string=None):
+                 help_string=None,
+                 version=None):
         if self.__class__.__name__ == 'UserEventConditionPlugin':
             raise TypeError("cannot instantiate abstract class")
         BaseConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_EVENT,
@@ -658,7 +668,8 @@ class FileChangeConditionPlugin(BaseConditionPlugin):
                  author,
                  copyright,
                  icon=None,
-                 help_string=None):
+                 help_string=None,
+                 version=None):
         if self.__class__.__name__ == 'FileChangeConditionPlugin':
             raise TypeError("cannot instantiate abstract class")
         BaseConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_EVENT,
