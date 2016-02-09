@@ -270,11 +270,11 @@ class WizardAppWindow(object):
             self.set_pane(self.pane_Summary)
         elif step == 'finish':
             if self.register_error:
-                self.pane_Finish.get_object(
-                    'lblFinish').set_text(resources.UI_FINISH_OPERATION_FAIL)
+                self.builder_panes.get_object(
+                    'lblFinish').set_text(RESOURCES.UI_FINISH_OPERATION_FAIL)
             else:
-                self.pane_Finish.get_object(
-                    'lblFinish').set_text(resources.UI_FINISH_OPERATION_OK)
+                self.builder_panes.get_object(
+                    'lblFinish').set_text(RESOURCES.UI_FINISH_OPERATION_OK)
             self.set_pane(self.pane_Finish)
             self.register_error = False
 
