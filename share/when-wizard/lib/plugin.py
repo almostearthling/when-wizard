@@ -13,6 +13,7 @@ import json
 import glob
 import textwrap
 import subprocess
+import dbus
 
 from utility import load_icon, load_pixbuf, load_dialog, build_dialog, \
     datastore, unique_str
