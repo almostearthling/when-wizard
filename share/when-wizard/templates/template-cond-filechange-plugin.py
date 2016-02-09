@@ -11,11 +11,17 @@ from plugin import FileChangeConditionPlugin, PLUGIN_CONST
 # Gtk might be needed: uncomment if this is the case
 # from gi.repository import Gtk
 
-# setup i18n for both applet text and dialogs
-locale.setlocale(locale.LC_ALL, locale.getlocale())
-locale.bindtextdomain(APP_NAME, APP_LOCALE_FOLDER)
-locale.textdomain(APP_NAME)
-_ = locale.gettext
+
+# setup localization for both plugin text and configuration pane
+# locale.setlocale(locale.LC_ALL, locale.getlocale())
+# locale.bindtextdomain(APP_NAME, APP_LOCALE_FOLDER)
+# locale.textdomain(APP_NAME)
+# _ = locale.gettext
+
+# if localization is supported, uncomment the lines above configure
+# them as appropriate, and remove this replacement function
+def _(x):
+    return x
 
 
 HELP = _("""\

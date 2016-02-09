@@ -43,6 +43,9 @@ class Resources(object):
     IDF_FOOTER = "# end.\n"
     IDF_FILENAME_FORMAT = 'itemdefs-%Y%m%d_%H%M%S.when'
 
+    # command line messages
+    CLI_ERR_NOTFOUND_WHEN = _("could not find a running instance of When")
+
     # ComboBox entries
     UI_COMBO_CATEGORY_APPLICATIONS = _("Applications")
     UI_COMBO_CATEGORY_SETTINGS = _("Desktop and System Settings")
@@ -62,6 +65,10 @@ class Resources(object):
     # Messages for when the wizard finishes
     UI_FINISH_OPERATION_OK = _("The action was correctly registered!")
     UI_FINISH_OPERATION_FAIL = _("The action could not be registered: please try again.")
+
+    # Button text
+    UI_BUTTON_FINISH = _("Finish")
+    UI_BUTTON_RESTART = _("Restart")
 
 
 # a single instance of the class will contain all resource strings

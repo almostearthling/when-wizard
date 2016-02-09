@@ -71,4 +71,4 @@ There are several elements that can be improved, besides what is strictly needed
 More fields of improvement can, and possibly will, be noted here.
 
 # Credits
-The icons I use in the application are from [icons8](https://github.com/icons8/flat-color-icons), and the screencast was made using [silentcast](https://github.com/colinkeenan/silentcast). Application icon is made out of parts by Rafi at [GraphicsFuel](http://www.graphicsfuel.com/).
+The icons I use in the application are from [icons8](https://github.com/icons8/flat-color-icons), and the screencast was made using [silentcast](https://github.com/colinkeenan/silentcast). Application icon is made out of parts by Rafi at [GraphicsFuel](http://www.graphicsfuel.com/). No credits for the wizard dialog side photo, I took it myself.

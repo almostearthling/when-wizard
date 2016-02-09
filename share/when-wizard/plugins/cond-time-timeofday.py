@@ -38,9 +38,10 @@ class Plugin(TimeConditionPlugin):
         self.stock = True
         self.builder = self.get_dialog('plugin_cond-time-timeofday')
         self.plugin_panel = None
-        self.forward_allowed = True
         self.timespec['hour'] = 0
         self.timespec['minute'] = 0
+        self.summary_description = _("The event will occur at midnight")
+        self.forward_allowed = True
 
     def get_pane(self):
         if self.plugin_panel is None:

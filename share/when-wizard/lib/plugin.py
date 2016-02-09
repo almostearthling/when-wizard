@@ -51,7 +51,8 @@ type: {plugin_type}
 description: {description}
 version: {version}
 copyright: {author}, {copyright}
-information: {help_string}"""
+information: {help_string}\
+"""
 
 _PLUGIN_HELP_HEADER_LENGTH_CONSOLE = len(
     _PLUGIN_DESC_FORMAT_CONSOLE.split('\n')[-1]) - len('{help_string}')

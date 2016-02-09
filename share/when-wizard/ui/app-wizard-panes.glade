@@ -165,7 +165,7 @@
         <property name="halign">start</property>
         <property name="margin_top">10</property>
         <property name="margin_bottom">10</property>
-        <property name="label" translatable="yes">Click Next to exit, or click Previous to start over.</property>
+        <property name="label" translatable="yes">Click Finish to exit, or click Restart to start over.</property>
       </object>
       <packing>
         <property name="expand">False</property>
@@ -187,7 +187,7 @@
         <property name="halign">start</property>
         <property name="margin_top">10</property>
         <property name="margin_bottom">10</property>
-        <property name="label" translatable="yes">Please review your choice:</property>
+        <property name="label" translatable="yes">Review your choice:</property>
         <attributes>
           <attribute name="weight" value="bold"/>
         </attributes>
@@ -226,7 +226,7 @@
         <property name="halign">start</property>
         <property name="margin_top">10</property>
         <property name="margin_bottom">10</property>
-        <property name="label" translatable="yes">Click the Next button to continue or hit Esc to abort.</property>
+        <property name="label" translatable="yes">Click the Next button to register or hit Esc to abort.</property>
       </object>
       <packing>
         <property name="expand">False</property>

@@ -27,8 +27,6 @@ from plugin import PLUGIN_CONST, stock_plugins_names, user_plugins_names, \
 
 # NOTE: all APP_... constants are builtins from the main script
 
-# mockup for the overall interface test
-# from plugins_mockup import PLUGINS as all_plugins
 # load all plugins
 all_plugins = {}
 for name in stock_plugins_names():
@@ -97,6 +95,9 @@ class WizardAppWindow(object):
         self.pane_TaskDef_changed = False
         self.pane_CondDef_changed = False
         self.pane_CondSel_selected = False
+
+        self.btntext_prev = o('btnBack').get_label()
+        self.btntext_next = o('btnForward').get_label()
 
         self.step_index = 0
         self.current_pane = None
@@ -211,6 +212,12 @@ class WizardAppWindow(object):
         btn_next = o('btnForward')
         btn_prev = o('btnBack')
         step = _WIZARD_STEPS[self.step_index]
+        if step == 'finish':
+            btn_next.set_label(RESOURCES.UI_BUTTON_FINISH)
+            btn_prev.set_label(RESOURCES.UI_BUTTON_RESTART)
+        else:
+            btn_next.set_label(self.btntext_next)
+            btn_prev.set_label(self.btntext_prev)
         if self.step_index > 0 and self.enable_prev:
             btn_prev.set_sensitive(True)
         else:

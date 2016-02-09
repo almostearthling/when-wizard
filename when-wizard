@@ -34,8 +34,8 @@ APP_LONGDESC = "A simple Wizard for easier setup of the When scheduler."
 # * the first holds the version ID that build utilities can extract
 # * the second one includes a message that is used both as a commit message
 #   and as a tag-associated message (in `git tag -m`)
-APP_VERSION = '0.0.1~alpha.1'
-APP_TAGDESC = 'This application is still not released'
+APP_VERSION = '0.0.1~alpha.2'
+APP_TAGDESC = 'The Wizard application has become almost usable'
 
 
 #############################################################################
@@ -84,11 +84,10 @@ USER_FOLDER = os.path.expanduser('~')
 USER_DATA_FOLDER = os.path.join(USER_FOLDER, '.local', 'share', APP_WHEN)
 USER_LAUNCHER_FOLDER = os.path.join(USER_FOLDER, '.local', 'share', 'applications')
 USER_CONFIG_FOLDER = os.path.join(USER_FOLDER, '.config', APP_WHEN)
-USER_STORE_BASE_FOLDER = os.path.join(USER_CONFIG_FOLDER, APP_NAME)
-USER_STORE_FOLDER = os.path.join(USER_STORE_BASE_FOLDER, 'store')
-USER_PLUGIN_FOLDER = os.path.join(USER_STORE_BASE_FOLDER, 'plugins')
-USER_RESOURCE_FOLDER = os.path.join(USER_STORE_BASE_FOLDER, 'resource')
-USER_SCRIPT_FOLDER = os.path.join(USER_STORE_BASE_FOLDER, 'scripts')
+USER_STORE_FOLDER = os.path.join(USER_CONFIG_FOLDER, APP_NAME)
+USER_PLUGIN_FOLDER = os.path.join(USER_DATA_FOLDER, APP_NAME, 'plugins')
+USER_RESOURCE_FOLDER = os.path.join(USER_DATA_FOLDER, APP_NAME, 'resource')
+USER_SCRIPT_FOLDER = os.path.join(USER_DATA_FOLDER, APP_NAME, 'scripts')
 
 # USER_CONFIG_FILE = os.path.join(USER_CONFIG_FOLDER, '%s.conf' % APP_NAME)
 # USER_CONFIG = None
@@ -119,7 +118,6 @@ __builtins__.USER_FOLDER = USER_FOLDER
 __builtins__.USER_DATA_FOLDER = USER_DATA_FOLDER
 __builtins__.USER_LAUNCHER_FOLDER = USER_LAUNCHER_FOLDER
 __builtins__.USER_CONFIG_FOLDER = USER_CONFIG_FOLDER
-__builtins__.USER_STORE_BASE_FOLDER = USER_STORE_BASE_FOLDER
 __builtins__.USER_STORE_FOLDER = USER_STORE_FOLDER
 __builtins__.USER_PLUGIN_FOLDER = USER_PLUGIN_FOLDER
 __builtins__.USER_RESOURCE_FOLDER = USER_RESOURCE_FOLDER
