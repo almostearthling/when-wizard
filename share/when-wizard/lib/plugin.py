@@ -114,7 +114,7 @@ class BasePlugin(object):
         self.category = None
         self.plugin_type = None
         self.stock = False
-        self.module_path = None
+        self.enabled = True
         self.forward_allowed = True
         self._forward_button = None
 
@@ -134,7 +134,6 @@ class BasePlugin(object):
             'plugin_type': self.plugin_type,
             'stock': self.stock,
             'module_basename': self.module_basename,
-            'module_path': self.module_path,
             'plugin_class': self.__class__.__name__,
         }
 
@@ -152,7 +151,6 @@ class BasePlugin(object):
         self.plugin_type = d['plugin_type']
         self.stock = d['stock']
         self.module_basename = d['module_basename']
-        self.module_path = d['module_path']
 
     def to_item_dict(self):
         return {}
@@ -256,92 +254,16 @@ class BasePlugin(object):
         if self._forward_button is not None:
             self._forward_button.set_sensitive(allow)
 
-
-##############################################################################
-# the following are all abstract base classes: real plugins have to derive
-# from these, and in turn expose a constructor that requires no arguments,
-# of course except self: this allows the other parts of the program to
-# instantiate real plugins whenever it's needed and initialize them on the
-# fly upon retrieval (via, for instance, from_dict and retrieve_plugin)
-
-class TaskPlugin(BasePlugin):
-
-    def __init__(self,
-                 category,
-                 basename,
-                 name,
-                 description,
-                 author,
-                 copyright,
-                 icon=None,
-                 help_string=None,
-                 version=None):
-        if self.__class__.__name__ == 'TaskPlugin':
-            raise TypeError("cannot instantiate abstract class")
-        BasePlugin.__init__(self, basename, name, description,
-                            author, copyright, icon, help_string, version)
-        self.plugin_type = PLUGIN_CONST.PLUGIN_TYPE_TASK
-        self.category = category
-        self.command_line = None
-        self.process_wait = False
-        # TODO: add other task related data, such as outcome control and its
-        #       modifiers (case sensitivity, RE, etc), environment variables
-
-    def to_dict(self):
-        d = BasePlugin.to_dict(self)
-        d['command_line'] = self.command_line
-        d['process_wait'] = self.process_wait
-        # TODO: add here common data from further specifications
-        return d
-
-    def from_dict(self, d):
-        BasePlugin.from_dict(self, d)
-        self.command_line = d['command_line']
-        self.process_wait = d['process_wait']
-
-    def to_item_dict(self):
-        d = BasePlugin.to_item_dict(self)
-        d['type'] = 'task'
-        d['task_id'] = 1
-        d['task_name'] = self.unique_id
-        d['environment_vars'] = []
-        d['include_env'] = True
-        d['success_stdout'] = None
-        d['success_stderr'] = None
-        d['success_status'] = 0
-        d['failure_stdout'] = None
-        d['failure_stderr'] = None
-        d['failure_status'] = None
-        d['match_exact'] = False
-        d['case_sensitive'] = False
-        d['command'] = self.command()
-        d['startup_dir'] = None
-        d['match_regexp'] = False
-        return d
-
-    def to_itemdef_dict(self):
-        d = BasePlugin.to_itemdef_dict(self)
-        d['type'] = 'task'
-        d['command'] = self.command()
-        # TODO: add here common data from further specifications
-        return d
-
-    def command(self):
-        loader_path = os.path.join(APP_BIN_FOLDER, _WIZARD_LOADER)
-        return '%s %s %s %s' % (loader_path, _WIZARD_SUBCOMMAND,
-                                self.module_basename, self.unique_id)
-
-    def run(self):
-        new_session = not self.process_wait
-        if self.command_line:
-            subprocess.call(self.command_line,
-                            start_new_session=new_session, shell=True)
-            return True
-        else:
-            return False
+    # this function must be overridden to enable or disable the plugin
+    # when necessary: the self.enabled attribute must be set to either
+    # True or False appropriately, and the value of self.enabled must
+    # be returned
+    def enable_plugin(self):
+        self.enabled = True
+        return self.enabled
 
 
-# this class is not meant to be directly derived from (thus Base... prefix)
+# this class too is not meant to be directly derived from
 class BaseConditionPlugin(BasePlugin):
 
     def __init__(self,
@@ -361,15 +283,30 @@ class BaseConditionPlugin(BasePlugin):
         self.plugin_type = PLUGIN_CONST.PLUGIN_TYPE_CONDITION
         self.category = category
         self.task_list = []
+        self.sequential = True
+        self.repeat = True
+        self.suspended = False
+        self.break_on_failure = False
+        self.break_on_success = False
 
     def to_dict(self):
         d = BasePlugin.to_dict(self)
         d['task_names'] = self.task_list
+        d['sequential'] = self.sequential
+        d['repeat'] = self.repeat
+        d['suspended'] = self.suspended
+        d['break_on_failure'] = self.break_on_failure
+        d['break_on_success'] = self.break_on_success
         return d
 
     def from_dict(self, d):
         ConditionPlugin.from_dict(self, d)
         self.task_list = d['task_names']
+        self.sequential = d['sequential']
+        self.repeat = d['repeat']
+        self.suspended = d['suspended']
+        self.break_on_failure = d['break_on_failure']
+        self.break_on_success = d['break_on_success']
 
     def to_item_dict(self):
         d = BasePlugin.to_item_dict(self)
@@ -379,11 +316,11 @@ class BaseConditionPlugin(BasePlugin):
         d['cond_name'] = self.unique_id
         d['type'] = 'condition'
         d['task_names'] = self.task_list
-        d['repeat'] = True
-        d['exec_sequence'] = True
-        d['suspended'] = False
-        d['break_failure'] = False
-        d['break_success'] = False
+        d['repeat'] = self.repeat
+        d['exec_sequence'] = self.sequential
+        d['suspended'] = self.suspended
+        d['break_failure'] = self.break_on_failure
+        d['break_success'] = self.break_on_success
         return d
 
     def to_itemdef_dict(self):
@@ -405,7 +342,143 @@ class BaseConditionPlugin(BasePlugin):
         return False
 
 
-# NOTE: the following are the actual base classes to derive from
+##############################################################################
+# the following are all abstract base classes: real plugins have to derive
+# from these, and in turn expose a constructor that requires no arguments,
+# of course except self: this allows the other parts of the program to
+# instantiate real plugins whenever it's needed and initialize them on the
+# fly upon retrieval (via, for instance, from_dict and retrieve_plugin); as
+# it could be expected, the derivable base classes are much simpler than the
+# main abstract base classes
+
+class TaskPlugin(BasePlugin):
+
+    def __init__(self,
+                 category,
+                 basename,
+                 name,
+                 description,
+                 author,
+                 copyright,
+                 icon=None,
+                 help_string=None,
+                 version=None):
+        if self.__class__.__name__ == 'TaskPlugin':
+            raise TypeError("cannot instantiate abstract class")
+        BasePlugin.__init__(self, basename, name, description,
+                            author, copyright, icon, help_string, version)
+        self.plugin_type = PLUGIN_CONST.PLUGIN_TYPE_TASK
+        self.category = category
+        self.command_line = None
+        self.process_wait = False
+        self.environment_vars = {}
+        self.import_environment = True
+        self.startup_directory = None
+        self.success_status = 0
+        self.failure_status = None
+        self.success_stdout = None
+        self.failure_stdout = None
+        self.success_stderr = None
+        self.failure_stderr = None
+        self.match_exact_output = False
+        self.match_case_sensitive = False
+        self.match_regexp = False
+
+    def to_dict(self):
+        d = BasePlugin.to_dict(self)
+        d['command_line'] = self.command_line
+        d['process_wait'] = self.process_wait
+        d['environment_vars'] = self.environment_vars
+        d['import_environment'] = self.import_environment
+        d['startup_directory'] = self.startup_directory
+        d['success_status'] = self.success_status
+        d['failure_status'] = self.failure_status
+        d['success_stdout'] = self.success_stdout
+        d['failure_stdout'] = self.failure_stdout
+        d['success_stderr'] = self.success_stderr
+        d['failure_stderr'] = self.failure_stderr
+        d['match_exact_output'] = self.match_exact_output
+        d['match_case_sensitive'] = self.match_case_sensitive
+        d['match_regexp'] = self.match_regexp
+        return d
+
+    def from_dict(self, d):
+        BasePlugin.from_dict(self, d)
+        self.command_line = d['command_line']
+        self.process_wait = d['process_wait']
+        self.environment_vars = d['environment_vars']
+        self.import_environment = d['import_environment']
+        self.startup_directory = d['startup_directory']
+        self.success_status = d['success_status']
+        self.failure_status = d['failure_status']
+        self.success_stdout = d['success_stdout']
+        self.failure_stdout = d['failure_stdout']
+        self.success_stderr = d['success_stderr']
+        self.failure_stderr = d['failure_stderr']
+        self.match_exact_output = d['match_exact_output']
+        self.match_case_sensitive = d['match_case_sensitive']
+        self.match_regexp = d['match_regexp']
+
+    def to_item_dict(self):
+        d = BasePlugin.to_item_dict(self)
+        d['type'] = 'task'
+        d['task_id'] = 1
+        d['task_name'] = self.unique_id
+        d['environment_vars'] = self.environment_vars
+        d['include_env'] = self.import_environment
+        d['success_stdout'] = self.success_stdout
+        d['success_stderr'] = self.success_stderr
+        d['success_status'] = self.success_status
+        d['failure_stdout'] = self.failure_stdout
+        d['failure_stderr'] = self.failure_stderr
+        d['failure_status'] = self.failure_status
+        d['match_exact'] = self.match_exact_output
+        d['case_sensitive'] = self.match_case_sensitive
+        d['command'] = self.command()
+        d['startup_dir'] = self.startup_directory
+        d['match_regexp'] = self.match_regexp
+        return d
+
+    def to_itemdef_dict(self):
+        d = BasePlugin.to_itemdef_dict(self)
+        d['type'] = 'task'
+        d['command'] = self.command()
+        d['environment vars'] = self.environment_vars
+        d['startup directory'] = self.startup_directory
+        d['exact match'] = self.match_exact_output
+        d['regexp match'] = self.match_regexp
+        d['case sensitive'] = self.match_case_sensitive
+        c = None
+        if self.success_status is not None:
+            c = ('success', 'status', self.success_status)
+        elif self.failure_status is not None:
+            c = ('failure', 'status', self.failure_status)
+        elif self.success_stdout is not None:
+            c = ('success', 'stdout', self.success_stdout)
+        elif self.failure_stdout is not None:
+            c = ('failure', 'stdout', self.failure_stdout)
+        elif self.success_stderr is not None:
+            c = ('success', 'stderr', self.success_stderr)
+        elif self.failure_stderr is not None:
+            c = ('failure', 'stderr', self.failure_stderr)
+        d['check for'] = c
+        return d
+
+    def command(self):
+        loader_path = os.path.join(APP_BIN_FOLDER, _WIZARD_LOADER)
+        return '%s %s %s %s' % (loader_path, _WIZARD_SUBCOMMAND,
+                                self.module_basename, self.unique_id)
+
+    def run(self):
+        new_session = not self.process_wait
+        if self.command_line:
+            subprocess.call(self.command_line,
+                            start_new_session=new_session, shell=True)
+            return True
+        else:
+            return False
+
+
 class IntervalConditionPlugin(BaseConditionPlugin):
 
     def __init__(self,
@@ -563,32 +636,61 @@ class CommandConditionPlugin(BaseConditionPlugin):
                                      basename, name, description, author,
                                      copyright, icon, help_string, version)
         self.command_line = None
+        self.expected_status = 0
+        self.expected_stdout = None
+        self.expected_stderr = None
+        self.match_exact_output = False
+        self.match_case_sensitive = False
+        self.match_regexp = False
 
     def to_dict(self):
         d = BaseConditionPlugin.to_dict(self)
         d['command_line'] = self.command_line
+        d['match_exact_output'] = self.match_exact_output
+        d['match_case_sensitive'] = self.match_case_sensitive
+        d['match_regexp'] = self.match_regexp
+        d['expected_status'] = self.expected_status
+        d['expected_stdout'] = self.expected_stdout
+        d['expected_stderr'] = self.expected_stderr
         return d
 
     def from_dict(self, d):
         BaseConditionPlugin.from_dict(self, d)
         self.command_line = d['command_line']
+        self.match_exact_output = d['match_exact_output']
+        self.match_case_sensitive = d['match_case_sensitive']
+        self.match_regexp = d['match_regexp']
+        self.expected_status = d['expected_status']
+        self.expected_stdout = d['expected_stdout']
+        self.expected_stderr = d['expected_stderr']
 
     def to_itemdef_dict(self):
         d = BaseConditionPlugin.to_itemdef_dict(self)
         d['based on'] = 'command'
         d['command'] = self.command_line
+        d['exact match'] = self.match_exact_output
+        d['regexp match'] = self.match_regexp
+        d['case sensitive'] = self.match_case_sensitive
+        c = None
+        if self.expected_status is not None:
+            c = ('status', self.expected_status)
+        elif self.expected_stdout is not None:
+            c = ('stdout', self.expected_stdout)
+        elif self.expected_stderr is not None:
+            c = ('stderr', self.expected_stderr)
+        d['check for'] = c
         return d
 
     def to_item_dict(self):
         d = BaseConditionPlugin.to_item_dict(self)
         d['subtype'] = 'CommandBasedCondition'
-        d['match_exact'] = False
-        d['match_regexp'] = False
-        d['case_sensitive'] = False
         d['command'] = self.command_line
-        d['expected_status'] = 0
-        d['expected_stdout'] = None
-        d['expected_stderr'] = None
+        d['match_exact'] = self.match_exact_output
+        d['case_sensitive'] = self.match_case_sensitive
+        d['match_regexp'] = self.match_regexp
+        d['expected_status'] = self.expected_status
+        d['expected_stdout'] = self.expected_stdout
+        d['expected_stderr'] = self.expected_stderr
         return d
 
 

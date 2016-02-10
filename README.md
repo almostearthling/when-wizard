@@ -52,6 +52,8 @@ The management utility will be a crucial part, as it will be needed to delete ta
 ## What still has to be done
 The wizard interface is almost complete but might require some refinements. Also, it completely lacks any form of configuration: although at the moment the application does not seem to need any form of configuration, it might do in the future.
 
+The provided _stock plugins_ **do not always do what they promise**: sometimes they do or at least try to, but in many cases they just don't work, especially for tasks. Mostly because I have to find out what is the command for a specific action, as I focused more on how to get the whole application working instead of caring for plugin details.
+
 The language used throughout the UI is, at best, inaccurate. Sometimes it just sucks. Styles are mixed, wording is far from being consistent, and I still need to decide how the user has to be addressed -- I'd like to stay on the colloquial side, but the over-proactive language of some recent _apps_ sounds irritating to me to the very least.
 
 As pointed out above, the other mandatory component of the suite is the management application, that has to be created from scratch. The plugin installation, uninstallation and management interface will be an interesting part of the application: it will need to handle plugin code, UI (graphics and configuration pane resource file), scripts and possibly user-defined signal handlers that have to be registered. The packaging format for plugins still has to be defined.
@@ -64,7 +66,7 @@ Localization is another argument that has to be faced: the plugin-based structur
 There are several elements that can be improved, besides what is strictly needed:
 - _stock_ plugins should be improved and made more stable
 - more stock plugins should be added
-- the `PicklingDatastore` is definitely too rough to be considered definitive: probably something more robust, maybe based on *SQLite*, can be used; in the end the `Datastore` protocol just requires to store big strings (usually JSON data) indexed by short strings which seems a fairly simple task for a SQL DB
+- the `PicklingDatastore` is definitely too rough to be considered definitive: probably something more robust, maybe based on _SQLite_, can be used; in the end the `Datastore` protocol just requires to store big strings (usually JSON data) indexed by short strings which seems a fairly simple task for a SQL DB
 - **When** remote API has to be debugged, revised and made more consistent if necessary, and **When Wizard**'s client counterpart should change accordingly
 - the application has to be packaged for Linux systems.
 

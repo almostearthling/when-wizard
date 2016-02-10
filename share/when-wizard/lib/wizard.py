@@ -73,8 +73,8 @@ class WizardAppWindow(object):
             os.path.join(APP_GRAPHICS_FOLDER, 'alarmclock_wand.png'))
         self.logo = Gtk.Image.new_from_file(
             os.path.join(APP_GRAPHICS_FOLDER, 'alarmclock_wand-128.png'))
-        o('imgDeco').set_from_file(os.path.join(APP_GRAPHICS_FOLDER,
-                                                'wizard-side.png'))
+        o('imgDeco').set_from_file(
+            os.path.join(APP_GRAPHICS_FOLDER, 'wizard-side.png'))
         self.dialog.set_icon(self.icon.get_pixbuf())
 
         self.dialog_about = o('dlgAbout')
@@ -300,13 +300,14 @@ class WizardAppWindow(object):
         sorted_plugins.sort()
         for x in sorted_plugins:
             m = x[1]
-            elem = [
-                all_plugins[m].basename,
-                app_pixbuf_from_name(all_plugins[m].icon),
-                all_plugins[m].name,
-                all_plugins[m].description,
-            ]
-            store.append(elem)
+            if all_plugins[m].enabled:
+                elem = [
+                    all_plugins[m].basename,
+                    app_pixbuf_from_name(all_plugins[m].icon),
+                    all_plugins[m].name,
+                    all_plugins[m].description,
+                ]
+                store.append(elem)
         l = p('listActions')
         l.set_model(store)
         self.enable_next = False
@@ -326,13 +327,14 @@ class WizardAppWindow(object):
         sorted_plugins.sort()
         for x in sorted_plugins:
             m = x[1]
-            elem = [
-                all_plugins[m].basename,
-                app_pixbuf_from_name(all_plugins[m].icon),
-                all_plugins[m].name,
-                all_plugins[m].description,
-            ]
-            store.append(elem)
+            if all_plugins[m].enabled:
+                elem = [
+                    all_plugins[m].basename,
+                    app_pixbuf_from_name(all_plugins[m].icon),
+                    all_plugins[m].name,
+                    all_plugins[m].description,
+                ]
+                store.append(elem)
         l = p('listConditions')
         l.set_model(store)
         self.pane_CondSel_selected = True

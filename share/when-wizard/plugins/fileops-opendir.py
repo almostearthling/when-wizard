@@ -34,7 +34,7 @@ class Plugin(TaskPlugin):
         TaskPlugin.__init__(
             self,
             category=PLUGIN_CONST.CATEGORY_TASK_FILEOPS,
-            basename='fileops-openfile',
+            basename='fileops-opendir',
             name=_("Open Directory"),
             description=_("Show a Directory in File Manager"),
             author="Francesco Garosi",
