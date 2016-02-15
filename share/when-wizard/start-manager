@@ -1,0 +1,53 @@
+# script: share/when-wizard/start-manager
+# -*- coding: utf-8 -*-
+#
+# When Wizard Manager
+#
+# Copyright (c) 2015-2016 Francesco Garosi
+# Released under the BSD License (see LICENSE file)
+#
+# Manager application script: prepare all paths and start application
+# Usage: when-wizard start-manager
+
+import os
+import sys
+import time
+
+import argparse
+import subprocess
+import locale
+
+from utility import verify_user_folders, datastore
+from resources import RESOURCES
+
+
+# setup i18n for both applet text and dialogs
+locale.setlocale(locale.LC_ALL, locale.getlocale())
+locale.bindtextdomain(APP_NAME, APP_LOCALE_FOLDER)
+locale.textdomain(APP_NAME)
+_ = locale.gettext
+
+
+def gui_main():
+    from manager import ManagerApplication
+    app = ManagerApplication()
+    return app.run()
+
+
+# take care of parsing possible arguments (if any) and run the GUI application
+def main():
+    # TODO: parse args and initialize applet
+    me = os.path.basename(__file__)
+    if subprocess.call([APP_WHEN, '--query']) != 0:
+        sys.stderr.write("%s: %s\n" % (me, RESOURCES.CLI_ERR_NOTFOUND_WHEN))
+        return 2
+    verify_user_folders()
+    if os.path.exists(datastore.filename):
+        datastore.load()
+    else:
+        datastore.save()
+    r = gui_main()
+    return r
+
+
+# end.

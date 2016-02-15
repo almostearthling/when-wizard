@@ -14,7 +14,7 @@
     <property name="website">http://almostearthling.github.io/when-command/</property>
     <property name="website_label" translatable="yes">When's Web Page</property>
     <property name="logo_icon_name"/>
-    <property name="license_type">lgpl-3-0</property>
+    <property name="license_type">bsd</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="aboutdialog-vbox1">
         <property name="can_focus">False</property>

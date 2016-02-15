@@ -70,6 +70,9 @@ class Resources(object):
     UI_BUTTON_FINISH = _("Finish")
     UI_BUTTON_RESTART = _("Restart")
 
+    # message boxes
+    UI_MSGBOX_CONFIRM_DELETE_ASSOCIATION = _("Are you sure you want to delete\nthe selected association?")
+
 
 # a single instance of the class will contain all resource strings
 RESOURCES = Resources()

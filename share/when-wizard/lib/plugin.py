@@ -134,6 +134,7 @@ class BasePlugin(object):
             'plugin_type': self.plugin_type,
             'stock': self.stock,
             'module_basename': self.module_basename,
+            'summary_description': self.summary_description,
             'plugin_class': self.__class__.__name__,
         }
 
@@ -151,6 +152,7 @@ class BasePlugin(object):
         self.plugin_type = d['plugin_type']
         self.stock = d['stock']
         self.module_basename = d['module_basename']
+        self.summary_description = d['summary_description']
 
     def to_item_dict(self):
         return {}
@@ -227,10 +229,6 @@ class BasePlugin(object):
             key = 'u:%s' % self.basename
         return json.loads(datastore.get(key))
 
-    # configuration retrieval utility
-    # def get_config(self, section, entry, default=None):
-    #     return USER_CONFIG.get(section, entry, default)
-
     # retrieve a script in the correct folder and return its full path
     def get_script(self, filename):
         if self.stock:
@@ -300,7 +298,7 @@ class BaseConditionPlugin(BasePlugin):
         return d
 
     def from_dict(self, d):
-        ConditionPlugin.from_dict(self, d)
+        BasePlugin.from_dict(self, d)
         self.task_list = d['task_names']
         self.sequential = d['sequential']
         self.repeat = d['repeat']
@@ -851,6 +849,10 @@ def store_plugin(plugin):
     return plugin.unique_id
 
 
+def unstore_plugin(plugin_id):
+    datastore.remove(plugin_id)
+
+
 def store_association(cond_plugin, *task_plugins):
     if len(task_plugins) < 1:
         raise ValueError("expected at least one task plugin")
@@ -867,6 +869,14 @@ def store_association(cond_plugin, *task_plugins):
     association_id = _PLUGIN_ASSOCIATION_ID_MAGIC + unique_str()
     datastore.put(association_id, json.dumps(l))
     return association_id
+
+
+def unstore_association(association_id, cascade=True):
+    if cascade:
+        li = json.loads(datastore.get(association_id))
+        for x in li:
+            datastore.remove(x)
+    datastore.remove(association_id)
 
 
 # this function registers data from a plugin into a running instance of When
@@ -905,14 +915,20 @@ def unregister_plugin_data(plugin):
         return False
 
 
-# this expects that the provided plugin reference is of the correct type
-# it returns the plugin object for symmetry with the association based one
-def retrieve_plugin(plugin, unique_id):
+# this expects the plugin reference to be either of the correct type or None
+def retrieve_plugin(unique_id, plugin=None):
     d = json.loads(datastore.get(unique_id))
+    if plugin is None:
+        mod = load_plugin_module(d['module_basename'], d['stock'])
+        plugin = mod.Plugin()
     if plugin.__class__.__name__ != d['plugin_class']:
         raise ValueError("plugin of class %s expected" % d['plugin_class'])
     plugin.from_dict(d)
     return plugin
+
+
+def retrieve_plugin_data(unique_id):
+    return json.loads(datastore.get(unique_id))
 
 
 def retrieve_association(association_id):

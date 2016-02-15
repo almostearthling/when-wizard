@@ -339,7 +339,6 @@ class WizardAppWindow(object):
         l.set_model(store)
         self.pane_CondSel_selected = True
         self.enable_next = False    # register action to the system
-
         self.refresh_buttons()
 
     def changed_listActions(self, sel):
