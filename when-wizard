@@ -34,8 +34,8 @@ APP_LONGDESC = "A simple Wizard for easier setup of the When scheduler."
 # * the first holds the version ID that build utilities can extract
 # * the second one includes a message that is used both as a commit message
 #   and as a tag-associated message (in `git tag -m`)
-APP_VERSION = '0.0.1~alpha.2'
-APP_TAGDESC = 'The Wizard application has become almost usable'
+APP_VERSION = '0.0.1~alpha.3'
+APP_TAGDESC = 'Manager application added'
 
 
 #############################################################################
