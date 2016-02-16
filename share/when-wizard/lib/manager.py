@@ -204,6 +204,8 @@ class ManagerAppWindow(object):
                 unstore_association(self.selected_association)
                 self.selected_association = None
                 self.fill_listAssociations(None)
+                o('txtCondition').set_text("")
+                o('txtConsequence').set_text("")
 
     def click_btnDeleteAll(self, obj):
         confirmbox = Gtk.MessageDialog(type=Gtk.MessageType.QUESTION,
@@ -224,6 +226,8 @@ class ManagerAppWindow(object):
                 unstore_association(x)
             self.selected_association = None
             self.fill_listAssociations(None)
+            o('txtCondition').set_text("")
+            o('txtConsequence').set_text("")
 
     def click_btnRefresh(self, obj):
         self.fill_listHistory(None)
