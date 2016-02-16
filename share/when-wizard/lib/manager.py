@@ -115,9 +115,15 @@ class ManagerAppWindow(object):
         l.set_model(store)
 
     def changed_listAssociation(self, sel):
+        o = self.builder.get_object
         m, i = sel.get_selected()
         if i is not None:
             self.selected_association = m[i][0]
+            li = retrieve_association(self.selected_association)
+            data_cond = retrieve_plugin_data(li[0])
+            data_task = retrieve_plugin_data(li[1])
+            o('txtCondition').set_text(data_cond['summary_description'])
+            o('txtConsequence').set_text(data_task['summary_description'])
 
     def click_btnDel(self, obj):
         if self.selected_association:
@@ -137,6 +143,10 @@ class ManagerAppWindow(object):
                 unstore_association(self.selected_association)
                 self.selected_association = None
                 self.fill_listAssociations(None)
+
+    def click_btnQuit(self, obj):
+        self.dialog.hide()
+        Gtk.main_quit()
 
     # wizard window main function
     def run(self):

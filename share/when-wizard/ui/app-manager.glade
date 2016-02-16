@@ -45,6 +45,10 @@
     <child internal-child="vbox">
       <object class="GtkBox" id="boxManager">
         <property name="can_focus">False</property>
+        <property name="margin_left">10</property>
+        <property name="margin_right">10</property>
+        <property name="margin_top">5</property>
+        <property name="margin_bottom">5</property>
         <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child internal-child="action_area">
@@ -68,11 +72,12 @@
             </child>
             <child>
               <object class="GtkButton" id="btnClose">
-                <property name="label">gtk-ok</property>
+                <property name="label">gtk-quit</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
+                <signal name="clicked" handler="click_btnQuit" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -103,6 +108,8 @@
                   <object class="GtkTreeView" id="listAssociation">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="margin_left">5</property>
+                    <property name="margin_right">6</property>
                     <property name="headers_visible">False</property>
                     <child internal-child="selection">
                       <object class="GtkTreeSelection" id="listAssociation_Selection">
@@ -117,9 +124,81 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkFixed" id="fixFill02">
+                  <object class="GtkGrid" id="gridDescription">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="row_spacing">5</property>
+                    <property name="column_spacing">5</property>
+                    <child>
+                      <object class="GtkLabel" id="lblCondition">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="margin_left">5</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Condition: </property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">0</property>
+                        <property name="width">1</property>
+                        <property name="height">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="lblConsequence">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="margin_left">5</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Consequence:</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">1</property>
+                        <property name="width">1</property>
+                        <property name="height">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkEntry" id="txtCondition">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="margin_left">10</property>
+                        <property name="margin_right">5</property>
+                        <property name="hexpand">True</property>
+                        <property name="editable">False</property>
+                        <property name="has_frame">False</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">0</property>
+                        <property name="width">1</property>
+                        <property name="height">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkEntry" id="txtConsequence">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="margin_left">10</property>
+                        <property name="margin_right">5</property>
+                        <property name="hexpand">True</property>
+                        <property name="editable">False</property>
+                        <property name="has_frame">False</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">1</property>
+                        <property name="width">1</property>
+                        <property name="height">1</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -134,10 +213,12 @@
                     <child>
                       <object class="GtkButton" id="btnDelete">
                         <property name="label">gtk-delete</property>
+                        <property name="width_request">80</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
-                        <property name="margin_top">13</property>
+                        <property name="margin_left">5</property>
+                        <property name="margin_top">10</property>
                         <property name="use_stock">True</property>
                         <signal name="clicked" handler="click_btnDel" swapped="no"/>
                       </object>
