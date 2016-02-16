@@ -95,15 +95,15 @@ class ManagerAppWindow(object):
         l.append_column(column_task_name)
         self.fill_listAssociations(None)
 
-        column_cond_datetime = Gtk.TreeViewColumn(
+        column_cond_time = Gtk.TreeViewColumn(
             RESOURCES.UI_COLUMN_HEAD_TIME, r_text, text=0)
-        column_cond_duration = Gtk.TreeViewColumn(
-            RESOURCES.UI_COLUMN_HEAD_DURATION, r_text, text=1)
         column_cond_icon = Gtk.TreeViewColumn(
-            RESOURCES.UI_COLUMN_HEAD_ICON, r_pixbuf, pixbuf=2)
+            RESOURCES.UI_COLUMN_HEAD_ICON, r_pixbuf, pixbuf=1)
         column_cond_name = Gtk.TreeViewColumn(
-            RESOURCES.UI_COLUMN_HEAD_CONDITION, r_text, text=3)
+            RESOURCES.UI_COLUMN_HEAD_CONDITION, r_text, text=2)
         column_cond_name.set_expand(True)
+        column_arrow = Gtk.TreeViewColumn(
+            RESOURCES.UI_COLUMN_HEAD_ICON, r_pixbuf, pixbuf=3)
         column_task_icon = Gtk.TreeViewColumn(
             RESOURCES.UI_COLUMN_HEAD_ICON, r_pixbuf, pixbuf=4)
         column_task_name = Gtk.TreeViewColumn(
@@ -112,10 +112,10 @@ class ManagerAppWindow(object):
         column_outcome = Gtk.TreeViewColumn(
             RESOURCES.UI_COLUMN_HEAD_OUTCOME, r_pixbuf, pixbuf=6)
         l = o('listHistory')
-        l.append_column(column_cond_datetime)
-        l.append_column(column_cond_duration)
+        l.append_column(column_cond_time)
         l.append_column(column_cond_icon)
         l.append_column(column_cond_name)
+        l.append_column(column_arrow)
         l.append_column(column_task_icon)
         l.append_column(column_task_name)
         l.append_column(column_outcome)
@@ -154,16 +154,18 @@ class ManagerAppWindow(object):
         o = self.builder.get_object
         h = retrieve_action_history()
         l = o('listHistory')
-        store = Gtk.ListStore(str, str,
+        store = Gtk.ListStore(str,
                               GdkPixbuf.Pixbuf, str,
+                              GdkPixbuf.Pixbuf,
                               GdkPixbuf.Pixbuf, str,
                               GdkPixbuf.Pixbuf)
+        arrow = load_pixbuf('right')
         for x in h:
             store.append([
-                x['datetime'],
-                "%.2f" % x['duration'],
+                "%s (%.2fs)" % (x['datetime'].split()[1], x['duration']),
                 x['cond_icon'],
                 x['cond_name'],
+                arrow,
                 x['task_icon'],
                 x['task_name'],
                 self.glyph_success if x['success'] else self.glyph_failure,

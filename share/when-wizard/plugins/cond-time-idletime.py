@@ -78,7 +78,7 @@ class Plugin(IdleConditionPlugin):
             if self.idlemins % 60:
                 spec = str(self.idlemins) + _(" minutes")
             else:
-                spec = str(self.idlemins / 60) + _(" hours")
+                spec = str(int(self.idlemins / 60)) + _(" hours")
             self.summary_description = _(
                 "The event will occur after being idle for %s") % spec
             self.allow_forward(True)
