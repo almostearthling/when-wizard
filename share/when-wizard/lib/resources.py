@@ -71,7 +71,7 @@ class Resources(object):
     UI_BUTTON_RESTART = _("Restart")
 
     # message boxes
-    UI_MSGBOX_CONFIRM_DELETE_ASSOCIATION = _("Are you sure you want to delete\nthe selected association?")
+    UI_MSGBOX_CONFIRM_DELETE_ASSOCIATION = _("Are you sure you want to delete\nthe selected action?")
 
 
 # a single instance of the class will contain all resource strings
