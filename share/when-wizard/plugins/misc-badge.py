@@ -10,7 +10,7 @@ from plugin import TaskPlugin, PLUGIN_CONST
 
 from gi.repository import Gtk
 from gi.repository import GdkPixbuf
-from utility import app_pixbuf_from_name
+from utility import load_pixbuf
 
 # setup i18n for both applet text and dialogs
 locale.setlocale(locale.LC_ALL, locale.getlocale())
@@ -59,13 +59,13 @@ class Plugin(TaskPlugin):
             r_text = Gtk.CellRendererText()
             r_pixbuf = Gtk.CellRendererPixbuf()
             store = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str)
-            store.append([app_pixbuf_from_name('info'),
+            store.append([load_pixbuf('info'),
                           _("Information"), 'dialog-information'])
-            store.append([app_pixbuf_from_name('questions'),
+            store.append([load_pixbuf('questions'),
                           _("Question"), 'dialog-question'])
-            store.append([app_pixbuf_from_name('high_priority'),
+            store.append([load_pixbuf('high_priority'),
                           _("Warning"), 'dialog-warning'])
-            store.append([app_pixbuf_from_name('cancel'),
+            store.append([load_pixbuf('cancel'),
                           _("Error"), 'dialog-error'])
             cb = o('cbIcon')
             cb.pack_start(r_text, True)

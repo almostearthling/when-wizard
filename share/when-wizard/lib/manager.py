@@ -18,13 +18,13 @@ from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import Pango
 
-from utility import app_dialog_from_name, app_pixbuf_from_name
+from utility import app_dialog, load_pixbuf
 
 from resources import *
 from plugin import PLUGIN_CONST, stock_plugins_names, user_plugins_names, \
-    load_plugin_module, unstore_association, \
-    retrieve_plugin_data, unregister_plugin_data, \
-    retrieve_plugin, retrieve_association, retrieve_association_ids
+    load_plugin_module, unstore_association, unregister_plugin_data, \
+    retrieve_action_history, retrieve_plugin_data, retrieve_plugin, \
+    retrieve_association, retrieve_association_ids
 
 # NOTE: all APP_... constants are builtins from the main script
 
@@ -41,7 +41,7 @@ for name in user_plugins_names():
 
 
 # load windows and stock panes
-ui_app_manager = app_dialog_from_name('app-manager')
+ui_app_manager = app_dialog('app-manager')
 
 
 # the main wizard manager window
@@ -53,15 +53,14 @@ class ManagerAppWindow(object):
         self.builder.set_translation_domain(APP_NAME)
         o = self.builder.get_object
         self.dialog = o('dlgManager')
-        self.icon = Gtk.Image.new_from_file(
-            os.path.join(APP_GRAPHICS_FOLDER, 'alarmclock_wand.png'))
-        self.logo = Gtk.Image.new_from_file(
-            os.path.join(APP_GRAPHICS_FOLDER, 'alarmclock_wand-128.png'))
-        self.dialog.set_icon(self.icon.get_pixbuf())
+        icon = load_pixbuf('alarmclock_wand')
+        self.glyph_success = load_pixbuf('success')
+        self.glyph_failure = load_pixbuf('failure')
+        self.dialog.set_icon(icon)
 
         self.dialog_about = o('dlgAbout')
-        self.dialog_about.set_icon(self.icon.get_pixbuf())
-        self.dialog_about.set_logo(self.logo.get_pixbuf())
+        self.dialog_about.set_icon(icon)
+        self.dialog_about.set_logo(load_pixbuf('alarmclock_wand-128'))
         self.dialog_about.set_program_name(APP_SHORTNAME)
         self.dialog_about.set_website(APP_URL)
         self.dialog_about.set_copyright(APP_COPYRIGHT)
@@ -72,14 +71,22 @@ class ManagerAppWindow(object):
         self.selected_association = None
 
         # prepare controls
+        r_text = Gtk.CellRendererText()
         r_text_e = Gtk.CellRendererText()
-        # r_text_e.set_property("ellipsize", Pango.EllipsizeMode.MIDDLE)
+        r_text_e.set_property('ellipsize', Pango.EllipsizeMode.MIDDLE)
         r_pixbuf = Gtk.CellRendererPixbuf()
-        column_cond_icon = Gtk.TreeViewColumn("Icon", r_pixbuf, pixbuf=1)
-        column_cond_name = Gtk.TreeViewColumn("Condition", r_text_e, text=2)
-        column_arrow = Gtk.TreeViewColumn("Arrow", r_pixbuf, pixbuf=3)
-        column_task_icon = Gtk.TreeViewColumn("Icon", r_pixbuf, pixbuf=4)
-        column_task_name = Gtk.TreeViewColumn("Consequence", r_text_e, text=5)
+        column_cond_icon = Gtk.TreeViewColumn(
+            RESOURCES.UI_COLUMN_HEAD_ICON, r_pixbuf, pixbuf=1)
+        column_cond_name = Gtk.TreeViewColumn(
+            RESOURCES.UI_COLUMN_HEAD_CONDITION, r_text, text=2)
+        column_cond_name.set_expand(True)
+        column_arrow = Gtk.TreeViewColumn(
+            RESOURCES.UI_COLUMN_HEAD_ICON, r_pixbuf, pixbuf=3)
+        column_task_icon = Gtk.TreeViewColumn(
+            RESOURCES.UI_COLUMN_HEAD_ICON, r_pixbuf, pixbuf=4)
+        column_task_name = Gtk.TreeViewColumn(
+            RESOURCES.UI_COLUMN_HEAD_TASK, r_text, text=5)
+        column_task_name.set_expand(True)
         l = o('listAssociation')
         l.append_column(column_cond_icon)
         l.append_column(column_cond_name)
@@ -87,6 +94,32 @@ class ManagerAppWindow(object):
         l.append_column(column_task_icon)
         l.append_column(column_task_name)
         self.fill_listAssociations(None)
+
+        column_cond_datetime = Gtk.TreeViewColumn(
+            RESOURCES.UI_COLUMN_HEAD_TIME, r_text, text=0)
+        column_cond_duration = Gtk.TreeViewColumn(
+            RESOURCES.UI_COLUMN_HEAD_DURATION, r_text, text=1)
+        column_cond_icon = Gtk.TreeViewColumn(
+            RESOURCES.UI_COLUMN_HEAD_ICON, r_pixbuf, pixbuf=2)
+        column_cond_name = Gtk.TreeViewColumn(
+            RESOURCES.UI_COLUMN_HEAD_CONDITION, r_text, text=3)
+        column_cond_name.set_expand(True)
+        column_task_icon = Gtk.TreeViewColumn(
+            RESOURCES.UI_COLUMN_HEAD_ICON, r_pixbuf, pixbuf=4)
+        column_task_name = Gtk.TreeViewColumn(
+            RESOURCES.UI_COLUMN_HEAD_TASK, r_text, text=5)
+        column_task_name.set_expand(True)
+        column_outcome = Gtk.TreeViewColumn(
+            RESOURCES.UI_COLUMN_HEAD_OUTCOME, r_pixbuf, pixbuf=6)
+        l = o('listHistory')
+        l.append_column(column_cond_datetime)
+        l.append_column(column_cond_duration)
+        l.append_column(column_cond_icon)
+        l.append_column(column_cond_name)
+        l.append_column(column_task_icon)
+        l.append_column(column_task_name)
+        l.append_column(column_outcome)
+        self.fill_listHistory(None)
 
     def show_about(self, *data):
         self.dialog_about.present()
@@ -99,19 +132,42 @@ class ManagerAppWindow(object):
                               GdkPixbuf.Pixbuf, str,
                               GdkPixbuf.Pixbuf,
                               GdkPixbuf.Pixbuf, str)
-        ass_ids = retrieve_association_ids()
-        arrow = app_pixbuf_from_name('right')
+        association_ids = retrieve_association_ids()
+        arrow = load_pixbuf('right')
         l = o('listAssociation')
-        for x in ass_ids:
+        delall_sensitive = False
+        for x in association_ids:
             li = retrieve_association(x)
             cond_name = li[0]
             cond_data = retrieve_plugin_data(cond_name)
-            cond_pixbuf = app_pixbuf_from_name(cond_data['icon'])
+            cond_pixbuf = load_pixbuf(cond_data['icon'])
             task_name = li[1]
             task_data = retrieve_plugin_data(task_name)
-            task_pixbuf = app_pixbuf_from_name(task_data['icon'])
+            task_pixbuf = load_pixbuf(task_data['icon'])
             store.append([x, cond_pixbuf, cond_data['name'], arrow,
                           task_pixbuf, task_data['name']])
+            delall_sensitive = True
+        l.set_model(store)
+        o('btnDeleteAll').set_sensitive(delall_sensitive)
+
+    def fill_listHistory(self, obj):
+        o = self.builder.get_object
+        h = retrieve_action_history()
+        l = o('listHistory')
+        store = Gtk.ListStore(str, str,
+                              GdkPixbuf.Pixbuf, str,
+                              GdkPixbuf.Pixbuf, str,
+                              GdkPixbuf.Pixbuf)
+        for x in h:
+            store.append([
+                x['datetime'],
+                "%.2f" % x['duration'],
+                x['cond_icon'],
+                x['cond_name'],
+                x['task_icon'],
+                x['task_name'],
+                self.glyph_success if x['success'] else self.glyph_failure,
+            ])
         l.set_model(store)
 
     def changed_listAssociation(self, sel):
@@ -124,8 +180,11 @@ class ManagerAppWindow(object):
             data_task = retrieve_plugin_data(li[1])
             o('txtCondition').set_text(data_cond['summary_description'])
             o('txtConsequence').set_text(data_task['summary_description'])
+            o('btnDelete').set_sensitive(True)
+        else:
+            o('btnDelete').set_sensitive(False)
 
-    def click_btnDel(self, obj):
+    def click_btnDelete(self, obj):
         if self.selected_association:
             confirmbox = Gtk.MessageDialog(type=Gtk.MessageType.QUESTION,
                                            buttons=Gtk.ButtonsType.YES_NO)
@@ -143,6 +202,29 @@ class ManagerAppWindow(object):
                 unstore_association(self.selected_association)
                 self.selected_association = None
                 self.fill_listAssociations(None)
+
+    def click_btnDeleteAll(self, obj):
+        confirmbox = Gtk.MessageDialog(type=Gtk.MessageType.QUESTION,
+                                       buttons=Gtk.ButtonsType.YES_NO)
+        confirmbox.set_markup(
+            RESOURCES.UI_MSGBOX_CONFIRM_DELETE_ALL_ASSOCIATIONS)
+        ret = confirmbox.run()
+        confirmbox.hide()
+        confirmbox.destroy()
+        if ret == Gtk.ResponseType.YES:
+            association_ids = retrieve_association_ids()
+            for x in association_ids:
+                li = retrieve_association(x)
+                plugin_cond = retrieve_plugin(li[0])
+                plugin_task = retrieve_plugin(li[1])
+                unregister_plugin_data(plugin_cond)
+                unregister_plugin_data(plugin_task)
+                unstore_association(x)
+            self.selected_association = None
+            self.fill_listAssociations(None)
+
+    def click_btnRefresh(self, obj):
+        self.fill_listHistory(None)
 
     def click_btnQuit(self, obj):
         self.dialog.hide()

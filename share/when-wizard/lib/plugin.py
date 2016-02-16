@@ -915,9 +915,46 @@ def unregister_plugin_data(plugin):
         return False
 
 
+# retrieve history from When and translate it into something wizard-ic
+def retrieve_action_history():
+    try:
+        bus = dbus.SessionBus()
+        proxy = bus.get_object(_WHEN_COMMAND_BUS_NAME, _WHEN_COMMAND_BUS_PATH)
+    except dbus.exceptions.DBusException:
+        return None
+    history = []
+    when_history = proxy.GetHistoryEntries()
+    when_history.reverse()
+    for x in when_history:
+        e = x.split(';')
+        if e[3].startswith(_PLUGIN_UNIQUE_ID_MAGIC) and \
+           e[4].startswith(_PLUGIN_UNIQUE_ID_MAGIC):
+            plugin_task = retrieve_plugin(e[3])
+            plugin_cond = retrieve_plugin(e[4])
+            if plugin_task and plugin_cond:
+                d = {
+                    'datetime': e[1],
+                    'duration': float(e[2]),
+                    'task_id': e[3],
+                    'task_name': plugin_task.name,
+                    'task_icon': load_pixbuf(plugin_task.icon,
+                                             not plugin_task.stock),
+                    'cond_id': e[4],
+                    'cond_name': plugin_cond.name,
+                    'cond_icon': load_pixbuf(plugin_cond.icon,
+                                             not plugin_cond.stock),
+                    'success': bool(e[5] == 'success'),
+                }
+                history.append(d)
+    return history
+
+
 # this expects the plugin reference to be either of the correct type or None
 def retrieve_plugin(unique_id, plugin=None):
-    d = json.loads(datastore.get(unique_id))
+    try:
+        d = json.loads(datastore.get(unique_id))
+    except TypeError:
+        return None
     if plugin is None:
         mod = load_plugin_module(d['module_basename'], d['stock'])
         plugin = mod.Plugin()
@@ -928,11 +965,17 @@ def retrieve_plugin(unique_id, plugin=None):
 
 
 def retrieve_plugin_data(unique_id):
-    return json.loads(datastore.get(unique_id))
+    try:
+        return json.loads(datastore.get(unique_id))
+    except TypeError:
+        return None
 
 
 def retrieve_association(association_id):
-    return json.loads(datastore.get(association_id))
+    try:
+        return json.loads(datastore.get(association_id))
+    except TypeError:
+        return None
 
 
 def retrieve_plugin_ids():

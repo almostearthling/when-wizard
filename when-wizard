@@ -54,6 +54,7 @@ APP_BIN_FOLDER = os.path.join(APP_BASE_FOLDER, 'bin')
 APP_DATA_FOLDER = os.path.join(APP_BASE_FOLDER, 'share', APP_NAME)
 APP_LIB_FOLDER = os.path.join(APP_DATA_FOLDER, 'lib')
 APP_GRAPHICS_FOLDER = os.path.join(APP_DATA_FOLDER, 'graphics')
+APP_ICONS_FOLDER = os.path.join(APP_GRAPHICS_FOLDER, 'app-icons')
 APP_RESOURCE_FOLDER = os.path.join(APP_DATA_FOLDER, 'ui')
 APP_PLUGIN_FOLDER = os.path.join(APP_DATA_FOLDER, 'plugins')
 APP_LOCALE_FOLDER = os.path.join(APP_BASE_FOLDER, 'share', 'locale')
@@ -68,6 +69,7 @@ if INVOKED_DIR == os.path.join('/opt', APP_NAME):
     APP_RESOURCE_FOLDER = os.path.join(APP_DATA_FOLDER, 'ui')
     APP_PLUGIN_FOLDER = os.path.join(APP_DATA_FOLDER, 'plugins')
     APP_GRAPHICS_FOLDER = os.path.join(APP_DATA_FOLDER, 'graphics')
+    APP_ICONS_FOLDER = os.path.join(APP_GRAPHICS_FOLDER, 'app-icons')
     APP_LOCALE_FOLDER = os.path.join(APP_DATA_FOLDER, 'locale')
 elif not INVOKED_DIR.startswith('/usr'):
     APP_BIN_FOLDER = INVOKED_DIR
@@ -77,6 +79,7 @@ elif not INVOKED_DIR.startswith('/usr'):
     APP_RESOURCE_FOLDER = os.path.join(APP_DATA_FOLDER, 'ui')
     APP_PLUGIN_FOLDER = os.path.join(APP_DATA_FOLDER, 'plugins')
     APP_GRAPHICS_FOLDER = os.path.join(APP_DATA_FOLDER, 'graphics')
+    APP_ICONS_FOLDER = os.path.join(APP_GRAPHICS_FOLDER, 'app-icons')
     APP_LOCALE_FOLDER = os.path.join(APP_BASE_FOLDER, 'share', 'locale')
 
 # configuration and store folders
@@ -112,6 +115,7 @@ __builtins__.APP_LIB_FOLDER = APP_LIB_FOLDER
 __builtins__.APP_RESOURCE_FOLDER = APP_RESOURCE_FOLDER
 __builtins__.APP_PLUGIN_FOLDER = APP_PLUGIN_FOLDER
 __builtins__.APP_GRAPHICS_FOLDER = APP_GRAPHICS_FOLDER
+__builtins__.APP_ICONS_FOLDER = APP_ICONS_FOLDER
 __builtins__.APP_LOCALE_FOLDER = APP_LOCALE_FOLDER
 
 __builtins__.USER_FOLDER = USER_FOLDER

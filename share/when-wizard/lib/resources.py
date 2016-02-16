@@ -58,6 +58,15 @@ class Resources(object):
     UI_COMBO_CATEGORY_COND_EVENT = _("Session or System Event")
     UI_COMBO_CATEGORY_COND_MISC = _("Miscellaneous")
 
+    # column headers
+    UI_COLUMN_HEAD_CONDITION = _("Condition")
+    UI_COLUMN_HEAD_TASK = _("Consequence")
+    # UI_COLUMN_HEAD_ICON = _("Icon")
+    UI_COLUMN_HEAD_ICON = ""
+    UI_COLUMN_HEAD_TIME = _("Time")
+    UI_COLUMN_HEAD_DURATION = _("Duration")
+    UI_COLUMN_HEAD_OUTCOME = _("Success")
+
     # Fill summary list with meaningful entries
     UI_SUMMARY_CONDITION = _("Condition:")
     UI_SUMMARY_CONSEQUENCE = _("Consequence:")
@@ -72,6 +81,7 @@ class Resources(object):
 
     # message boxes
     UI_MSGBOX_CONFIRM_DELETE_ASSOCIATION = _("Are you sure you want to delete\nthe selected action?")
+    UI_MSGBOX_CONFIRM_DELETE_ALL_ASSOCIATIONS = _("Are you sure you want to\ndelete all actions?")
 
 
 # a single instance of the class will contain all resource strings

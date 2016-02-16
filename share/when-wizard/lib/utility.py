@@ -73,9 +73,9 @@ def build_dialog(name, reverse_order=False):
 # retrieve images from files using a custom directory search order
 def load_icon(name, reverse_order=False):
     if reverse_order:
-        order = USER_RESOURCE_FOLDER, APP_GRAPHICS_FOLDER
+        order = USER_RESOURCE_FOLDER, APP_ICONS_FOLDER, APP_GRAPHICS_FOLDER
     else:
-        order = APP_GRAPHICS_FOLDER, USER_RESOURCE_FOLDER
+        order = APP_ICONS_FOLDER, APP_GRAPHICS_FOLDER, USER_RESOURCE_FOLDER
     for path in order:
         filename = os.path.join(path, '%s.png' % name)
         if os.path.exists(filename):
@@ -92,28 +92,11 @@ def load_pixbuf(name, reverse_order=False):
         return None
 
 
-# specific function for application specific icons and resources
-def app_dialog_from_name(name):
+# specific function for application dialog boxes
+def app_dialog(name):
     with open(os.path.join(APP_RESOURCE_FOLDER, '%s.glade' % name)) as f:
         dialog_xml = f.read()
     return dialog_xml
-
-
-def app_icon_from_name(name, size=24):
-    appicon_dir = os.path.join(APP_GRAPHICS_FOLDER, 'app-icons', str(size))
-    appicon_file = os.path.join(appicon_dir, '%s.png' % name)
-    if not os.path.exists(appicon_file):
-        return None
-    image = Gtk.Image.new_from_file(appicon_file)
-    return image
-
-
-def app_pixbuf_from_name(name, size=24):
-    image = app_icon_from_name(name, size)
-    if image:
-        return image.get_pixbuf()
-    else:
-        return None
 
 
 # an utility function that creates an unique string of fixed length

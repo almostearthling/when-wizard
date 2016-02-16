@@ -18,7 +18,7 @@ from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import Pango
 
-from utility import app_dialog_from_name, app_pixbuf_from_name
+from utility import app_dialog, load_pixbuf
 
 from resources import *
 from plugin import PLUGIN_CONST, stock_plugins_names, user_plugins_names, \
@@ -40,8 +40,8 @@ for name in user_plugins_names():
 
 
 # load windows and stock panes
-ui_app_wizard_master = app_dialog_from_name('app-wizard-master')
-ui_app_wizard_panes = app_dialog_from_name('app-wizard-panes')
+ui_app_wizard_master = app_dialog('app-wizard-master')
+ui_app_wizard_panes = app_dialog('app-wizard-panes')
 
 
 # wizard steps
@@ -69,17 +69,14 @@ class WizardAppWindow(object):
         o = self.builder.get_object
         p = self.builder_panes.get_object
         self.dialog = o('dlgWhenWizardMaster')
-        self.icon = Gtk.Image.new_from_file(
-            os.path.join(APP_GRAPHICS_FOLDER, 'alarmclock_wand.png'))
-        self.logo = Gtk.Image.new_from_file(
-            os.path.join(APP_GRAPHICS_FOLDER, 'alarmclock_wand-128.png'))
+        icon = load_pixbuf('alarmclock_wand')
         o('imgDeco').set_from_file(
             os.path.join(APP_GRAPHICS_FOLDER, 'wizard-side.png'))
-        self.dialog.set_icon(self.icon.get_pixbuf())
+        self.dialog.set_icon(icon)
 
         self.dialog_about = o('dlgAbout')
-        self.dialog_about.set_icon(self.icon.get_pixbuf())
-        self.dialog_about.set_logo(self.logo.get_pixbuf())
+        self.dialog_about.set_icon(icon)
+        self.dialog_about.set_logo(load_pixbuf('alarmclock_wand-128'))
         self.dialog_about.set_program_name(APP_SHORTNAME)
         self.dialog_about.set_website(APP_URL)
         self.dialog_about.set_copyright(APP_COPYRIGHT)
@@ -115,22 +112,22 @@ class WizardAppWindow(object):
     def get_view_TaskSel(self):
         p = self.builder_panes.get_object
         store = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str)
-        store.append([app_pixbuf_from_name('process'),
+        store.append([load_pixbuf('process'),
                       PLUGIN_CONST.CATEGORY_TASK_APPS,
                       RESOURCES.UI_COMBO_CATEGORY_APPLICATIONS])
-        store.append([app_pixbuf_from_name('settings'),
+        store.append([load_pixbuf('settings'),
                       PLUGIN_CONST.CATEGORY_TASK_SETTINGS,
                       RESOURCES.UI_COMBO_CATEGORY_SETTINGS])
-        store.append([app_pixbuf_from_name('key'),
+        store.append([load_pixbuf('key'),
                       PLUGIN_CONST.CATEGORY_TASK_SESSION,
                       RESOURCES.UI_COMBO_CATEGORY_SESSION])
-        store.append([app_pixbuf_from_name('electricity'),
+        store.append([load_pixbuf('electricity'),
                       PLUGIN_CONST.CATEGORY_TASK_POWER,
                       RESOURCES.UI_COMBO_CATEGORY_POWER])
-        store.append([app_pixbuf_from_name('folder'),
+        store.append([load_pixbuf('folder'),
                       PLUGIN_CONST.CATEGORY_TASK_FILEOPS,
                       RESOURCES.UI_COMBO_CATEGORY_FILEOPS])
-        store.append([app_pixbuf_from_name('mind_map'),
+        store.append([load_pixbuf('mind_map'),
                       PLUGIN_CONST.CATEGORY_TASK_MISC,
                       RESOURCES.UI_COMBO_CATEGORY_MISC])
         r_text = Gtk.CellRendererText()
@@ -155,13 +152,13 @@ class WizardAppWindow(object):
     def get_view_CondSel(self):
         p = self.builder_panes.get_object
         store = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str)
-        store.append([app_pixbuf_from_name('clock'),
+        store.append([load_pixbuf('clock'),
                       PLUGIN_CONST.CATEGORY_COND_TIME,
                       RESOURCES.UI_COMBO_CATEGORY_COND_TIME])
-        store.append([app_pixbuf_from_name('clapperboard'),
+        store.append([load_pixbuf('clapperboard'),
                       PLUGIN_CONST.CATEGORY_COND_EVENT,
                       RESOURCES.UI_COMBO_CATEGORY_COND_EVENT])
-        store.append([app_pixbuf_from_name('mind_map'),
+        store.append([load_pixbuf('mind_map'),
                       PLUGIN_CONST.CATEGORY_COND_MISC,
                       RESOURCES.UI_COMBO_CATEGORY_COND_MISC])
         r_text = Gtk.CellRendererText()
@@ -303,7 +300,7 @@ class WizardAppWindow(object):
             if all_plugins[m].enabled:
                 elem = [
                     all_plugins[m].basename,
-                    app_pixbuf_from_name(all_plugins[m].icon),
+                    load_pixbuf(all_plugins[m].icon),
                     all_plugins[m].name,
                     all_plugins[m].description,
                 ]
@@ -330,7 +327,7 @@ class WizardAppWindow(object):
             if all_plugins[m].enabled:
                 elem = [
                     all_plugins[m].basename,
-                    app_pixbuf_from_name(all_plugins[m].icon),
+                    load_pixbuf(all_plugins[m].icon),
                     all_plugins[m].name,
                     all_plugins[m].description,
                 ]
@@ -392,11 +389,11 @@ class WizardAppWindow(object):
         store = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str)
         description = self.plugin_cond.summary_description
         if description:
-            store.append([app_pixbuf_from_name(self.plugin_cond.icon),
+            store.append([load_pixbuf(self.plugin_cond.icon),
                           RESOURCES.UI_SUMMARY_CONDITION, description])
         description = self.plugin_task.summary_description
         if description:
-            store.append([app_pixbuf_from_name(self.plugin_task.icon),
+            store.append([load_pixbuf(self.plugin_task.icon),
                           RESOURCES.UI_SUMMARY_CONSEQUENCE, description])
         l = p('listSummary')
         l.set_model(store)
