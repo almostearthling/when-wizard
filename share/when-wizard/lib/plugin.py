@@ -14,6 +14,10 @@ import glob
 import textwrap
 import subprocess
 import dbus
+import zipfile
+import tempfile
+import shutil
+from importlib.machinery import SourceFileLoader
 
 from utility import load_icon, load_pixbuf, load_dialog, build_dialog, \
     datastore, unique_str
@@ -22,8 +26,7 @@ from utility import load_icon, load_pixbuf, load_dialog, build_dialog, \
 # plugin related inner constants
 
 
-# public constants, to import: 'from plugin import ConcretePlugin,
-# PLUGIN_CONST'
+# constants, to import: 'from plugin import ConcretePlugin, PLUGIN_CONST'
 class PluginConstants(object):
     PLUGIN_TYPE_TASK = 'task'
     PLUGIN_TYPE_CONDITION = 'condition'
@@ -114,6 +117,9 @@ class BasePlugin(object):
         self.category = None
         self.plugin_type = None
         self.stock = False
+        self.scripts = []
+        self.graphics = []
+        self.resources = []
         self.enabled = True
         self.forward_allowed = True
         self._forward_button = None
@@ -133,6 +139,9 @@ class BasePlugin(object):
             'category': self.category,
             'plugin_type': self.plugin_type,
             'stock': self.stock,
+            'scripts': self.scripts,
+            'graphics': self.graphics,
+            'resources': self.resources,
             'module_basename': self.module_basename,
             'summary_description': self.summary_description,
             'plugin_class': self.__class__.__name__,
@@ -151,6 +160,9 @@ class BasePlugin(object):
         self.category = d['category']
         self.plugin_type = d['plugin_type']
         self.stock = d['stock']
+        self.scripts = d['scripts']
+        self.graphics = d['graphics']
+        self.resources = d['resources']
         self.module_basename = d['module_basename']
         self.summary_description = d['summary_description']
 
@@ -468,10 +480,18 @@ class TaskPlugin(BasePlugin):
                                 self.module_basename, self.unique_id)
 
     def run(self):
-        new_session = not self.process_wait
         if self.command_line:
-            subprocess.call(self.command_line,
-                            start_new_session=new_session, shell=True)
+            new_session = not self.process_wait
+            if new_session:
+                subprocess.Popen(self.command_line,
+                                 start_new_session=new_session,
+                                 stdout=open('/dev/null', 'w'),
+                                 stderr=open('/dev/null', 'w'),
+                                 close_fds=True,
+                                 shell=True)
+            else:
+                subprocess.Popen(self.command_line,
+                                 start_new_session=new_session, shell=True)
             return True
         else:
             return False
@@ -749,16 +769,19 @@ class UserEventConditionPlugin(BaseConditionPlugin):
         BaseConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_EVENT,
                                      basename, name, description, author,
                                      copyright, icon, help_string, version)
+        self.sighandler_file = None
         self.event_name = None
 
     def to_dict(self):
         d = BaseConditionPlugin.to_dict(self)
         d['event_name'] = self.event_name
+        d['sighandler_file'] = self.sighandler_file
         return d
 
     def from_dict(self, d):
         BaseConditionPlugin.from_dict(self, d)
         self.event_name = d['event_name']
+        self.sighandler_file = d['sighandler_file']
 
     def to_itemdef_dict(self):
         d = BaseConditionPlugin.to_itemdef_dict(self)
@@ -820,22 +843,173 @@ class FileChangeConditionPlugin(BaseConditionPlugin):
 # that have been created through concrete plugin classes) and for storage
 # and retrieval; kept here because the scope is plugin related anyway
 
-# function to load a plugin as a module
+# function to load a plugin as a module, some notes about this utility:
+# - if a full (absolute) path is provided for the plugin file, the 'stock'
+#   parameter is ignored and the file is loaded directly if it has the
+#   correct extension
+# - stock plugins are only loaded from the stock plugin directory
+# - user plugins are loaded from the respective user plugin directory, unless
+#   the PLUGIN_TEMP_FOLDER variable is defined (that is the environment
+#   variable WHEN_WIZARD_DEVPLUGIN), in which case they will be searched first
+#   in the directory pointed to by PLUGIN_TEMP_FOLDER and then in the user
+#   plugin directory
 def load_plugin_module(basename, stock=False):
-    base = APP_PLUGIN_FOLDER if stock else USER_PLUGIN_FOLDER
-    for ext in _PLUGIN_FILE_EXTENSIONS:
-        basename_ext = basename + ext
-        path = os.path.join(base, basename_ext)
-        if os.path.exists(path):
-            break
+    path = None
+    if os.path.isabs(basename):
+        is_plugin = False
+        if os.path.exists(basename):
+            for ext in _PLUGIN_FILE_EXTENSIONS:
+                if basename.endswith(ext):
+                    is_plugin = True
+            if is_plugin:
+                path = basename
+    else:
+        if stock:
+            for ext in _PLUGIN_FILE_EXTENSIONS:
+                basename_ext = basename + ext
+                path = os.path.join(APP_PLUGIN_FOLDER, basename_ext)
+                if os.path.exists(path):
+                    break
+                else:
+                    path = None
         else:
-            path = None
+            if PLUGIN_TEMP_FOLDER:
+                for ext in _PLUGIN_FILE_EXTENSIONS:
+                    basename_ext = basename + ext
+                    path = os.path.join(PLUGIN_TEMP_FOLDER, basename_ext)
+                    if os.path.exists(path):
+                        break
+                    else:
+                        path = None
+            if path is None:
+                for ext in _PLUGIN_FILE_EXTENSIONS:
+                    basename_ext = basename + ext
+                    path = os.path.join(USER_PLUGIN_FOLDER, basename_ext)
+                    if os.path.exists(path):
+                        break
+                    else:
+                        path = None
     if path:
-        from importlib.machinery import SourceFileLoader
         module = SourceFileLoader(basename, path).load_module()
         return module
     else:
         return None
+
+
+# install plugin files in user plugin directories
+def install_plugin(filename):
+    global PLUGIN_TEMP_FOLDER
+    try:
+        save_pdd = PLUGIN_TEMP_FOLDER
+        tmpdir = tempfile.mkdtemp()
+        PLUGIN_TEMP_FOLDER = tmpdir
+        with zipfile.ZipFile(filename, mode='r') as z:
+            names = z.infolist()
+            for f in names:
+                z.extract(f, path=tmpdir)
+        plugin_file = None
+        for x in _PLUGIN_FILE_EXTENSIONS:
+            li = glob.glob(os.path.join(tmpdir, '*' + x))
+            if len(li) > 1:
+                raise IOError("too many plugin files")
+            elif len(li) == 1:
+                plugin_file = li[0]
+                break
+        if not plugin_file:
+            raise IOError("plugin file not found")
+        mod = load_plugin_module(plugin_file)
+        plugin = mod.Plugin()
+        for x in plugin.scripts:
+            shutil.copy(os.path.join(tmpdir, x), USER_SCRIPT_FOLDER)
+            os.chmod(os.path.join(USER_SCRIPT_FOLDER, x), 0o755)
+        for x in plugin.graphics:
+            shutil.copy(os.path.join(tmpdir, x), USER_RESOURCE_FOLDER)
+            os.chmod(os.path.join(USER_RESOURCE_FOLDER, x), 0o644)
+        for x in plugin.resources:
+            shutil.copy(os.path.join(tmpdir, x), USER_RESOURCE_FOLDER)
+            os.chmod(os.path.join(USER_RESOURCE_FOLDER, x), 0o644)
+        shutil.copy(plugin_file, USER_PLUGIN_FOLDER)
+        os.chmod(os.path.join(USER_PLUGIN_FOLDER, plugin_file), 0o644)
+        PLUGIN_TEMP_FOLDER = save_pdd
+        shutil.rmtree(tmpdir)
+        return True
+    except Exception as e:
+        if plugin:
+            for x in plugin.scripts:
+                try:
+                    os.unlink(os.path.join(USER_SCRIPT_FOLDER, x))
+                except (IOError, OSError) as e:
+                    pass
+            for x in plugin.graphics:
+                try:
+                    os.unlink(os.path.join(USER_RESOURCE_FOLDER, x))
+                except (IOError, OSError) as e:
+                    pass
+            for x in plugin.resources:
+                try:
+                    os.unlink(os.path.join(USER_RESOURCE_FOLDER, x))
+                except (IOError, OSError) as e:
+                    pass
+            try:
+                os.unlink(os.path.join(USER_PLUGIN_FOLDER,
+                                       os.path.basename(plugin_file)))
+            except (IOError, OSError) as e:
+                pass
+        PLUGIN_TEMP_FOLDER = save_pdd
+        shutil.rmtree(tmpdir)
+        return False
+
+
+# create a package for a plugin from a directory
+def package_plugins(source_dir, basename=None):
+    plugin_files = []
+    if not os.path.isdir(source_dir):
+        return False
+    source_dir = os.path.abspath(source_dir)
+    if not basename:
+        for x in _PLUGIN_FILE_EXTENSIONS:
+            l = glob.glob(os.path.join(source_dir, '*' + x))
+            for x in l:
+                plugin_files.append(os.path.basename(x))
+    else:
+        for x in _PLUGIN_FILE_EXTENSIONS:
+            filename = basename + x
+            if os.path.exists(os.path.join(source_dir, filename)):
+                plugin_files.append(filename)
+                break
+    try:
+        for x in plugin_files:
+            mod = load_plugin_module(os.path.join(source_dir, x))
+            plugin = mod.Plugin()
+            files = [x]
+            if plugin.scripts:
+                for f in plugin.scripts:
+                    if os.path.exists(os.path.join(source_dir, f)):
+                        files.append(f)
+                    else:
+                        raise IOError("file not found: %s" % f)
+            if plugin.graphics:
+                for f in plugin.graphics:
+                    if os.path.exists(os.path.join(source_dir, f)):
+                        files.append(f)
+                    else:
+                        raise IOError("file not found: %s" % f)
+            if plugin.resources:
+                for f in plugin.resources:
+                    if os.path.exists(os.path.join(source_dir, f)):
+                        files.append(f)
+                    else:
+                        raise IOError("file not found: %s" % f)
+            unique_suffix = unique_str()
+            archive_name = '%s.%s.wwpz' % (plugin.basename, unique_suffix)
+            with zipfile.ZipFile(archive_name, mode='w') as z:
+                for f in files:
+                    z.write(os.path.join(source_dir, f), os.path.basename(f))
+        return len(plugin_files)
+    except IOError:
+        return 0
+    except zipfile.BadZipfile:
+        return 0
 
 
 # plugin data and registration management
@@ -1009,7 +1183,10 @@ def stock_plugins_names():
 
 
 def user_plugins_names():
-    return _plugins_names(USER_PLUGIN_FOLDER)
+    names = _plugins_names(USER_PLUGIN_FOLDER)
+    if PLUGIN_TEMP_FOLDER:
+        names = _plugins_names(PLUGIN_TEMP_FOLDER) + names
+    return names
 
 
 # end.

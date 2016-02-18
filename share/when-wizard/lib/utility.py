@@ -49,9 +49,11 @@ def verify_user_folders():
 # retrieve dialog design resources using a custom directory search order
 def load_dialog(name, reverse_order=False):
     if reverse_order:
-        order = USER_RESOURCE_FOLDER, APP_RESOURCE_FOLDER
+        order = [USER_RESOURCE_FOLDER, APP_RESOURCE_FOLDER]
     else:
-        order = APP_RESOURCE_FOLDER, USER_RESOURCE_FOLDER
+        order = [APP_RESOURCE_FOLDER, USER_RESOURCE_FOLDER]
+    if PLUGIN_TEMP_FOLDER:
+        order.insert(0, PLUGIN_TEMP_FOLDER)
     for path in order:
         for ext in ['glade', 'ui']:
             filename = os.path.join(path, '%s.%s' % (name, ext))
@@ -73,9 +75,11 @@ def build_dialog(name, reverse_order=False):
 # retrieve images from files using a custom directory search order
 def load_icon(name, reverse_order=False):
     if reverse_order:
-        order = USER_RESOURCE_FOLDER, APP_ICONS_FOLDER, APP_GRAPHICS_FOLDER
+        order = [USER_RESOURCE_FOLDER, APP_ICONS_FOLDER, APP_GRAPHICS_FOLDER]
     else:
-        order = APP_ICONS_FOLDER, APP_GRAPHICS_FOLDER, USER_RESOURCE_FOLDER
+        order = [APP_ICONS_FOLDER, APP_GRAPHICS_FOLDER, USER_RESOURCE_FOLDER]
+    if PLUGIN_TEMP_FOLDER:
+        order.insert(0, PLUGIN_TEMP_FOLDER)
     for path in order:
         filename = os.path.join(path, '%s.png' % name)
         if os.path.exists(filename):

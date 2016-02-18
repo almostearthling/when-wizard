@@ -46,11 +46,18 @@ class Plugin(IdleConditionPlugin):
             help_string=HELP,
             version="0.1.0",
         )
+        # the icon resource is only needed if the plugin uses a custom icon
+        # self.graphics.append('plugin_icon.png')
+
         # the items below might be not needed and can be deleted if the
         # plugin does not have a configuration panel
+        self.resources.append('plugin_template.glade')
         self.builder = self.get_dialog('plugin_template')
         self.plugin_panel = None
         self.forward_allowed = False        # forward not enabled by default
+
+        # define this only if the plugin provides one or more scripts
+        # self.scripts.append('needed_script.sh')
 
         # mandatory or anyway structural variables and object values follow:
         self.idlemins = None                # as the name says idle minutes

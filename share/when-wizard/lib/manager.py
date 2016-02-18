@@ -187,6 +187,7 @@ class ManagerAppWindow(object):
             o('btnDelete').set_sensitive(False)
 
     def click_btnDelete(self, obj):
+        o = self.builder.get_object
         if self.selected_association:
             confirmbox = Gtk.MessageDialog(type=Gtk.MessageType.QUESTION,
                                            buttons=Gtk.ButtonsType.YES_NO)
@@ -208,6 +209,7 @@ class ManagerAppWindow(object):
                 o('txtConsequence').set_text("")
 
     def click_btnDeleteAll(self, obj):
+        o = self.builder.get_object
         confirmbox = Gtk.MessageDialog(type=Gtk.MessageType.QUESTION,
                                        buttons=Gtk.ButtonsType.YES_NO)
         confirmbox.set_markup(

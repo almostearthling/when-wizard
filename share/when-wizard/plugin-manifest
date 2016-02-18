@@ -1,0 +1,32 @@
+# script: share/when-wizard/plugin-manifest
+# -*- coding: utf-8 -*-
+#
+# When Wizard
+#
+# Copyright (c) 2015-2016 Francesco Garosi
+# Released under the BSD License (see LICENSE file)
+#
+# Manifest creator: print a JSON representation of plugin data
+# Usage: when-wizard plugin-manifest plugin_name
+
+import sys
+import json
+from plugin import load_plugin_module
+
+
+def main():
+    if len(sys.argv) != 2:
+        return 2
+    plugin_name = sys.argv[1]
+    mod = load_plugin_module(plugin_name)
+    if mod is None:
+        mod = load_plugin_module(plugin_name, stock=True)
+        if mod is None:
+            return 2
+    plugin = mod.Plugin()
+    d = plugin.to_dict()
+    s = json.dumps(d, indent=4)
+    print(s)
+
+
+# end.

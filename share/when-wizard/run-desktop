@@ -1,9 +1,11 @@
-# file: share/when-wizard/lib/wizard.py
+# file: share/when-wizard/run-desktop
 # -*- coding: utf-8 -*-
 #
-# Desktop file launcher
+# When Wizard
+#
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
+# Desktop file launcher
 # see: http://askubuntu.com/a/239883/466738 for the source
 
 

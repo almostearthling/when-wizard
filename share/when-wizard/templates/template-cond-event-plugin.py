@@ -62,6 +62,12 @@ class Plugin(EventConditionPlugin):
             help_string=HELP,
             version="0.1.0",
         )
+        # the icon resource is only needed if the plugin uses a custom icon
+        # self.graphics.append('plugin_icon.png')
+
+        # define this only if the plugin provides one or more scripts
+        # self.scripts.append('needed_script.sh')
+
         # mandatory or anyway structural variables and object values follow:
         self.event = EVENT_CONSTANT         # this has to be changed
         self.summary_description = None     # has to be set to a fixed string

@@ -92,6 +92,17 @@ USER_PLUGIN_FOLDER = os.path.join(USER_DATA_FOLDER, APP_NAME, 'plugins')
 USER_RESOURCE_FOLDER = os.path.join(USER_DATA_FOLDER, APP_NAME, 'resource')
 USER_SCRIPT_FOLDER = os.path.join(USER_DATA_FOLDER, APP_NAME, 'scripts')
 
+# if there is an environment variable defined as WHEN_WIZARD_DEVPLUGIN
+# and it points to an existing path, then it is set as the plugin development
+# folder, where all files related to a plugin can reside making it easier to
+# develop a plugin before installation
+try:
+    PLUGIN_TEMP_FOLDER = os.environ['WHEN_WIZARD_DEVPLUGIN']
+    if not os.path.isdir(PLUGIN_TEMP_FOLDER):
+        PLUGIN_TEMP_FOLDER = None
+except KeyError:
+    PLUGIN_TEMP_FOLDER = None
+
 # USER_CONFIG_FILE = os.path.join(USER_CONFIG_FOLDER, '%s.conf' % APP_NAME)
 # USER_CONFIG = None
 
@@ -126,6 +137,8 @@ __builtins__.USER_STORE_FOLDER = USER_STORE_FOLDER
 __builtins__.USER_PLUGIN_FOLDER = USER_PLUGIN_FOLDER
 __builtins__.USER_RESOURCE_FOLDER = USER_RESOURCE_FOLDER
 __builtins__.USER_SCRIPT_FOLDER = USER_SCRIPT_FOLDER
+
+__builtins__.PLUGIN_TEMP_FOLDER = PLUGIN_TEMP_FOLDER
 
 __builtins__.APP_LOADER_SCRIPT = INVOKED_CMD
 # __builtins__.USER_CONFIG_FILE = USER_CONFIG_FILE

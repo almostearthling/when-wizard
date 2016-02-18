@@ -1,0 +1,28 @@
+# script: share/when-wizard/plugin-install
+# -*- coding: utf-8 -*-
+#
+# When Wizard
+#
+# Copyright (c) 2015-2016 Francesco Garosi
+# Released under the BSD License (see LICENSE file)
+#
+# Package installer: install an user plugin from a .wwpz package
+# Usage: when-wizard plugin-install package-name[.hexblurb].wwpz
+
+
+import sys
+from plugin import install_plugin
+
+
+def main():
+    if len(sys.argv) == 2:
+        package_file = sys.argv[1]
+    else:
+        return 1
+    if install_plugin(package_file):
+        return 0
+    else:
+        return 1
+
+
+# end.
