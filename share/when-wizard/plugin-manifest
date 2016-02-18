@@ -9,12 +9,15 @@
 # Manifest creator: print a JSON representation of plugin data
 # Usage: when-wizard plugin-manifest plugin_name
 
+
+import os
 import sys
 import json
 from plugin import load_plugin_module
 
 
 def main():
+    me = os.path.basename(__file__)
     if len(sys.argv) != 2:
         return 2
     plugin_name = sys.argv[1]

@@ -43,8 +43,11 @@ class Resources(object):
     IDF_FOOTER = "# end.\n"
     IDF_FILENAME_FORMAT = 'itemdefs-%Y%m%d_%H%M%S.when'
 
-    # command line messages
+    # command line interface messages
     CLI_ERR_NOTFOUND_WHEN = _("could not find a running instance of When")
+    CLI_ERR_FAIL_INSTALL_PLUGIN = _("the specified plugin could not be installed")
+    CLI_ERR_FAIL_UNINSTALL_PLUGIN = _("the specified plugin could not be uninstalled")
+    CLI_ERR_FAIL_PACKAGE_PLUGIN = _("could not package plugin: check file names")
 
     # ComboBox entries
     UI_COMBO_CATEGORY_APPLICATIONS = _("Applications")
@@ -64,6 +67,8 @@ class Resources(object):
     # UI_COLUMN_HEAD_ICON = _("Icon")
     UI_COLUMN_HEAD_ICON = ""
     UI_COLUMN_HEAD_TIME = _("Time")
+    UI_COLUMN_HEAD_NAME = _("Name")
+    UI_COLUMN_HEAD_DESCRIPTION = _("Description")
     UI_COLUMN_HEAD_DURATION = _("Duration")
     UI_COLUMN_HEAD_OUTCOME = _("Success")
 
@@ -82,7 +87,15 @@ class Resources(object):
     # message boxes
     UI_MSGBOX_CONFIRM_DELETE_ASSOCIATION = _("Are you sure you want to delete\nthe selected action?")
     UI_MSGBOX_CONFIRM_DELETE_ALL_ASSOCIATIONS = _("Are you sure you want to\ndelete all actions?")
+    UI_MSGBOX_CONFIRM_UNINSTALL_PLUGIN = _("Are you sure you want to uninstall\nthe %s plugin?")
 
+    UI_MSGBOX_ERR_INSTALL_PLUGIN = _("The specified plugin could not be installed.\nEnsure that it is a proper package and/or contact the author.")
+    UI_MSGBOX_ERR_UNINSTALL_PLUGIN = _("The specified plugin could not be uninstalled.")
+    UI_MSGBOX_OK_INSTALL_PLUGIN = _("The plugin has been correctly installed.")
+    UI_MSGBOX_OK_UNINSTALL_PLUGIN = _("The plugin has been correctly uninstalled.")
+
+    # dialog box text and titles
+    UI_TITLE_CHOOSE_PACKAGE_FILE = _("Choose a Package File")
 
 # a single instance of the class will contain all resource strings
 RESOURCES = Resources()

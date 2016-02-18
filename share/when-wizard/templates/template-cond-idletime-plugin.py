@@ -5,8 +5,9 @@
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
+
 import locale
-from plugin import IdleConditionPlugin, PLUGIN_CONST
+from plugin import IdleConditionPlugin, PLUGIN_CONST, plugin_name
 
 # Gtk might be needed: uncomment if this is the case
 # from gi.repository import Gtk
@@ -37,7 +38,7 @@ class Plugin(IdleConditionPlugin):
     def __init__(self):
         IdleConditionPlugin.__init__(
             self,
-            basename='template-cond-idletime-plugin',
+            basename=plugin_name(__file__),
             name=_("Template"),
             description=_("Explain here what it does"),
             author="John Smith",

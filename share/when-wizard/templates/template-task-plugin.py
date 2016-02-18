@@ -5,8 +5,9 @@
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
+
 import locale
-from plugin import TaskPlugin, PLUGIN_CONST
+from plugin import TaskPlugin, PLUGIN_CONST, plugin_name
 
 # Gtk might be needed: uncomment if this is the case
 # from gi.repository import Gtk
@@ -42,7 +43,7 @@ class Plugin(TaskPlugin):
         TaskPlugin.__init__(
             self,
             category=PLUGIN_CONST.CATEGORY_TASK_MISC,
-            basename='template-task-plugin',
+            basename=plugin_name(__file__),
             name=_("Template"),
             description=_("Explain here what it does"),
             author="John Smith",

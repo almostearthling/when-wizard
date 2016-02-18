@@ -59,11 +59,11 @@ class Plugin(TaskPlugin):
     def click_btnChoose(self, obj):
         o = self.builder.get_object
         filter_img = Gtk.FileFilter()
-        filter_img.set_name("Image files")
+        filter_img.set_name("Image Files")
         filter_img.add_mime_type("image/jpeg")
         filter_img.add_mime_type("image/png")
         dlg = Gtk.FileChooserDialog(
-            _("Choose an image file"), None,
+            _("Choose an Image File"), None,
             Gtk.FileChooserAction.OPEN,
             (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
              Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
@@ -84,7 +84,7 @@ class Plugin(TaskPlugin):
             self.background_image = os.path.realpath(path)
             self.command_line = cmd_template % self.background_image
             self.summary_description = _(
-                "Background image will be changed to '%s'") % name
+                "The desktop background will be changed to '%s'") % name
             self.allow_forward(True)
         else:
             self.background_image = None

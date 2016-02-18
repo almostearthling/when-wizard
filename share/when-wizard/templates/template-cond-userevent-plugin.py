@@ -5,8 +5,9 @@
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
+
 import locale
-from plugin import UserEventConditionPlugin, PLUGIN_CONST
+from plugin import UserEventConditionPlugin, PLUGIN_CONST, plugin_name
 
 
 # setup localization for both plugin text and configuration pane
@@ -35,7 +36,7 @@ class Plugin(UserEventConditionPlugin):
     def __init__(self):
         UserEventConditionPlugin.__init__(
             self,
-            basename='template-cond-userevent-plugin',
+            basename=plugin_name(__file__),
             name=_("Template"),
             description=_("Explain here what it does"),
             author="John Smith",

@@ -80,7 +80,7 @@ class Plugin(IdleConditionPlugin):
             else:
                 spec = str(int(self.idlemins / 60)) + _(" hours")
             self.summary_description = _(
-                "The event will occur after being idle for %s") % spec
+                "After the computer has been idle for %s") % spec
             self.allow_forward(True)
         else:
             self.summary_description = None

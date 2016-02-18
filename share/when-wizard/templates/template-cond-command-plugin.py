@@ -5,8 +5,9 @@
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
+
 import locale
-from plugin import CommandConditionPlugin, PLUGIN_CONST
+from plugin import CommandConditionPlugin, PLUGIN_CONST, plugin_name
 
 # Gtk might be needed: uncomment if this is the case
 # from gi.repository import Gtk
@@ -38,7 +39,7 @@ class Plugin(CommandConditionPlugin):
     def __init__(self):
         CommandConditionPlugin.__init__(
             self,
-            basename='template-cond-command-plugin',
+            basename=plugin_name(__file__),
             name=_("Template"),
             description=_("Explain here what it does"),
             author="John Smith",

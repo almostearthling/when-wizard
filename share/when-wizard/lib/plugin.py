@@ -63,9 +63,9 @@ _PLUGIN_HELP_LINE_LENGTH_CONSOLE = 78 - _PLUGIN_HELP_HEADER_LENGTH_CONSOLE
 _PLUGIN_DESC_FORMAT_GUI = """\
 {help_string}
 
-({plugin_type}: {basename}, {version})\
+({plugin_type}: {basename})\
 """
-_PLUGIN_DESC_FORMAT_GUI_COPYRIGHT = """\n{copyright}, {author}"""
+_PLUGIN_DESC_FORMAT_GUI_COPYRIGHT = """\nversion {version} - {copyright}, {author}"""
 
 _PLUGIN_FILE_EXTENSIONS = ['.py']
 _PLUGIN_UNIQUE_ID_MAGIC = '00wiz99_'
@@ -960,6 +960,41 @@ def install_plugin(filename):
         return False
 
 
+def uninstall_plugin(basename):
+    for uid in datastore:
+        if uid.startswith(_PLUGIN_UNIQUE_ID_MAGIC + basename):
+            return False
+    mod = load_plugin_module(basename, stock=False)
+    if mod is None:
+        return False
+    plugin = mod.Plugin()
+    if plugin:
+        for x in plugin.scripts:
+            try:
+                os.unlink(os.path.join(USER_SCRIPT_FOLDER, x))
+            except (IOError, OSError) as e:
+                pass
+        for x in plugin.graphics:
+            try:
+                os.unlink(os.path.join(USER_RESOURCE_FOLDER, x))
+            except (IOError, OSError) as e:
+                pass
+        for x in plugin.resources:
+            try:
+                os.unlink(os.path.join(USER_RESOURCE_FOLDER, x))
+            except (IOError, OSError) as e:
+                pass
+        for x in _PLUGIN_FILE_EXTENSIONS:
+            plugin_file = basename + x
+            try:
+                os.unlink(os.path.join(USER_PLUGIN_FOLDER, plugin_file))
+            except (IOError, OSError) as e:
+                pass
+        return True
+    else:
+        return False
+
+
 # create a package for a plugin from a directory
 def package_plugins(source_dir, basename=None):
     plugin_files = []
@@ -1178,6 +1213,14 @@ def _plugins_names(basedir):
     return r
 
 
+def plugin_name(path):
+    filename = os.path.basename(path)
+    for ext in _PLUGIN_FILE_EXTENSIONS:
+        if filename.endswith(ext):
+            return filename[:-len(ext)]
+    return None
+
+
 def stock_plugins_names():
     return _plugins_names(APP_PLUGIN_FOLDER)
 
@@ -1187,6 +1230,11 @@ def user_plugins_names():
     if PLUGIN_TEMP_FOLDER:
         names = _plugins_names(PLUGIN_TEMP_FOLDER) + names
     return names
+
+
+def active_plugins_names():
+    return [retrieve_plugin_data(item)['basename'] for item in datastore
+            if item.startswith(_PLUGIN_UNIQUE_ID_MAGIC)]
 
 
 # end.

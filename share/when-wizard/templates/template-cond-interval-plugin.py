@@ -5,8 +5,9 @@
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
+
 import locale
-from plugin import IntervalConditionPlugin, PLUGIN_CONST
+from plugin import IntervalConditionPlugin, PLUGIN_CONST, plugin_name
 
 # Gtk might be needed: uncomment if this is the case
 # from gi.repository import Gtk
@@ -37,7 +38,7 @@ class Plugin(IntervalConditionPlugin):
     def __init__(self):
         IntervalConditionPlugin.__init__(
             self,
-            basename='template-cond-interval-plugin',
+            basename=plugin_name(__file__),
             name=_("Template"),
             description=_("Explain here what it does"),
             author="John Smith",

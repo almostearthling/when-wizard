@@ -10,11 +10,13 @@
 # Usage: when-wizard plugin-package staging_directory
 
 
+import os
 import sys
 from plugin import package_plugins
 
 
 def main():
+    me = os.path.basename(__file__)
     if len(sys.argv) == 2:
         base_dir = sys.argv[1]
     elif len(sys.argv) == 1:

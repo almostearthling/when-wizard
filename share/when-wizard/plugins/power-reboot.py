@@ -44,7 +44,7 @@ class Plugin(TaskPlugin):
         )
         self.stock = True
         self.command_line = REBOOT_COMMAND
-        self.summary_description = _("The system will be rebooted")
+        self.summary_description = _("The system will reboot")
 
 
 # end.

@@ -46,7 +46,7 @@ class Plugin(TaskPlugin):
         )
         self.stock = True
         self.command_line = HIBERNATE_COMMAND
-        self.summary_description = _("The system will be suspended/hibernated")
+        self.summary_description = _("The system will suspend or hibernate")
 
 
 # end.

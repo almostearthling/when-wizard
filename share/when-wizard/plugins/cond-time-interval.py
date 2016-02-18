@@ -81,8 +81,7 @@ class Plugin(IntervalConditionPlugin):
                 spec = str(self.interval) + _(" minutes")
             else:
                 spec = str(int(self.interval / 60)) + _(" hours")
-            self.summary_description = _(
-                "The event will occur every %s") % spec
+            self.summary_description = _("Every %s") % spec
             self.allow_forward(True)
         else:
             self.summary_description = None

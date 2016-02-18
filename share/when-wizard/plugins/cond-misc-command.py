@@ -60,7 +60,7 @@ class Plugin(CommandConditionPlugin):
         if self.command_line:
             command_name = os.path.basename(self.command_line.split()[0])
             self.summary_description = _(
-                "A command based on '%s' will be run") % command_name
+                "After a command based on '%s' was successful") % command_name
             self.allow_forward(True)
         else:
             self.command_line = None
