@@ -20,7 +20,7 @@ import shutil
 from importlib.machinery import SourceFileLoader
 
 from utility import load_icon, load_pixbuf, load_dialog, build_dialog, \
-    datastore, unique_str
+    datastore, unique_str, when_proxy
 
 ##############################################################################
 # plugin related inner constants
@@ -75,12 +75,6 @@ _PLUGIN_ASSOCIATION_ID_MAGIC = '00act99_'   # ACT = associate condittion + task
 # all external task commands will be launched using a stub launcher
 _WIZARD_LOADER = 'when-wizard'
 _WIZARD_SUBCOMMAND = 'launcher'
-
-
-# constants for DBus communication
-_WHEN_COMMAND_ID = 'it.jks.WhenCommand'
-_WHEN_COMMAND_BUS_NAME = '%s.BusService' % _WHEN_COMMAND_ID
-_WHEN_COMMAND_BUS_PATH = '/' + _WHEN_COMMAND_BUS_NAME.replace('.', '/')
 
 
 ##############################################################################
@@ -660,6 +654,7 @@ class CommandConditionPlugin(BaseConditionPlugin):
         self.match_exact_output = False
         self.match_case_sensitive = False
         self.match_regexp = False
+        self.repeat = False
 
     def to_dict(self):
         d = BaseConditionPlugin.to_dict(self)
@@ -1090,10 +1085,8 @@ def unstore_association(association_id, cascade=True):
 
 # this function registers data from a plugin into a running instance of When
 def register_plugin_data(plugin):
-    try:
-        bus = dbus.SessionBus()
-        proxy = bus.get_object(_WHEN_COMMAND_BUS_NAME, _WHEN_COMMAND_BUS_PATH)
-    except dbus.exceptions.DBusException:
+    proxy = when_proxy()
+    if proxy is None:
         return False
     data = plugin.to_item_dict()
     data = dbus.Dictionary({
@@ -1110,10 +1103,8 @@ def register_plugin_data(plugin):
 
 
 def unregister_plugin_data(plugin):
-    try:
-        bus = dbus.SessionBus()
-        proxy = bus.get_object(_WHEN_COMMAND_BUS_NAME, _WHEN_COMMAND_BUS_PATH)
-    except dbus.exceptions.DBusException:
+    proxy = when_proxy()
+    if proxy is None:
         return False
     item_spec = '%s:%s' % (plugin.plugin_type, plugin.unique_id)
     try:
@@ -1126,10 +1117,8 @@ def unregister_plugin_data(plugin):
 
 # retrieve history from When and translate it into something wizard-ic
 def retrieve_action_history():
-    try:
-        bus = dbus.SessionBus()
-        proxy = bus.get_object(_WHEN_COMMAND_BUS_NAME, _WHEN_COMMAND_BUS_PATH)
-    except dbus.exceptions.DBusException:
+    proxy = when_proxy()
+    if proxy is None:
         return None
     history = []
     when_history = proxy.GetHistoryEntries()

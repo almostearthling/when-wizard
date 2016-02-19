@@ -7,6 +7,7 @@
 
 import os
 import time
+import dbus
 import subprocess
 
 import gi
@@ -18,7 +19,10 @@ from gi.repository import Gdk
 from gi.repository import GdkPixbuf
 from gi.repository import Pango
 
-from utility import app_dialog, load_pixbuf
+from utility import app_dialog, load_pixbuf, when_proxy, \
+    when_apply_options, write_desktop_entry, \
+    WHEN_OPTIONS_REACTIVITY_LAZY, WHEN_OPTIONS_REACTIVITY_NORMAL, \
+    WHEN_OPTIONS_GENERIC
 
 from resources import *
 from plugin import PLUGIN_CONST, stock_plugins_names, user_plugins_names, \
@@ -131,10 +135,13 @@ class ManagerAppWindow(object):
         cb.add_attribute(r_pixbuf, 'pixbuf', 1)
         self.fill_cbSelectUninstallPlugin(None)
 
-        # default sensitivity states
+        # default sensitivity and checked states
         o('btnDelete').set_sensitive(False)
         o('btnInstall').set_sensitive(False)
         o('btnUninstall').set_sensitive(False)
+        o('chkDesktopIcons').set_active(False)
+        if APP_BIN_FOLDER.startswith('/usr'):
+            o('chkDesktopIcons').set_sensitive(False)
         self.change_action(None)
 
     def show_about(self, *data):
@@ -299,8 +306,8 @@ class ManagerAppWindow(object):
     def click_btnChoosePackage(self, obj):
         o = self.builder.get_object
         filter_wwpz = Gtk.FileFilter()
-        filter_wwpz.set_name("Plugin Packages")
-        filter_wwpz.add_pattern("*.wwpz")
+        filter_wwpz.set_name(RESOURCES.FILTER_PLUGIN_PACKAGE_NAME)
+        filter_wwpz.add_pattern(RESOURCES.FILTER_PLUGIN_PACKAGE_PATTERN)
         dlg = Gtk.FileChooserDialog(
             RESOURCES.UI_TITLE_CHOOSE_PACKAGE_FILE, None,
             Gtk.FileChooserAction.OPEN,
@@ -366,6 +373,38 @@ class ManagerAppWindow(object):
                 box.run()
                 box.hide()
                 box.destroy()
+
+    def click_btnSchedulerApply(self, obj):
+        o = self.builder.get_object
+        all_options = []
+        errors = []
+        if o('chkGenericSettings').get_active():
+            all_options.append(WHEN_OPTIONS_GENERIC)
+        if o('rbScheduleNormal').get_active():
+            all_options.append(WHEN_OPTIONS_REACTIVITY_NORMAL)
+        else:
+            all_options.append(WHEN_OPTIONS_REACTIVITY_LAZY)
+        if o('chkDesktopIcons').get_active():
+            if not write_desktop_entry('start-wizard',
+                                       RESOURCES.DESKTOP_ENTRY_WIZARD_NAME,
+                                       'alarmclock_wand-128',
+                                       RESOURCES.DESKTOP_ENTRY_WIZARD_COMMENT) or \
+               not write_desktop_entry('start-manager',
+                                       RESOURCES.DESKTOP_ENTRY_MANAGER_NAME,
+                                       'alarmclock_wand-128',
+                                       RESOURCES.DESKTOP_ENTRY_MANAGER_COMMENT):
+                errors.append(RESOURCES.UI_MSGBOX_ERR_DESKTOP_ICONS)
+        if all_options:
+            if not when_apply_options(all_options):
+                errors.append(RESOURCES.UI_MSGBOX_ERR_DBUS_APPLYCHANGES)
+        if errors:
+            errstr = "\n".join(errors)
+            box = Gtk.MessageDialog(type=Gtk.MessageType.ERROR,
+                                    buttons=Gtk.ButtonsType.OK)
+            box.set_markup(errstr)
+            box.run()
+            box.hide()
+            box.destroy()
 
     def change_action(self, obj):
         o = self.builder.get_object

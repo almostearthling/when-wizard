@@ -41,13 +41,25 @@ class Resources(object):
     IDF_PREAMBLE_END = "# Import this file using 'when-command --item-add %s'\n\n"
     IDF_COMMENT = "# %s"
     IDF_FOOTER = "# end.\n"
-    IDF_FILENAME_FORMAT = 'itemdefs-%Y%m%d_%H%M%S.when'
+    IDF_FILENAME_FORMAT = 'itemdefs-%Y%m%d_%H%M%S.widf'
+
+    # desktop entry constants
+    DESKTOP_ENTRY_WIZARD_NAME = "When Wizard"
+    DESKTOP_ENTRY_WIZARD_COMMENT = _("When Wizard: Main Wizard Application")
+    DESKTOP_ENTRY_MANAGER_NAME = "When Wizard Manager"
+    DESKTOP_ENTRY_MANAGER_COMMENT = _("When Wizard: Manager Utility")
 
     # command line interface messages
     CLI_ERR_NOTFOUND_WHEN = _("could not find a running instance of When")
     CLI_ERR_FAIL_INSTALL_PLUGIN = _("the specified plugin could not be installed")
     CLI_ERR_FAIL_UNINSTALL_PLUGIN = _("the specified plugin could not be uninstalled")
     CLI_ERR_FAIL_PACKAGE_PLUGIN = _("could not package plugin: check file names")
+
+    # file filter specifications
+    FILTER_PLUGIN_PACKAGE_NAME = "Plugin Package"
+    FILTER_PLUGIN_PACKAGE_PATTERN = '*.wwpz'
+    FILTER_IDF_NAME = "Item Definition"
+    FILTER_IDF_PATTERN = '*.widf'
 
     # ComboBox entries
     UI_COMBO_CATEGORY_APPLICATIONS = _("Applications")
@@ -85,17 +97,26 @@ class Resources(object):
     UI_BUTTON_RESTART = _("Restart")
 
     # message boxes
-    UI_MSGBOX_CONFIRM_DELETE_ASSOCIATION = _("Are you sure you want to delete\nthe selected action?")
-    UI_MSGBOX_CONFIRM_DELETE_ALL_ASSOCIATIONS = _("Are you sure you want to\ndelete all actions?")
-    UI_MSGBOX_CONFIRM_UNINSTALL_PLUGIN = _("Are you sure you want to uninstall\nthe %s plugin?")
+    UI_MSGBOX_CONFIRM_DELETE_ASSOCIATION = _("Are you sure you want to delete the selected action?")
+    UI_MSGBOX_CONFIRM_DELETE_ALL_ASSOCIATIONS = _("Are you sure you want to delete all actions?")
+    UI_MSGBOX_CONFIRM_UNINSTALL_PLUGIN = _("Are you sure you want to uninstall the %s plugin?")
+    UI_MSGBOX_CONFIRM_UNIMPORT_ITEMS = _("Are you sure you want to remove items imported from %s?")
 
     UI_MSGBOX_ERR_INSTALL_PLUGIN = _("The specified plugin could not be installed.\nEnsure that it is a proper package and/or contact the author.")
     UI_MSGBOX_ERR_UNINSTALL_PLUGIN = _("The specified plugin could not be uninstalled.")
     UI_MSGBOX_OK_INSTALL_PLUGIN = _("The plugin has been correctly installed.")
     UI_MSGBOX_OK_UNINSTALL_PLUGIN = _("The plugin has been correctly uninstalled.")
+    UI_MSGBOX_ERR_IMPORT_IDF = _("The specified item definition file could\nnot be imported. Check file consistency.")
+    UI_MSGBOX_ERR_UNIMPORT_IDF = _("Not all items from the specified definition file\ncould be removed: please check dependencies.")
+    UI_MSGBOX_OK_IMPORT_IDF = _("Items imported successfully.")
+    UI_MSGBOX_OK_UNIMPORT_IDF = _("Items removed successfully.")
+    UI_MSGBOX_ERR_DBUS_COMMUNICATION = _("Unable to communicate with a running When instance.")
+    UI_MSGBOX_ERR_DBUS_APPLYCHANGES = _("Could not apply at least part of the requested changes.")
+    UI_MSGBOX_ERR_DESKTOP_ICONS = _("Could not create all desktop icons.")
 
     # dialog box text and titles
     UI_TITLE_CHOOSE_PACKAGE_FILE = _("Choose a Package File")
+    UI_TITLE_CHOOSE_IDF_FILE = _("Choose an Item Definition File")
 
 # a single instance of the class will contain all resource strings
 RESOURCES = Resources()
