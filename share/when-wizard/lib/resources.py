@@ -116,6 +116,7 @@ class Resources(object):
     UI_MSGBOX_ERR_DBUS_COMMUNICATION = _("Unable to communicate with a running When instance.")
     UI_MSGBOX_ERR_DBUS_APPLYCHANGES = _("Could not apply at least part of the requested changes.")
     UI_MSGBOX_ERR_DESKTOP_ICONS = _("Could not create all desktop icons.")
+    UI_MSGBOX_OK_APPLYCHANGES = _("All changes applied successfully.")
 
     # dialog box text and titles
     UI_TITLE_CHOOSE_PACKAGE_FILE = _("Choose a Package File")

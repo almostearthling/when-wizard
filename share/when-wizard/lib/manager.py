@@ -535,9 +535,13 @@ class ManagerAppWindow(object):
             box = Gtk.MessageDialog(type=Gtk.MessageType.ERROR,
                                     buttons=Gtk.ButtonsType.OK)
             box.set_markup(errstr)
-            box.run()
-            box.hide()
-            box.destroy()
+        else:
+            box = Gtk.MessageDialog(type=Gtk.MessageType.INFO,
+                                    buttons=Gtk.ButtonsType.OK)
+            box.set_markup(RESOURCES.UI_MSGBOX_OK_APPLYCHANGES)
+        box.run()
+        box.hide()
+        box.destroy()
 
     def change_action_rbInstall(self, obj):
         o = self.builder.get_object
