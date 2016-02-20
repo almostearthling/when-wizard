@@ -1089,6 +1089,11 @@ def register_plugin_data(plugin):
     if proxy is None:
         return False
     data = plugin.to_item_dict()
+
+    # filter empty lists and dictionaries, because DBus will complain
+    # that it cannot determine the type otherwise; When has become smart
+    # enough to fall back to the default (that is, an empty structure)
+    # if it does not find a key in a definition dictionary
     data = dbus.Dictionary({
         key: data[key] for key in data
         if data[key] is not None and not (
