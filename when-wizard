@@ -43,7 +43,7 @@ APP_TAGDESC = 'All functionality in the manager application implemented'
 # Support these installation schemes:
 #
 # * default: LSB standard (/usr/bin, /usr/share/when-wizard/*)
-# * /opt based (/opt/when-wizard, /opt/when-command/share/when-wizard/*)
+# * /opt based (/opt/when-wizard, /opt/when-wizard/share/when-wizard/*)
 # * own folder ($FOLDER, $FOLDER/share/when-wizard/*)
 #
 # where first element is the invoked command directory, second one is the
