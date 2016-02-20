@@ -403,7 +403,7 @@
                         <property name="xalign">0</property>
                         <property name="active">True</property>
                         <property name="draw_indicator">True</property>
-                        <signal name="toggled" handler="change_action" swapped="no"/>
+                        <signal name="toggled" handler="change_action_rbInstall" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -748,6 +748,7 @@
                         <property name="xalign">0</property>
                         <property name="active">True</property>
                         <property name="draw_indicator">True</property>
+                        <signal name="toggled" handler="change_action_rbImport" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -828,6 +829,7 @@
                           <object class="GtkEntry" id="txtChooseIDF">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <signal name="changed" handler="change_txtChooseIDF" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -844,6 +846,7 @@
                             <property name="receives_default">True</property>
                             <property name="margin_left">5</property>
                             <property name="use_stock">True</property>
+                            <signal name="clicked" handler="click_btnChooseIDF" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -882,6 +885,7 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="use_stock">True</property>
+                            <signal name="clicked" handler="click_btnImport" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -927,7 +931,7 @@
                         <property name="can_focus">False</property>
                         <property name="margin_bottom">5</property>
                         <property name="xalign">0</property>
-                        <property name="label" translatable="yes">Select a Recently Used Item Definition File:</property>
+                        <property name="label" translatable="yes">Select an Imported Item Definition File:</property>
                         <attributes>
                           <attribute name="weight" value="bold"/>
                         </attributes>
@@ -942,6 +946,7 @@
                       <object class="GtkComboBox" id="cbSelectUnimport">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <signal name="changed" handler="changed_cbSelectUnimport" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -973,6 +978,7 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="use_stock">True</property>
+                            <signal name="clicked" handler="click_btnUnimport" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>

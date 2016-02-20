@@ -24,12 +24,22 @@ from utility import app_dialog, load_pixbuf, when_proxy, \
     WHEN_OPTIONS_REACTIVITY_LAZY, WHEN_OPTIONS_REACTIVITY_NORMAL, \
     WHEN_OPTIONS_GENERIC
 
+from itemimport import idf_exists, idf_install, idf_remove, idf_installed_list
+
 from resources import *
 from plugin import PLUGIN_CONST, stock_plugins_names, user_plugins_names, \
     load_plugin_module, unstore_association, unregister_plugin_data, \
     retrieve_action_history, retrieve_plugin_data, retrieve_plugin, \
     active_plugins_names, retrieve_association, retrieve_association_ids, \
     install_plugin, uninstall_plugin
+
+_WIZARD_LOADER = 'when-wizard'
+_WIZARD_WIZARD_SUBCOMMAND = 'start-wizard'
+_WIZARD_MANAGER_SUBCOMMAND = 'start-manager'
+_WIZARD_WIZARD_ICON = 'alarmclock_wand-128'
+_WIZARD_MANAGER_ICON = 'alarmclock_wand-128'
+_WIZARD_WIZARD_DLGICON = 'alarmclock_wand'
+_WIZARD_MANAGER_DLGICON = 'alarmclock_wand'
 
 # NOTE: all APP_... constants are builtins from the main script
 
@@ -58,14 +68,14 @@ class ManagerAppWindow(object):
         self.builder.set_translation_domain(APP_NAME)
         o = self.builder.get_object
         self.dialog = o('dlgManager')
-        icon = load_pixbuf('alarmclock_wand')
+        icon = load_pixbuf(_WIZARD_MANAGER_DLGICON)
         self.glyph_success = load_pixbuf('success')
         self.glyph_failure = load_pixbuf('failure')
         self.dialog.set_icon(icon)
 
         self.dialog_about = o('dlgAbout')
         self.dialog_about.set_icon(icon)
-        self.dialog_about.set_logo(load_pixbuf('alarmclock_wand-128'))
+        self.dialog_about.set_logo(load_pixbuf(_WIZARD_MANAGER_ICON))
         self.dialog_about.set_program_name(APP_SHORTNAME)
         self.dialog_about.set_website(APP_URL)
         self.dialog_about.set_copyright(APP_COPYRIGHT)
@@ -75,7 +85,19 @@ class ManagerAppWindow(object):
         # dialog data
         self.selected_association = None
         self.selected_uninstallplugin = None
+        self.selected_unimportidf = None
         self.install_package = None
+        self.import_idf = None
+
+        # default sensitivity and checked states
+        o('btnDelete').set_sensitive(False)
+        o('btnDeleteAll').set_sensitive(False)
+        o('btnInstall').set_sensitive(False)
+        o('btnUninstall').set_sensitive(False)
+        o('btnImport').set_sensitive(False)
+        o('btnUnimport').set_sensitive(False)
+        if APP_BIN_FOLDER.startswith('/usr'):
+            o('chkDesktopIcons').set_sensitive(False)
 
         # prepare controls
         r_text = Gtk.CellRendererText()
@@ -135,14 +157,14 @@ class ManagerAppWindow(object):
         cb.add_attribute(r_pixbuf, 'pixbuf', 1)
         self.fill_cbSelectUninstallPlugin(None)
 
-        # default sensitivity and checked states
-        o('btnDelete').set_sensitive(False)
-        o('btnInstall').set_sensitive(False)
-        o('btnUninstall').set_sensitive(False)
-        o('chkDesktopIcons').set_active(False)
-        if APP_BIN_FOLDER.startswith('/usr'):
-            o('chkDesktopIcons').set_sensitive(False)
-        self.change_action(None)
+        cb = o('cbSelectUnimport')
+        cb.pack_start(r_text, True)
+        cb.add_attribute(r_text, 'text', 0)
+        self.fill_cbSelectUnimport(None)
+
+        # visible sections of multi-pane pages
+        self.change_action_rbInstall(None)
+        self.change_action_rbImport(None)
 
     def show_about(self, *data):
         self.dialog_about.present()
@@ -212,6 +234,14 @@ class ManagerAppWindow(object):
         o('cbSelectUninstallPlugin').set_model(store)
         self.selected_uninstallplugin = None
 
+    def fill_cbSelectUnimport(self, obj):
+        o = self.builder.get_object
+        store = Gtk.ListStore(str)
+        for idf in idf_installed_list():
+            store.append([idf])
+        o('cbSelectUnimport').set_model(store)
+        self.selected_unimportidf = None
+
     def changed_listAssociation(self, sel):
         o = self.builder.get_object
         m, i = sel.get_selected()
@@ -239,9 +269,21 @@ class ManagerAppWindow(object):
             o('txtUninstallPluginDescription').set_text(plugin.description)
             o('btnUninstall').set_sensitive(True)
         else:
+            self.selected_uninstallplugin = None
             o('txtUninstallPluginName').set_text("")
             o('txtUninstallPluginDescription').set_text("")
             o('btnUninstall').set_sensitive(False)
+
+    def changed_cbSelectUnimport(self, cb):
+        o = self.builder.get_object
+        i = cb.get_active_iter()
+        if i is not None:
+            m = cb.get_model()
+            self.selected_unimportidf = m[i][0]
+            o('btnUnimport').set_sensitive(True)
+        else:
+            self.selected_uninstallplugin = None
+            o('btnUnimport').set_sensitive(False)
 
     def change_txtChoosePackage(self, obj):
         o = self.builder.get_object
@@ -252,6 +294,16 @@ class ManagerAppWindow(object):
         else:
             self.install_package = None
             o('btnInstall').set_sensitive(False)
+
+    def change_txtChooseIDF(self, obj):
+        o = self.builder.get_object
+        path = o('txtChooseIDF').get_text()
+        if os.path.exists(path) and os.path.isfile(os.path.realpath(path)):
+            self.import_idf = path
+            o('btnImport').set_sensitive(True)
+        else:
+            self.import_idf = None
+            o('btnImport').set_sensitive(False)
 
     def click_btnDelete(self, obj):
         o = self.builder.get_object
@@ -322,6 +374,25 @@ class ManagerAppWindow(object):
         if filename:
             o('txtChoosePackage').set_text(filename)
 
+    def click_btnChooseIDF(self, obj):
+        o = self.builder.get_object
+        filter_widf = Gtk.FileFilter()
+        filter_widf.set_name(RESOURCES.FILTER_IDF_NAME)
+        filter_widf.add_pattern(RESOURCES.FILTER_IDF_PATTERN)
+        dlg = Gtk.FileChooserDialog(
+            RESOURCES.UI_TITLE_CHOOSE_IDF_FILE, None,
+            Gtk.FileChooserAction.OPEN,
+            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+             Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+        dlg.add_filter(filter_widf)
+        res = dlg.run()
+        filename = None
+        if res == Gtk.ResponseType.OK:
+            filename = dlg.get_filename()
+        dlg.destroy()
+        if filename:
+            o('txtChooseIDF').set_text(filename)
+
     def click_btnInstall(self, obj):
         o = self.builder.get_object
         if self.install_package:
@@ -374,6 +445,68 @@ class ManagerAppWindow(object):
                 box.hide()
                 box.destroy()
 
+    def click_btnImport(self, obj):
+        o = self.builder.get_object
+        error = None
+        if self.import_idf:
+            name = os.path.basename(self.import_idf)
+            if not os.path.exists(self.import_idf):
+                error = RESOURCES.UI_MSGBOX_ERR_IMPORT_IDF_READ
+            elif idf_exists(name):
+                error = RESOURCES.UI_MSGBOX_ERR_IMPORT_IDF_EXISTS
+            else:
+                try:
+                    with open(self.import_idf) as f:
+                        contents = f.read()
+                except:
+                    error = RESOURCES.UI_MSGBOX_ERR_IMPORT_IDF_READ
+            if error is None:
+                if not idf_install(name, contents):
+                    box = Gtk.MessageDialog(type=Gtk.MessageType.ERROR,
+                                            buttons=Gtk.ButtonsType.OK)
+                    box.set_markup(RESOURCES.UI_MSGBOX_ERR_IMPORT_IDF)
+                else:
+                    box = Gtk.MessageDialog(type=Gtk.MessageType.INFO,
+                                            buttons=Gtk.ButtonsType.OK)
+                    box.set_markup(RESOURCES.UI_MSGBOX_OK_IMPORT_IDF)
+                    o('txtChooseIDF').set_text("")
+                    self.import_idf = None
+                    self.fill_cbSelectUnimport(None)
+            else:
+                box = Gtk.MessageDialog(type=Gtk.MessageType.ERROR,
+                                        buttons=Gtk.ButtonsType.OK)
+                box.set_markup(error)
+            box.run()
+            box.hide()
+            box.destroy()
+
+    def click_btnUnimport(self, obj):
+        o = self.builder.get_object
+        if self.selected_unimportidf:
+            confirmbox = Gtk.MessageDialog(type=Gtk.MessageType.QUESTION,
+                                           buttons=Gtk.ButtonsType.YES_NO)
+            confirmbox.set_markup(
+                RESOURCES.UI_MSGBOX_CONFIRM_UNIMPORT_ITEMS %
+                self.selected_unimportidf)
+            ret = confirmbox.run()
+            confirmbox.hide()
+            confirmbox.destroy()
+            if ret == Gtk.ResponseType.YES:
+                if idf_remove(self.selected_unimportidf) <= 0:
+                    box = Gtk.MessageDialog(type=Gtk.MessageType.ERROR,
+                                            buttons=Gtk.ButtonsType.OK)
+                    box.set_markup(RESOURCES.UI_MSGBOX_ERR_UNIMPORT_IDF)
+                else:
+                    box = Gtk.MessageDialog(type=Gtk.MessageType.INFO,
+                                            buttons=Gtk.ButtonsType.OK)
+                    box.set_markup(RESOURCES.UI_MSGBOX_OK_UNIMPORT_IDF)
+                    self.selected_unimportidf = None
+                    o('btnUnimport').set_sensitive(False)
+                    self.fill_cbSelectUnimport(None)
+                box.run()
+                box.hide()
+                box.destroy()
+
     def click_btnSchedulerApply(self, obj):
         o = self.builder.get_object
         all_options = []
@@ -385,13 +518,13 @@ class ManagerAppWindow(object):
         else:
             all_options.append(WHEN_OPTIONS_REACTIVITY_LAZY)
         if o('chkDesktopIcons').get_active():
-            if not write_desktop_entry('start-wizard',
+            if not write_desktop_entry(_WIZARD_WIZARD_SUBCOMMAND,
                                        RESOURCES.DESKTOP_ENTRY_WIZARD_NAME,
-                                       'alarmclock_wand-128',
+                                       _WIZARD_WIZARD_ICON,
                                        RESOURCES.DESKTOP_ENTRY_WIZARD_COMMENT) or \
-               not write_desktop_entry('start-manager',
+               not write_desktop_entry(_WIZARD_MANAGER_SUBCOMMAND,
                                        RESOURCES.DESKTOP_ENTRY_MANAGER_NAME,
-                                       'alarmclock_wand-128',
+                                       _WIZARD_MANAGER_ICON,
                                        RESOURCES.DESKTOP_ENTRY_MANAGER_COMMENT):
                 errors.append(RESOURCES.UI_MSGBOX_ERR_DESKTOP_ICONS)
         if all_options:
@@ -406,7 +539,7 @@ class ManagerAppWindow(object):
             box.hide()
             box.destroy()
 
-    def change_action(self, obj):
+    def change_action_rbInstall(self, obj):
         o = self.builder.get_object
         if o('rbInstall').get_active():
             o('boxInstall').set_visible(True)
@@ -414,6 +547,15 @@ class ManagerAppWindow(object):
         else:
             o('boxInstall').set_visible(False)
             o('boxUninstall').set_visible(True)
+
+    def change_action_rbImport(self, obj):
+        o = self.builder.get_object
+        if o('rbImport').get_active():
+            o('boxImport').set_visible(True)
+            o('boxUnimport').set_visible(False)
+        else:
+            o('boxImport').set_visible(False)
+            o('boxUnimport').set_visible(True)
 
     def click_btnQuit(self, obj):
         self.dialog.hide()

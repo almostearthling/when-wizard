@@ -25,6 +25,14 @@ from plugin import PLUGIN_CONST, stock_plugins_names, user_plugins_names, \
     load_plugin_module, add_to_file, store_plugin, store_association, \
     register_plugin_data, unregister_plugin_data
 
+_WIZARD_LOADER = 'when-wizard'
+_WIZARD_WIZARD_SUBCOMMAND = 'start-wizard'
+_WIZARD_MANAGER_SUBCOMMAND = 'start-manager'
+_WIZARD_WIZARD_ICON = 'alarmclock_wand-128'
+_WIZARD_MANAGER_ICON = 'alarmclock_wand-128'
+_WIZARD_WIZARD_DLGICON = 'alarmclock_wand'
+_WIZARD_MANAGER_DLGICON = 'alarmclock_wand'
+
 # NOTE: all APP_... constants are builtins from the main script
 
 # load all plugins
@@ -69,14 +77,14 @@ class WizardAppWindow(object):
         o = self.builder.get_object
         p = self.builder_panes.get_object
         self.dialog = o('dlgWhenWizardMaster')
-        icon = load_pixbuf('alarmclock_wand')
+        icon = load_pixbuf(_WIZARD_WIZARD_ICON)
         o('imgDeco').set_from_file(
             os.path.join(APP_GRAPHICS_FOLDER, 'wizard-side.png'))
         self.dialog.set_icon(icon)
 
         self.dialog_about = o('dlgAbout')
         self.dialog_about.set_icon(icon)
-        self.dialog_about.set_logo(load_pixbuf('alarmclock_wand-128'))
+        self.dialog_about.set_logo(load_pixbuf(_WIZARD_WIZARD_ICON))
         self.dialog_about.set_program_name(APP_SHORTNAME)
         self.dialog_about.set_website(APP_URL)
         self.dialog_about.set_copyright(APP_COPYRIGHT)

@@ -60,6 +60,7 @@ class Resources(object):
     FILTER_PLUGIN_PACKAGE_PATTERN = '*.wwpz'
     FILTER_IDF_NAME = "Item Definition"
     FILTER_IDF_PATTERN = '*.widf'
+    FILTER_IDF_EXTENSION = '.widf'
 
     # ComboBox entries
     UI_COMBO_CATEGORY_APPLICATIONS = _("Applications")
@@ -107,6 +108,8 @@ class Resources(object):
     UI_MSGBOX_OK_INSTALL_PLUGIN = _("The plugin has been correctly installed.")
     UI_MSGBOX_OK_UNINSTALL_PLUGIN = _("The plugin has been correctly uninstalled.")
     UI_MSGBOX_ERR_IMPORT_IDF = _("The specified item definition file could\nnot be imported. Check file consistency.")
+    UI_MSGBOX_ERR_IMPORT_IDF_READ = _("The item definition file could not be read.")
+    UI_MSGBOX_ERR_IMPORT_IDF_EXISTS = _("An item definition file with the same name\nhas been already imported: remove it first.")
     UI_MSGBOX_ERR_UNIMPORT_IDF = _("Not all items from the specified definition file\ncould be removed: please check dependencies.")
     UI_MSGBOX_OK_IMPORT_IDF = _("Items imported successfully.")
     UI_MSGBOX_OK_UNIMPORT_IDF = _("Items removed successfully.")

@@ -74,7 +74,7 @@ _PLUGIN_ASSOCIATION_ID_MAGIC = '00act99_'   # ACT = associate condittion + task
 
 # all external task commands will be launched using a stub launcher
 _WIZARD_LOADER = 'when-wizard'
-_WIZARD_SUBCOMMAND = 'launcher'
+_WIZARD_LAUNCHER_SUBCOMMAND = 'launcher'
 
 
 ##############################################################################
@@ -470,7 +470,7 @@ class TaskPlugin(BasePlugin):
 
     def command(self):
         loader_path = os.path.join(APP_BIN_FOLDER, _WIZARD_LOADER)
-        return '%s %s %s %s' % (loader_path, _WIZARD_SUBCOMMAND,
+        return '%s %s %s %s' % (loader_path, _WIZARD_LAUNCHER_SUBCOMMAND,
                                 self.module_basename, self.unique_id)
 
     def run(self):

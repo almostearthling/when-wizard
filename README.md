@@ -24,7 +24,7 @@ The only requirement for the **When Wizard** at the moment is that it should not
 ## What is available for now
 At present, since the beginning of this document, some of the goals have already been reached:
 - a wizard-style application that can register tasks and conditions into a running instance of **When**, with plugins for several types of item
-- a separate management application which allows to remove actions created through the wizard, to view the history of currently defined actions, and to install and remove third party plugin packages
+- a separate management application which allows to remove actions created through the wizard, to view the history of currently defined actions, to install and remove third party plugin packages and item definition files, and to manage a selection of settings in the **When** applet
 - an incomplete but fairly working stock plugin library: although they have to be revised and refined, these plugins can serve as a base for future plugin development.
 
 This is how the **When Wizard** looks like:
@@ -46,7 +46,7 @@ The **When Wizard** has to be considered sort of an application suite, as it con
 - a stub to run an application disowning it immediately, to work in an inherently multitasking environment
 - command line utilities to install plugins and create plugin packages.
 
-The management utility is a crucial part, as it is necessary to delete tasks and conditions, to configure **When**, to add or remove plugins and to actually view the history of wizard-managed actions.
+The management utility is a crucial part, as it is necessary to delete tasks and conditions, to configure **When**, to add or remove plugins and item definition files, and and to actually view the history of wizard-managed actions.
 
 
 ## Installation
@@ -56,11 +56,11 @@ There is no automatic installation procedure at present: the package has to be d
 $ ./when-wizard start-wizard
 ```
 
-at the `$` prompt. This will start the wizard GUI. To start the management application, change `start-wizard` to `start-manager`. Consider that it's in early alpha stage: it mostly works but it can produce some errors. Also consider that the **When Wizard** is used also to debug and improve **When**'s remote API: if something does not work it should be tested with the latest updates in the ``devel`` (_development_) branch of **When** before filing an issue.
+at the `$` prompt. This will start the wizard GUI. To start the management application, change `start-wizard` to `start-manager`. Consider that it's in early alpha stage: it mostly works but it can produce some errors. Also consider that the **When Wizard** is used also to debug and improve **When**'s remote API: if something does not work it should be tested with the latest updates in the `devel` (_development_) branch of **When** before filing an issue.
 
 
 ## What still has to be done
-The wizard interface is almost complete but might require some refinements. Also, it completely lacks any form of configuration: although at the moment the application does not seem to need any form of configuration, it might do in the future. The manager application is also quite complete and functional, but it still lacks the tab to configure the running **When** scheduler. Parts of its UI can be improved too, although in my opinion both graphic utilities now have reached an almost stable state.
+The wizard interface is almost complete but might require some refinements. Also, it completely lacks any form of configuration: although at the moment the application does not seem to need any form of configuration, it might do in the future. The manager application is also quite complete and functional. Parts of its UI can be improved too, although in my opinion both graphic utilities now have reached an almost stable state.
 
 The provided _stock plugins_ **do not always do what they promise**: sometimes they do or at least try to, but in many cases they just don't work, especially for tasks. Mostly because I have to find out what is the command for a specific action, as I focused more on how to get the whole application working instead of caring for plugin details.
 
@@ -71,6 +71,8 @@ The language used throughout the UI has been taken care of, but still needs to b
 The documentation for the **When Wizard** has still to be written: the user part should be a chapter in the **When** documentation, while in the developer documentation there is already a chapter dedicated to plugin development.
 
 Localization is another argument that has to be faced: the plugin-based structure makes it hard to deal with localizations of third party components. While stock plugins will be handled just as if they were normal components, third-party plugins might have to be left out or find another way to be translated.
+
+Everything has to be thoroughly tested: all functionality has been fairly checked, but exceptional situations (such as unexpected file formats, incorrectly written plugins and other unexpected events) might still break the applet. There is still **When** that can be used to correct possible errors: every operation performed by the **When Wizard** applications can be undone in **When**, and **When** appears to be quite robust at the moment. When testing this application suite, it's strongly advised to export **When** items before, using the `--export` switch.
 
 ## What more can be done
 There are several elements that can be improved, besides what is strictly needed:
