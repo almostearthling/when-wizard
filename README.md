@@ -3,6 +3,8 @@ It turns out that [**When**](https://github.com/almostearthling/when-command) co
 - offer the usual interface, with direct access to _tasks_, _conditions_ and _signal handlers_
 - provide a simpler, intuitive and wizard-based interface to hide the parts that require knowledge of the shell, scripting and maybe even some programming.
 
+![anim](https://raw.githubusercontent.com/almostearthling/hello-world/master/images/when-wizard.gif)
+
 Instead of boiling everything together, which would make **When** too heavy to both use and develop, I thought that a different approach could be taken that allows both aspects to coexist. On the applet side these features have been implemented:
 
 1. the ability to manage _tasks_, _conditions_ and _signal handlers_ without directly accessing the configuration dialog boxes, that is using specific command line arguments and specially crafted text files and/or a generic DBus based [Remote API](http://contributing-to-when.readthedocs.org/en/latest/dbusapi.html) to interact with a running instance of **When**
@@ -27,10 +29,6 @@ At present, since the beginning of this document, some of the goals have already
 - a separate management application which allows to remove actions created through the wizard, to view the history of currently defined actions, to install and remove third party plugin packages and item definition files, and to manage a selection of settings in the **When** applet
 - an incomplete but fairly working stock plugin library: although they have to be revised and refined, these plugins can serve as a base for future plugin development.
 
-This is how the **When Wizard** looks like:
-
-![anim](https://raw.githubusercontent.com/almostearthling/hello-world/master/images/when-wizard.gif)
-
 The plugin system for the **When Wizard** has been designed in such a way that it takes into account plugins that come with the application itself (and could possibly be installed in system directories) and plugins that can be added on a per-user basis (that will be installed in a subdirectory of `$HOME`): the application tries to dynamically load every file in a plugin directory (user or system) as a plugin, and their names have not to be known in advance. Also, it is possible to choose a directory where a plugin is developed and load it from there (more on this [here](http://contributing-to-when.readthedocs.org/en/latest/wizard.html#plugin-rationale), in the note): this allows experimental plugins to be tested without spoiling the entire installation and possibly even "third party" plugins. The application interacts with a running instance of **When** and is already able to register tasks and conditions.
 
 Since plugins _must_ be coded deriving them from a base plugin class and defining some of its attributes, there are templates for the various plugin types, both for tasks and all types of conditions, that constitute a boilerplate for plugin development. Since plugins may (or may not) provide a configuration pane in the wizard, if applicable, a basic configuration pane template for the _Glade_ designer is also provided.
@@ -44,10 +42,9 @@ The **When Wizard** has to be considered sort of an application suite, as it con
 
 The management utility is a crucial part, as it is necessary to delete tasks and conditions, to configure **When**, to add or remove plugins and item definition files, and and to actually view the history of wizard-managed actions.
 
-The following screencast roughly shows the management application (it does not exactly reflect current status, because unfortunately recent *ffmpeg* packages don't support *x11grab*):
+The following screencast briefly shows the management application:
 
 ![anim](https://raw.githubusercontent.com/almostearthling/hello-world/master/images/when-wizard-manager.gif)
-
 
 
 ## Installation
