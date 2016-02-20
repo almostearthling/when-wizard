@@ -35,11 +35,11 @@ class Plugin(TaskPlugin):
             basename='session-logout',
             name=_("Logout"),
             description=_("Session Logout"),
-            author="Francesco Garosi",
-            copyright="Copyright (c) 2016",
+            author=APP_AUTHOR,
+            copyright=APP_COPYRIGHT,
             icon='undo',
             help_string=HELP,
-            version="0.1~alpha.0",
+            version=APP_VERSION,
         )
         self.stock = True
         self.command_line = LOGOUT_COMMAND

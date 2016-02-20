@@ -35,11 +35,11 @@ class Plugin(TaskPlugin):
             basename='fileops-sync',
             name=_("Synchronize"),
             description=_("Synchronize Two Directories"),
-            author="Francesco Garosi",
-            copyright="Copyright (c) 2016",
+            author=APP_AUTHOR,
+            copyright=APP_COPYRIGHT,
             icon='advance',
             help_string=HELP,
-            version="0.1~alpha.0",
+            version=APP_VERSION,
         )
         self.stock = True
         self.script = self.get_script('plugin_fileops-sync.sh')

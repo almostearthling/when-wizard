@@ -36,11 +36,11 @@ class Plugin(EventConditionPlugin):
             basename='cond-event-shutdown',
             name=_("Session End"),
             description=_("End of the User Session"),
-            author="Francesco Garosi",
-            copyright="Copyright (c) 2016",
+            author=APP_AUTHOR,
+            copyright=APP_COPYRIGHT,
             icon='no_idea',
             help_string=HELP,
-            version="0.1~alpha.0",
+            version=APP_VERSION,
         )
         # mandatory or anyway structural variables and object values follow:
         self.stock = True

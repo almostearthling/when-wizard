@@ -35,11 +35,11 @@ class Plugin(EventConditionPlugin):
             basename='cond-event-lock',
             name=_("Session Lock"),
             description=_("Lock the User Session"),
-            author="Francesco Garosi",
-            copyright="Copyright (c) 2016",
+            author=APP_AUTHOR,
+            copyright=APP_COPYRIGHT,
             icon='lock',
             help_string=HELP,
-            version="0.1~alpha.0",
+            version=APP_VERSION,
         )
         # mandatory or anyway structural variables and object values follow:
         self.stock = True

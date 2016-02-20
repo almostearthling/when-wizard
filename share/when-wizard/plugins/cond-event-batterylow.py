@@ -34,11 +34,11 @@ class Plugin(EventConditionPlugin):
             basename='cond-event-batterylow',
             name=_("Low Battery"),
             description=_("The Battery is Critically Low"),
-            author="Francesco Garosi",
-            copyright="Copyright (c) 2016",
+            author=APP_AUTHOR,
+            copyright=APP_COPYRIGHT,
             icon='low_battery',
             help_string=HELP,
-            version="0.1~alpha.0",
+            version=APP_VERSION,
         )
         # mandatory or anyway structural variables and object values follow:
         self.stock = True

@@ -34,11 +34,11 @@ class Plugin(TaskPlugin):
             basename='fileops-mediacopy',
             name=_("Media Copy"),
             description=_("Copy from Removable Media"),
-            author="Francesco Garosi",
-            copyright="Copyright (c) 2016",
+            author=APP_AUTHOR,
+            copyright=APP_COPYRIGHT,
             icon='briefcase',
             help_string=HELP,
-            version="0.1~alpha.0",
+            version=APP_VERSION,
         )
         self.stock = True
         self.script = self.get_script('plugin_fileops-mediacopy.sh')

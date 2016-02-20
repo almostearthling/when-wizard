@@ -32,11 +32,11 @@ class Plugin(TaskPlugin):
             basename='apps-command',
             name=_("Command Launcher"),
             description=_("Run a Command using the default Shell"),
-            author="Francesco Garosi",
-            copyright="Copyright (c) 2016",
+            author=APP_AUTHOR,
+            copyright=APP_COPYRIGHT,
             icon='start',
             help_string=HELP,
-            version="0.1~alpha.0",
+            version=APP_VERSION,
         )
         self.stock = True
         self.builder = self.get_dialog('plugin_apps-command')

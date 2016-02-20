@@ -32,19 +32,18 @@ class Plugin(TaskPlugin):
             category=PLUGIN_CONST.CATEGORY_TASK_APPS,
             basename='apps-launch',
             name=_("Application Launcher"),
-            description=_("Start an Application"),
-            author="Francesco Garosi",
-            copyright="Copyright (c) 2016",
+            description=_("Start a Desktop Application"),
+            author=APP_AUTHOR,
+            copyright=APP_COPYRIGHT,
             icon='electro_devices',
             help_string=HELP,
-            version="0.1~alpha.0",
+            version=APP_VERSION,
         )
         self.stock = True
         self.builder = self.get_dialog('plugin_apps-launch')
         self.plugin_panel = None
         self.app_name = None
 
-    # see http://python-gtk-3-tutorial.readthedocs.org/en/latest/iconview.html
     def get_pane(self):
         if self.plugin_panel is None:
             o = self.builder.get_object

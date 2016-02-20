@@ -33,11 +33,11 @@ class Plugin(CommandConditionPlugin):
             basename='cond-misc-command',
             name=_("Command"),
             description=_("Check successful execution of command"),
-            author="Francesco Garosi",
-            copyright="Copyright (c) 2016",
+            author=APP_AUTHOR,
+            copyright=APP_COPYRIGHT,
             icon='start',
             help_string=HELP,
-            version="0.1~alpha.0",
+            version=APP_VERSION,
         )
         self.stock = True
         self.builder = self.get_dialog('plugin_cond-misc-command')

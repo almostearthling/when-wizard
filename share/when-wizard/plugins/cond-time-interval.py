@@ -32,11 +32,11 @@ class Plugin(IntervalConditionPlugin):
             basename='cond-time-interval',
             name=_("Time Interval"),
             description=_("Occur periodically after an amount of time"),
-            author="Francesco Garosi",
-            copyright="Copyright (c) 2016",
+            author=APP_AUTHOR,
+            copyright=APP_COPYRIGHT,
             icon='pie_chart',
             help_string=HELP,
-            version="0.1~alpha.0",
+            version=APP_VERSION,
         )
         self.stock = True
         self.builder = self.get_dialog('plugin_cond-time-interval')

@@ -35,11 +35,11 @@ class Plugin(TaskPlugin):
             basename='misc-sendmail',
             name=_("Email"),
             description=_("Send an E-mail Message"),
-            author="Francesco Garosi",
-            copyright="Copyright (c) 2016",
+            author=APP_AUTHOR,
+            copyright=APP_COPYRIGHT,
             icon='feedback',
             help_string=HELP,
-            version="0.1~alpha.0",
+            version=APP_VERSION,
         )
         self.stock = True
         self.builder = self.get_dialog('plugin_misc-sendmail')
