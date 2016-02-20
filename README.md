@@ -31,10 +31,6 @@ This is how the **When Wizard** looks like:
 
 ![anim](https://raw.githubusercontent.com/almostearthling/hello-world/master/images/when-wizard.gif)
 
-and this is its companion **When Wizard Manager** application:
-
-![anim](https://raw.githubusercontent.com/almostearthling/hello-world/master/images/when-wizard-manager.gif)
-
 The plugin system for the **When Wizard** has been designed in such a way that it takes into account plugins that come with the application itself (and could possibly be installed in system directories) and plugins that can be added on a per-user basis (that will be installed in a subdirectory of `$HOME`): the application tries to dynamically load every file in a plugin directory (user or system) as a plugin, and their names have not to be known in advance. Also, it is possible to choose a directory where a plugin is developed and load it from there (more on this [here](http://contributing-to-when.readthedocs.org/en/latest/wizard.html#plugin-rationale), in the note): this allows experimental plugins to be tested without spoiling the entire installation and possibly even "third party" plugins. The application interacts with a running instance of **When** and is already able to register tasks and conditions.
 
 Since plugins _must_ be coded deriving them from a base plugin class and defining some of its attributes, there are templates for the various plugin types, both for tasks and all types of conditions, that constitute a boilerplate for plugin development. Since plugins may (or may not) provide a configuration pane in the wizard, if applicable, a basic configuration pane template for the _Glade_ designer is also provided.
@@ -47,6 +43,11 @@ The **When Wizard** has to be considered sort of an application suite, as it con
 - command line utilities to install plugins and create plugin packages.
 
 The management utility is a crucial part, as it is necessary to delete tasks and conditions, to configure **When**, to add or remove plugins and item definition files, and and to actually view the history of wizard-managed actions.
+
+The following screencast roughly shows the management application (it does not exactly reflect current status, because unfortunately recent *ffmpeg* packages don't support *x11grab*):
+
+![anim](https://raw.githubusercontent.com/almostearthling/hello-world/master/images/when-wizard-manager.gif)
+
 
 
 ## Installation
