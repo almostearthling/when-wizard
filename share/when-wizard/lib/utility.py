@@ -128,7 +128,7 @@ def build_dialog(name, reverse_order=False):
 
 
 # retrieve images from files using a custom directory search order
-def load_icon(name, reverse_order=False):
+def load_image(name, reverse_order=False):
     if reverse_order:
         order = [USER_RESOURCE_FOLDER, APP_ICONS_FOLDER, APP_GRAPHICS_FOLDER]
     else:
@@ -144,7 +144,7 @@ def load_icon(name, reverse_order=False):
 
 
 def load_pixbuf(name, reverse_order=False):
-    image = load_icon(name, reverse_order)
+    image = load_image(name, reverse_order)
     if image:
         return image.get_pixbuf()
     else:

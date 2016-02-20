@@ -19,7 +19,7 @@ import tempfile
 import shutil
 from importlib.machinery import SourceFileLoader
 
-from utility import load_icon, load_pixbuf, load_dialog, build_dialog, \
+from utility import load_image, load_pixbuf, load_dialog, build_dialog, \
     datastore, unique_str, when_proxy
 
 ##############################################################################
@@ -218,7 +218,7 @@ class BasePlugin(object):
         return build_dialog(name, reverse_order=not self.stock)
 
     def get_image(self, name):
-        return load_icon(name, reverse_order=not self.stock)
+        return load_image(name, reverse_order=not self.stock)
 
     # plugin level persistent data
     def data_store(self, data_dic):
