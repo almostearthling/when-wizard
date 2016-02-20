@@ -403,7 +403,7 @@
                         <property name="xalign">0</property>
                         <property name="active">True</property>
                         <property name="draw_indicator">True</property>
-                        <signal name="toggled" handler="change_action_rbInstall" swapped="no"/>
+                        <signal name="toggled" handler="changed_action_rbInstall" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -485,7 +485,7 @@
                           <object class="GtkEntry" id="txtChoosePackage">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <signal name="changed" handler="change_txtChoosePackage" swapped="no"/>
+                            <signal name="changed" handler="changed_txtChoosePackage" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -748,7 +748,7 @@
                         <property name="xalign">0</property>
                         <property name="active">True</property>
                         <property name="draw_indicator">True</property>
-                        <signal name="toggled" handler="change_action_rbImport" swapped="no"/>
+                        <signal name="toggled" handler="changed_action_rbImport" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -829,7 +829,7 @@
                           <object class="GtkEntry" id="txtChooseIDF">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <signal name="changed" handler="change_txtChooseIDF" swapped="no"/>
+                            <signal name="changed" handler="changed_txtChooseIDF" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">True</property>

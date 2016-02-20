@@ -163,8 +163,8 @@ class ManagerAppWindow(object):
         self.fill_cbSelectUnimport(None)
 
         # visible sections of multi-pane pages
-        self.change_action_rbInstall(None)
-        self.change_action_rbImport(None)
+        self.changed_action_rbInstall(None)
+        self.changed_action_rbImport(None)
 
     def show_about(self, *data):
         self.dialog_about.present()
@@ -285,7 +285,7 @@ class ManagerAppWindow(object):
             self.selected_uninstallplugin = None
             o('btnUnimport').set_sensitive(False)
 
-    def change_txtChoosePackage(self, obj):
+    def changed_txtChoosePackage(self, obj):
         o = self.builder.get_object
         path = o('txtChoosePackage').get_text()
         if os.path.exists(path) and os.path.isfile(os.path.realpath(path)):
@@ -295,7 +295,7 @@ class ManagerAppWindow(object):
             self.install_package = None
             o('btnInstall').set_sensitive(False)
 
-    def change_txtChooseIDF(self, obj):
+    def changed_txtChooseIDF(self, obj):
         o = self.builder.get_object
         path = o('txtChooseIDF').get_text()
         if os.path.exists(path) and os.path.isfile(os.path.realpath(path)):
@@ -311,7 +311,7 @@ class ManagerAppWindow(object):
             confirmbox = Gtk.MessageDialog(type=Gtk.MessageType.QUESTION,
                                            buttons=Gtk.ButtonsType.YES_NO)
             confirmbox.set_markup(
-                RESOURCES.UI_MSGBOX_CONFIRM_DELETE_ASSOCIATION)
+                RESOURCES.MSGBOX_CONFIRM_DELETE_ASSOCIATION)
             ret = confirmbox.run()
             confirmbox.hide()
             confirmbox.destroy()
@@ -333,7 +333,7 @@ class ManagerAppWindow(object):
         confirmbox = Gtk.MessageDialog(type=Gtk.MessageType.QUESTION,
                                        buttons=Gtk.ButtonsType.YES_NO)
         confirmbox.set_markup(
-            RESOURCES.UI_MSGBOX_CONFIRM_DELETE_ALL_ASSOCIATIONS)
+            RESOURCES.MSGBOX_CONFIRM_DELETE_ALL_ASSOCIATIONS)
         ret = confirmbox.run()
         confirmbox.hide()
         confirmbox.destroy()
@@ -399,11 +399,11 @@ class ManagerAppWindow(object):
             if not install_plugin(self.install_package):
                 box = Gtk.MessageDialog(type=Gtk.MessageType.ERROR,
                                         buttons=Gtk.ButtonsType.OK)
-                box.set_markup(RESOURCES.UI_MSGBOX_ERR_INSTALL_PLUGIN)
+                box.set_markup(RESOURCES.MSGBOX_ERR_INSTALL_PLUGIN)
             else:
                 box = Gtk.MessageDialog(type=Gtk.MessageType.INFO,
                                         buttons=Gtk.ButtonsType.OK)
-                box.set_markup(RESOURCES.UI_MSGBOX_OK_INSTALL_PLUGIN)
+                box.set_markup(RESOURCES.MSGBOX_OK_INSTALL_PLUGIN)
                 o('txtChoosePackage').set_text("")
                 for name in user_plugins_names():
                     m = load_plugin_module(name)
@@ -421,7 +421,7 @@ class ManagerAppWindow(object):
             confirmbox = Gtk.MessageDialog(type=Gtk.MessageType.QUESTION,
                                            buttons=Gtk.ButtonsType.YES_NO)
             confirmbox.set_markup(
-                RESOURCES.UI_MSGBOX_CONFIRM_UNINSTALL_PLUGIN %
+                RESOURCES.MSGBOX_CONFIRM_UNINSTALL_PLUGIN %
                 self.selected_uninstallplugin)
             ret = confirmbox.run()
             confirmbox.hide()
@@ -430,11 +430,11 @@ class ManagerAppWindow(object):
                 if not uninstall_plugin(self.selected_uninstallplugin):
                     box = Gtk.MessageDialog(type=Gtk.MessageType.ERROR,
                                             buttons=Gtk.ButtonsType.OK)
-                    box.set_markup(RESOURCES.UI_MSGBOX_ERR_UNINSTALL_PLUGIN)
+                    box.set_markup(RESOURCES.MSGBOX_ERR_UNINSTALL_PLUGIN)
                 else:
                     box = Gtk.MessageDialog(type=Gtk.MessageType.INFO,
                                             buttons=Gtk.ButtonsType.OK)
-                    box.set_markup(RESOURCES.UI_MSGBOX_OK_UNINSTALL_PLUGIN)
+                    box.set_markup(RESOURCES.MSGBOX_OK_UNINSTALL_PLUGIN)
                     del all_plugins[self.selected_uninstallplugin]
                     self.selected_uninstallplugin = None
                     o('txtUninstallPluginName').set_text("")
@@ -451,24 +451,24 @@ class ManagerAppWindow(object):
         if self.import_idf:
             name = os.path.basename(self.import_idf)
             if not os.path.exists(self.import_idf):
-                error = RESOURCES.UI_MSGBOX_ERR_IMPORT_IDF_READ
+                error = RESOURCES.MSGBOX_ERR_IMPORT_IDF_READ
             elif idf_exists(name):
-                error = RESOURCES.UI_MSGBOX_ERR_IMPORT_IDF_EXISTS
+                error = RESOURCES.MSGBOX_ERR_IMPORT_IDF_EXISTS
             else:
                 try:
                     with open(self.import_idf) as f:
                         contents = f.read()
                 except:
-                    error = RESOURCES.UI_MSGBOX_ERR_IMPORT_IDF_READ
+                    error = RESOURCES.MSGBOX_ERR_IMPORT_IDF_READ
             if error is None:
                 if not idf_install(name, contents):
                     box = Gtk.MessageDialog(type=Gtk.MessageType.ERROR,
                                             buttons=Gtk.ButtonsType.OK)
-                    box.set_markup(RESOURCES.UI_MSGBOX_ERR_IMPORT_IDF)
+                    box.set_markup(RESOURCES.MSGBOX_ERR_IMPORT_IDF)
                 else:
                     box = Gtk.MessageDialog(type=Gtk.MessageType.INFO,
                                             buttons=Gtk.ButtonsType.OK)
-                    box.set_markup(RESOURCES.UI_MSGBOX_OK_IMPORT_IDF)
+                    box.set_markup(RESOURCES.MSGBOX_OK_IMPORT_IDF)
                     o('txtChooseIDF').set_text("")
                     self.import_idf = None
                     self.fill_cbSelectUnimport(None)
@@ -486,7 +486,7 @@ class ManagerAppWindow(object):
             confirmbox = Gtk.MessageDialog(type=Gtk.MessageType.QUESTION,
                                            buttons=Gtk.ButtonsType.YES_NO)
             confirmbox.set_markup(
-                RESOURCES.UI_MSGBOX_CONFIRM_UNIMPORT_ITEMS %
+                RESOURCES.MSGBOX_CONFIRM_UNIMPORT_ITEMS %
                 self.selected_unimportidf)
             ret = confirmbox.run()
             confirmbox.hide()
@@ -495,11 +495,11 @@ class ManagerAppWindow(object):
                 if idf_remove(self.selected_unimportidf) <= 0:
                     box = Gtk.MessageDialog(type=Gtk.MessageType.ERROR,
                                             buttons=Gtk.ButtonsType.OK)
-                    box.set_markup(RESOURCES.UI_MSGBOX_ERR_UNIMPORT_IDF)
+                    box.set_markup(RESOURCES.MSGBOX_ERR_UNIMPORT_IDF)
                 else:
                     box = Gtk.MessageDialog(type=Gtk.MessageType.INFO,
                                             buttons=Gtk.ButtonsType.OK)
-                    box.set_markup(RESOURCES.UI_MSGBOX_OK_UNIMPORT_IDF)
+                    box.set_markup(RESOURCES.MSGBOX_OK_UNIMPORT_IDF)
                     self.selected_unimportidf = None
                     o('btnUnimport').set_sensitive(False)
                     self.fill_cbSelectUnimport(None)
@@ -526,10 +526,10 @@ class ManagerAppWindow(object):
                                        RESOURCES.DESKTOP_ENTRY_MANAGER_NAME,
                                        _WIZARD_MANAGER_ICON,
                                        RESOURCES.DESKTOP_ENTRY_MANAGER_COMMENT):
-                errors.append(RESOURCES.UI_MSGBOX_ERR_DESKTOP_ICONS)
+                errors.append(RESOURCES.MSGBOX_ERR_DESKTOP_ICONS)
         if all_options:
             if not when_apply_options(all_options):
-                errors.append(RESOURCES.UI_MSGBOX_ERR_DBUS_APPLYCHANGES)
+                errors.append(RESOURCES.MSGBOX_ERR_DBUS_APPLYCHANGES)
         if errors:
             errstr = "\n".join(errors)
             box = Gtk.MessageDialog(type=Gtk.MessageType.ERROR,
@@ -538,12 +538,12 @@ class ManagerAppWindow(object):
         else:
             box = Gtk.MessageDialog(type=Gtk.MessageType.INFO,
                                     buttons=Gtk.ButtonsType.OK)
-            box.set_markup(RESOURCES.UI_MSGBOX_OK_APPLYCHANGES)
+            box.set_markup(RESOURCES.MSGBOX_OK_APPLYCHANGES)
         box.run()
         box.hide()
         box.destroy()
 
-    def change_action_rbInstall(self, obj):
+    def changed_action_rbInstall(self, obj):
         o = self.builder.get_object
         if o('rbInstall').get_active():
             o('boxInstall').set_visible(True)
@@ -552,7 +552,7 @@ class ManagerAppWindow(object):
             o('boxInstall').set_visible(False)
             o('boxUninstall').set_visible(True)
 
-    def change_action_rbImport(self, obj):
+    def changed_action_rbImport(self, obj):
         o = self.builder.get_object
         if o('rbImport').get_active():
             o('boxImport').set_visible(True)
