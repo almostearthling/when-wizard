@@ -51,9 +51,15 @@ class Resources(object):
 
     # command line interface messages
     CLI_ERR_NOTFOUND_WHEN = _("could not find a running instance of When")
+    CLI_ERR_INVALID_ARGUMENTS = _("required arguments missing or invalid")
     CLI_ERR_FAIL_INSTALL_PLUGIN = _("the specified plugin could not be installed")
     CLI_ERR_FAIL_UNINSTALL_PLUGIN = _("the specified plugin could not be uninstalled")
     CLI_ERR_FAIL_PACKAGE_PLUGIN = _("could not package plugin: check file names")
+    CLI_ERR_FAIL_LOAD_PLUGIN = _("the required plugin could not be loaded")
+    CLI_ERR_FAIL_RUN_PLUGIN = _("the required plugin could not be loaded")
+
+    CLI_MSG_PLUGIN_PACKAGED = _("plugin successfully packaged")
+    CLI_MSG_PLUGINS_PACKAGED = _("%s plugins successfully packaged")
 
     # file filter specifications
     FILTER_PLUGIN_PACKAGE_NAME = "Plugin Package"

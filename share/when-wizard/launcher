@@ -13,27 +13,28 @@
 import os
 import sys
 from plugin import load_plugin_module, retrieve_plugin
+from utility import oerr
+from resources import RESOURCES
 
 
 # the main entry point can just return an exit value
 def main():
     me = os.path.basename(__file__)
     if len(sys.argv) != 3:
+        oerr(me, RESOURCES.CLI_ERR_INVALID_ARGUMENTS)
         return 1
     mod = load_plugin_module(sys.argv[1], True)
     if mod:
         p = mod.Plugin()
         try:
-            # use of specific retrieve_plugin is possible because concrete
-            # plugin classes should be created in a way that no argument
-            # is needed for the constructor
-            # TODO: remove comment and add to developer docs
             retrieve_plugin(sys.argv[2], p)
         except:
+            oerr(me, RESOURCES.CLI_ERR_FAIL_LOAD_PLUGIN)
             return 2
         if hasattr(p, 'run') and p.run():
             return 0
         else:
+            oerr(me, RESOURCES.CLI_ERR_FAIL_RUN_PLUGIN)
             return 2
     else:
         return 2

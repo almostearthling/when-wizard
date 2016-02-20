@@ -73,12 +73,14 @@ Exec={loader_exec} {subcommand}
 """
 
 
-# format an exception for logging purposes
-# def _x(e):
-#     t, v, tb = sys.exc_info()
-#     if t is None:
-#         return ''
-#     return '%s: %s' % (t.__name__, v)
+# command line interface reporting function
+def oerr(source, message, error=True, verbose=True):
+    if verbose:
+        if error:
+            stream = sys.stderr
+        else:
+            stream = sys.stdout
+        stream.write("%s: %s\n" % (source, message))
 
 
 # verify that the user folders are present, otherwise create them

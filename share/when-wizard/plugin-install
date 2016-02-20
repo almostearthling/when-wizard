@@ -13,6 +13,8 @@
 import os
 import sys
 from plugin import install_plugin
+from utility import oerr
+from resources import RESOURCES
 
 
 def main():
@@ -20,11 +22,13 @@ def main():
     if len(sys.argv) == 2:
         package_file = sys.argv[1]
     else:
+        oerr(me, RESOURCES.CLI_ERR_INVALID_ARGUMENTS)
         return 1
     if install_plugin(package_file):
         return 0
     else:
-        return 1
+        oerr(me, RESOURCES.CLI_ERR_FAIL_INSTALL_PLUGIN)
+        return 2
 
 
 # end.

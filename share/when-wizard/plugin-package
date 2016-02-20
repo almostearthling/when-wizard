@@ -13,6 +13,8 @@
 import os
 import sys
 from plugin import package_plugins
+from utility import oerr
+from resources import RESOURCES
 
 
 def main():
@@ -22,11 +24,18 @@ def main():
     elif len(sys.argv) == 1:
         base_dir = '.'
     else:
+        oerr(me, RESOURCES.CLI_ERR_INVALID_ARGUMENTS)
         return 1
     num_plugins = package_plugins(base_dir)
     if num_plugins == 0:
+        oerr(me, RESOURCES.CLI_ERR_FAIL_PACKAGE_PLUGIN)
         return 2
     else:
+        if num_plugins == 1:
+            message = RESOURCES.CLI_MSG_PLUGIN_PACKAGED
+        else:
+            message = RESOURCES.CLI_MSG_PLUGINS_PACKAGED % num_plugins
+        oerr(me, message, error=False)
         return 0
 
 

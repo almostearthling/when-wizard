@@ -17,7 +17,7 @@ import argparse
 import subprocess
 import locale
 
-from utility import verify_user_folders, datastore
+from utility import verify_user_folders, datastore, oerr
 from resources import RESOURCES
 
 
@@ -36,10 +36,9 @@ def gui_main():
 
 # take care of parsing possible arguments (if any) and run the GUI application
 def main():
-    # TODO: parse args and initialize applet
     me = os.path.basename(__file__)
     if subprocess.call([APP_WHEN, '--query']) != 0:
-        sys.stderr.write("%s: %s\n" % (me, RESOURCES.CLI_ERR_NOTFOUND_WHEN))
+        oerr(me, RESOURCES.CLI_ERR_NOTFOUND_WHEN)
         return 2
     verify_user_folders()
     if os.path.exists(datastore.filename):
