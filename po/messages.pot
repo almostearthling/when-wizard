@@ -1,0 +1,1123 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-02-21 01:29+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: plugin_template.glade.h:1
+msgid "Enter a value"
+msgstr ""
+
+#: plugin_template.glade.h:2
+msgid "Do..."
+msgstr ""
+
+#: app-manager.glade.h:1 app-wizard-master.glade.h:1
+msgid "Copyright (c) Francesco Garosi"
+msgstr ""
+
+#: app-manager.glade.h:2 app-wizard-master.glade.h:2
+msgid "A simple Wizard for easier setup of the When scheduler."
+msgstr ""
+
+#: app-manager.glade.h:3 app-wizard-master.glade.h:3
+msgid "When's Web Page"
+msgstr ""
+
+#: app-manager.glade.h:4
+msgid "When Wizard: Manager"
+msgstr ""
+
+#: app-manager.glade.h:5
+msgid "Condition: "
+msgstr ""
+
+#: app-manager.glade.h:6 resources.py:96
+msgid "Consequence:"
+msgstr ""
+
+#: app-manager.glade.h:7
+msgid "Actions"
+msgstr ""
+
+#: app-manager.glade.h:8
+msgid "History"
+msgstr ""
+
+#: app-manager.glade.h:9
+msgid "Install or Upgrade Plugin"
+msgstr ""
+
+#: app-manager.glade.h:10
+msgid "Uninstall Existing Inactive Plugin"
+msgstr ""
+
+#: app-manager.glade.h:11
+msgid "Choose Package:"
+msgstr ""
+
+#: app-manager.glade.h:12
+msgid "Select Plugin:"
+msgstr ""
+
+#: app-manager.glade.h:13
+msgid "Plugins"
+msgstr ""
+
+#: app-manager.glade.h:14
+msgid "Import Actions and Items from Item Definition File"
+msgstr ""
+
+#: app-manager.glade.h:15
+msgid "Remove Actions Imported from Item Definition Files"
+msgstr ""
+
+#: app-manager.glade.h:16
+msgid "Choose an Item Definition File:"
+msgstr ""
+
+#: app-manager.glade.h:17
+msgid "Select an Imported Item Definition File:"
+msgstr ""
+
+#: app-manager.glade.h:18
+msgid "Import"
+msgstr ""
+
+#: app-manager.glade.h:19
+msgid "Apply Generic Settings for Wizard Based Management"
+msgstr ""
+
+#: app-manager.glade.h:20
+msgid "Create or Restore Desktop Icons for Wizard Applications"
+msgstr ""
+
+#: app-manager.glade.h:21
+msgid "Scheduler Reactivity Normal"
+msgstr ""
+
+#: app-manager.glade.h:22
+msgid "Scheduler in Lazy Mode"
+msgstr ""
+
+#: app-manager.glade.h:23
+msgid "Utility"
+msgstr ""
+
+#: app-wizard-master.glade.h:4
+msgid "When Wizard"
+msgstr ""
+
+#: app-wizard-panes.glade.h:1
+msgid "When should it happen?"
+msgstr ""
+
+#: app-wizard-panes.glade.h:2
+msgid "Type:"
+msgstr ""
+
+#: app-wizard-panes.glade.h:3
+msgid "Click Finish to exit, or click Restart to start over."
+msgstr ""
+
+#: app-wizard-panes.glade.h:4
+msgid "Review your choice:"
+msgstr ""
+
+#: app-wizard-panes.glade.h:5
+msgid "Click the Next button to register or hit Esc to abort."
+msgstr ""
+
+#: app-wizard-panes.glade.h:6
+msgid "What do you want to do?"
+msgstr ""
+
+#: app-wizard-panes.glade.h:7
+msgid "Category:"
+msgstr ""
+
+#: plugin_apps-command.glade.h:1
+msgid "Enter the complete shell command to run:"
+msgstr ""
+
+#: plugin_apps-launch.glade.h:1
+msgid "Select the application to be launched:"
+msgstr ""
+
+#: plugin_cond-misc-command.glade.h:1
+msgid "Specify the full command line to check:"
+msgstr ""
+
+#: plugin_cond-time-idletime.glade.h:1
+msgid "Specify how long the computer must be idle:"
+msgstr ""
+
+#: plugin_cond-time-idletime.glade.h:2 plugin_cond-time-interval.glade.h:2
+msgid "Minutes"
+msgstr ""
+
+#: plugin_cond-time-idletime.glade.h:3 plugin_cond-time-interval.glade.h:3
+msgid "Hours"
+msgstr ""
+
+#: plugin_cond-time-interval.glade.h:1
+msgid "Specify the duration of the interval:"
+msgstr ""
+
+#: plugin_cond-time-timeofday.glade.h:1
+msgid "Select the time of day in 24h format:"
+msgstr ""
+
+#: plugin_cond-time-timeofday.glade.h:2
+msgid "0"
+msgstr ""
+
+#: plugin_cond-time-timeofday.glade.h:3
+msgid "Hour"
+msgstr ""
+
+#: plugin_cond-time-timeofday.glade.h:4
+msgid "Minute"
+msgstr ""
+
+#: plugin_desktop-changebg.glade.h:1
+msgid "Choose the background image:"
+msgstr ""
+
+#: plugin_desktop-changebg.glade.h:2 plugin_fileops-mediacopy.glade.h:3
+#: plugin_fileops-opendir.glade.h:2 plugin_fileops-openfile.glade.h:2
+#: plugin_fileops-sync.glade.h:3 plugin_misc-sound.glade.h:2
+msgid "Choose..."
+msgstr ""
+
+#: plugin_fileops-mediacopy.glade.h:1 plugin_fileops-sync.glade.h:1
+msgid "Choose source and destination:"
+msgstr ""
+
+#: plugin_fileops-mediacopy.glade.h:2 plugin_fileops-sync.glade.h:2
+msgid "Destination:"
+msgstr ""
+
+#: plugin_fileops-mediacopy.glade.h:4
+msgid "Label:"
+msgstr ""
+
+#: plugin_fileops-mediacopy.glade.h:5
+msgid "Refresh"
+msgstr ""
+
+#: plugin_fileops-opendir.glade.h:1
+msgid "Choose the directory to open:"
+msgstr ""
+
+#: plugin_fileops-openfile.glade.h:1
+msgid "Choose the file to open:"
+msgstr ""
+
+#: plugin_fileops-sync.glade.h:4
+msgid "Source:"
+msgstr ""
+
+#: plugin_misc-badge.glade.h:1
+msgid "Define the badge to show:"
+msgstr ""
+
+#: plugin_misc-badge.glade.h:2 plugin_misc-sendmail.glade.h:2
+msgid "Title"
+msgstr ""
+
+#: plugin_misc-badge.glade.h:3
+msgid "Icon"
+msgstr ""
+
+#: plugin_misc-badge.glade.h:4
+msgid "Badge message"
+msgstr ""
+
+#: plugin_misc-sendmail.glade.h:1
+msgid "Define email contents and recipient:"
+msgstr ""
+
+#: plugin_misc-sendmail.glade.h:3
+msgid "Send To"
+msgstr ""
+
+#: plugin_misc-sendmail.glade.h:4
+msgid "Message Text"
+msgstr ""
+
+#: plugin_misc-sound.glade.h:1
+msgid "Choose a sound file to play:"
+msgstr ""
+
+#: resources.py:48
+msgid "When Wizard: Main Wizard Application"
+msgstr ""
+
+#: resources.py:50
+msgid "When Wizard: Manager Utility"
+msgstr ""
+
+#: resources.py:53
+msgid "could not find a running instance of When"
+msgstr ""
+
+#: resources.py:54
+msgid "required arguments missing or invalid"
+msgstr ""
+
+#: resources.py:55
+msgid "the specified plugin could not be installed"
+msgstr ""
+
+#: resources.py:56
+msgid "the specified plugin could not be uninstalled"
+msgstr ""
+
+#: resources.py:57
+msgid "could not package plugin: check file names"
+msgstr ""
+
+#: resources.py:58 resources.py:59
+msgid "the required plugin could not be loaded"
+msgstr ""
+
+#: resources.py:61
+msgid "plugin successfully packaged"
+msgstr ""
+
+#: resources.py:62
+#, python-format
+msgid "%s plugins successfully packaged"
+msgstr ""
+
+#: resources.py:72
+msgid "Applications"
+msgstr ""
+
+#: resources.py:73
+msgid "Desktop and System Settings"
+msgstr ""
+
+#: resources.py:74
+msgid "Session Management"
+msgstr ""
+
+#: resources.py:75
+msgid "Power Management"
+msgstr ""
+
+#: resources.py:76
+msgid "File and Folder Operations"
+msgstr ""
+
+#: resources.py:77 resources.py:81
+msgid "Miscellaneous"
+msgstr ""
+
+#: resources.py:79
+msgid "Time Related"
+msgstr ""
+
+#: resources.py:80
+msgid "Session or System Event"
+msgstr ""
+
+#: resources.py:84
+msgid "Condition"
+msgstr ""
+
+#: resources.py:85
+msgid "Consequence"
+msgstr ""
+
+#: resources.py:88
+msgid "Time"
+msgstr ""
+
+#: resources.py:89
+msgid "Name"
+msgstr ""
+
+#: resources.py:90
+msgid "Description"
+msgstr ""
+
+#: resources.py:91
+msgid "Duration"
+msgstr ""
+
+#: resources.py:92
+msgid "Success"
+msgstr ""
+
+#: resources.py:95
+msgid "Condition:"
+msgstr ""
+
+#: resources.py:99
+msgid "The action was correctly registered!"
+msgstr ""
+
+#: resources.py:100
+msgid "The action could not be registered: please try again."
+msgstr ""
+
+#: resources.py:103
+msgid "Finish"
+msgstr ""
+
+#: resources.py:104
+msgid "Restart"
+msgstr ""
+
+#: resources.py:107
+msgid "Are you sure you want to delete the selected action?"
+msgstr ""
+
+#: resources.py:108
+msgid "Are you sure you want to delete all actions?"
+msgstr ""
+
+#: resources.py:109
+#, python-format
+msgid "Are you sure you want to uninstall the %s plugin?"
+msgstr ""
+
+#: resources.py:110
+#, python-format
+msgid "Are you sure you want to remove items imported from %s?"
+msgstr ""
+
+#: resources.py:112
+msgid ""
+"The specified plugin could not be installed.\n"
+"Ensure that it is a proper package and/or contact the author."
+msgstr ""
+
+#: resources.py:113
+msgid "The specified plugin could not be uninstalled."
+msgstr ""
+
+#: resources.py:114
+msgid "The plugin has been correctly installed."
+msgstr ""
+
+#: resources.py:115
+msgid "The plugin has been correctly uninstalled."
+msgstr ""
+
+#: resources.py:116
+msgid ""
+"The specified item definition file could\n"
+"not be imported. Check file consistency."
+msgstr ""
+
+#: resources.py:117
+msgid "The item definition file could not be read."
+msgstr ""
+
+#: resources.py:118
+msgid ""
+"An item definition file with the same name\n"
+"has been already imported: remove it first."
+msgstr ""
+
+#: resources.py:119
+msgid ""
+"Not all items from the specified definition file\n"
+"could be removed: please check dependencies."
+msgstr ""
+
+#: resources.py:120
+msgid "Items imported successfully."
+msgstr ""
+
+#: resources.py:121
+msgid "Items removed successfully."
+msgstr ""
+
+#: resources.py:122
+msgid "Unable to communicate with a running When instance."
+msgstr ""
+
+#: resources.py:123
+msgid "Could not apply at least part of the requested changes."
+msgstr ""
+
+#: resources.py:124
+msgid "Could not create all desktop icons."
+msgstr ""
+
+#: resources.py:125
+msgid "All changes applied successfully."
+msgstr ""
+
+#: resources.py:128
+msgid "Choose a Package File"
+msgstr ""
+
+#: resources.py:129
+msgid "Choose an Item Definition File"
+msgstr ""
+
+#: apps-command.py:19
+msgid ""
+"This task is used to start a non-interactive system command: you can "
+"provide\n"
+"the whole command line that will be executed in the background without user\n"
+"interaction.\n"
+msgstr ""
+
+#: apps-command.py:33
+msgid "Command Launcher"
+msgstr ""
+
+#: apps-command.py:34
+msgid "Run a Command using the default Shell"
+msgstr ""
+
+#: apps-command.py:59
+#, python-format
+msgid "A command based on '%s' will be run"
+msgstr ""
+
+#: apps-launch.py:19
+msgid ""
+"Use this action to launch a desktop application: choose one from the list\n"
+"and it will be started once the referring condition occurs. You will be\n"
+"able to interact with the application and will have to close it yourself\n"
+"when you finished using it.\n"
+msgstr ""
+
+#: apps-launch.py:34
+msgid "Application Launcher"
+msgstr ""
+
+#: apps-launch.py:35
+msgid "Start a Desktop Application"
+msgstr ""
+
+#: apps-launch.py:61
+#, python-format
+msgid "The application '%s' will be started"
+msgstr ""
+
+#: cond-event-batterydischarging.py:18
+msgid ""
+"This event will occur when the battery is discharging, for example when you\n"
+"use a notebook and plug it off the mains socket.\n"
+msgstr ""
+
+#: cond-event-batterydischarging.py:34
+msgid "Discharging"
+msgstr ""
+
+#: cond-event-batterydischarging.py:35
+msgid "The Battery is Discharging"
+msgstr ""
+
+#: cond-event-batterydischarging.py:45
+msgid "When the battery is discharging"
+msgstr ""
+
+#: cond-event-batterylow.py:18
+msgid ""
+"This event will occur when the battery is considered critically low by the\n"
+"system: use this only if the event is not caught by the system itself, for\n"
+"example by hibernating the computer.\n"
+msgstr ""
+
+#: cond-event-batterylow.py:35
+msgid "Low Battery"
+msgstr ""
+
+#: cond-event-batterylow.py:36
+msgid "The Battery is Critically Low"
+msgstr ""
+
+#: cond-event-batterylow.py:46
+msgid "When the battery is critically low"
+msgstr ""
+
+#: cond-event-lock.py:18 cond-event-screensaver.py:18
+msgid ""
+"This event will occur when the session locks, either because the system is\n"
+"instructed to do so after a while or because you intentionally locked your\n"
+"computer by pressing the lock key combination or by selecting an "
+"appropriate\n"
+"menu entry.\n"
+msgstr ""
+
+#: cond-event-lock.py:36 session-lock.py:36
+msgid "Session Lock"
+msgstr ""
+
+#: cond-event-lock.py:37
+msgid "Lock the User Session"
+msgstr ""
+
+#: cond-event-lock.py:47
+msgid "When the session is being locked"
+msgstr ""
+
+#: cond-event-screensaver.py:36
+msgid "Screensaver"
+msgstr ""
+
+#: cond-event-screensaver.py:37
+msgid "The Screensaver Starts"
+msgstr ""
+
+#: cond-event-screensaver.py:47
+msgid "When the screensaver starts"
+msgstr ""
+
+#: cond-event-shutdown.py:21
+msgid ""
+"This event will occur as soon as the applet is closed, normally when the\n"
+"session itself finishes, at logout or when the computer is shut down.\n"
+msgstr ""
+
+#: cond-event-shutdown.py:37
+msgid "Session End"
+msgstr ""
+
+#: cond-event-shutdown.py:38
+msgid "End of the User Session"
+msgstr ""
+
+#: cond-event-shutdown.py:48
+msgid "When the session is ending"
+msgstr ""
+
+#: cond-event-startup.py:21
+msgid ""
+"This event will occur as soon as the applet is started, normally when the\n"
+"session itself begins, that is at login time or after the computer was\n"
+"turned on.\n"
+msgstr ""
+
+#: cond-event-startup.py:38
+msgid "Session Start"
+msgstr ""
+
+#: cond-event-startup.py:39
+msgid "Beginning of the User Session"
+msgstr ""
+
+#: cond-event-startup.py:49
+msgid "When the session is beginning"
+msgstr ""
+
+#: cond-event-unlock.py:18
+msgid "This event will occur when you unlock the session.\n"
+msgstr ""
+
+#: cond-event-unlock.py:33
+msgid "Session Unlock"
+msgstr ""
+
+#: cond-event-unlock.py:34
+msgid "Unlock the User Session"
+msgstr ""
+
+#: cond-event-unlock.py:44
+msgid "When the session is unlocked"
+msgstr ""
+
+#: cond-misc-command.py:19
+msgid ""
+"This tests a command by periodically running it in the background, and if\n"
+"it succeeds (that is, it has an exit status of zero) the associated task\n"
+"is run as a consequence. It can also run specially crafted scripts so that\n"
+"virtually everything in the system can be checked.\n"
+msgstr ""
+
+#: cond-misc-command.py:34
+msgid "Command"
+msgstr ""
+
+#: cond-misc-command.py:35
+msgid "Check successful execution of command"
+msgstr ""
+
+#: cond-misc-command.py:63
+#, python-format
+msgid "After a command based on '%s' runs successfully"
+msgstr ""
+
+#: cond-time-idletime.py:19
+msgid ""
+"Run the associated task after the session has been idle for the specified\n"
+"amount of time. The time can be given either in hours or in minutes.\n"
+msgstr ""
+
+#: cond-time-idletime.py:31
+msgid "Idle Time"
+msgstr ""
+
+#: cond-time-idletime.py:32
+msgid "Occur when the workstation is idle"
+msgstr ""
+
+#: cond-time-idletime.py:79 cond-time-interval.py:81
+msgid " minutes"
+msgstr ""
+
+#: cond-time-idletime.py:81 cond-time-interval.py:83
+msgid " hours"
+msgstr ""
+
+#: cond-time-idletime.py:83
+#, python-format
+msgid "After the computer has been idle for %s"
+msgstr ""
+
+#: cond-time-interval.py:20
+msgid ""
+"Run the associated task whenever a certain interval of time has passed:\n"
+"the time can be specified as an amount of either minutes or hours, and\n"
+"time accounting begins as soon as the scheduler starts.\n"
+msgstr ""
+
+#: cond-time-interval.py:33
+msgid "Time Interval"
+msgstr ""
+
+#: cond-time-interval.py:34
+msgid "Occur periodically after an amount of time"
+msgstr ""
+
+#: cond-time-interval.py:84
+#, python-format
+msgid "Every %s"
+msgstr ""
+
+#: cond-time-timeofday.py:18
+msgid ""
+"This pane allows to define the time of day when the condition will be\n"
+"verified. Associated actions will occur every day at the specified time.\n"
+msgstr ""
+
+#: cond-time-timeofday.py:30
+msgid "Time Of Day"
+msgstr ""
+
+#: cond-time-timeofday.py:31
+msgid "Full Specification of the Time of Day"
+msgstr ""
+
+#: cond-time-timeofday.py:43
+msgid "At midnight"
+msgstr ""
+
+#: cond-time-timeofday.py:62
+#, python-format
+msgid "At %s:%s o'clock"
+msgstr ""
+
+#: desktop-changebg.py:21
+msgid ""
+"Change the desktop background to the image you decide. Of course you can\n"
+"switch it back to the original one using the desktop settings: this can be\n"
+"useful to provide a strong alert when some event occurs.\n"
+msgstr ""
+
+#: desktop-changebg.py:38
+msgid "Change Background"
+msgstr ""
+
+#: desktop-changebg.py:39
+msgid "Modify the Desktop Background"
+msgstr ""
+
+#: desktop-changebg.py:66
+msgid "Choose an Image File"
+msgstr ""
+
+#: desktop-changebg.py:87
+#, python-format
+msgid "The desktop background will be changed to '%s'"
+msgstr ""
+
+#: fileops-mediacopy.py:21
+msgid ""
+"Use this task to copy files from a certain removable storage device (such "
+"as\n"
+"an USB stick or a CD-ROM) to a selected destination directory. The "
+"removable\n"
+"storage device is recognized by its label, which has to be specified.\n"
+msgstr ""
+
+#: fileops-mediacopy.py:35
+msgid "Media Copy"
+msgstr ""
+
+#: fileops-mediacopy.py:36
+msgid "Copy from Removable Media"
+msgstr ""
+
+#: fileops-mediacopy.py:61 fileops-opendir.py:62
+msgid "Choose a directory"
+msgstr ""
+
+#: fileops-mediacopy.py:91 fileops-sync.py:103
+#, python-format
+msgid "Files from %s will be copied to %s"
+msgstr ""
+
+#: fileops-opendir.py:21
+msgid ""
+"This task opens a directory in the default file manager application. The\n"
+"specified directory is shown on your desktop and you can search for files\n"
+"and perform any file operations as long as permissions are granted to do "
+"so.\n"
+msgstr ""
+
+#: fileops-opendir.py:38
+msgid "Open Directory"
+msgstr ""
+
+#: fileops-opendir.py:39
+msgid "Show a Directory in File Manager"
+msgstr ""
+
+#: fileops-opendir.py:82
+#, python-format
+msgid "The '%s' directory will be open"
+msgstr ""
+
+#: fileops-openfile.py:21
+msgid ""
+"This task opens a file in its associated default application: it uses the\n"
+"system settings to determine the action to perform (that is, the "
+"application\n"
+"used) to open the specified file. The file can be read and, if you have the\n"
+"permissions, modified and saved interactively.\n"
+msgstr ""
+
+#: fileops-openfile.py:39
+msgid "Open File"
+msgstr ""
+
+#: fileops-openfile.py:40
+msgid "Open a File"
+msgstr ""
+
+#: fileops-openfile.py:63 misc-sound.py:68
+msgid "Choose a file"
+msgstr ""
+
+#: fileops-openfile.py:83
+#, python-format
+msgid "The file '%s' will be open"
+msgstr ""
+
+#: fileops-sync.py:21
+msgid ""
+"This action synchronizes two directories: it copies all files in the source\n"
+"directory to the destination making sure that files in both directories are\n"
+"always up to date. It can also propagate deletions if desired. This is "
+"useful\n"
+"for unattended backups of valuable data.\n"
+msgstr ""
+
+#: fileops-sync.py:36
+msgid "Synchronize"
+msgstr ""
+
+#: fileops-sync.py:37
+msgid "Synchronize Two Directories"
+msgstr ""
+
+#: fileops-sync.py:62
+msgid "Choose source directory"
+msgstr ""
+
+#: fileops-sync.py:77
+msgid "Choose destination directory"
+msgstr ""
+
+#: misc-badge.py:22
+msgid ""
+"This action shows a notification badge when the chosen condition occurs:\n"
+"it can be useful if you are at the computer and you want visible feedback\n"
+"about a certain event.\n"
+msgstr ""
+
+#: misc-badge.py:39
+msgid "Show Badge"
+msgstr ""
+
+#: misc-badge.py:40
+msgid "Show a Notification Badge"
+msgstr ""
+
+#: misc-badge.py:54
+msgid "A notification badge will be displayed"
+msgstr ""
+
+#: misc-badge.py:63
+msgid "Information"
+msgstr ""
+
+#: misc-badge.py:65
+msgid "Question"
+msgstr ""
+
+#: misc-badge.py:67
+msgid "Warning"
+msgstr ""
+
+#: misc-badge.py:69
+msgid "Error"
+msgstr ""
+
+#: misc-sendmail.py:18
+msgid ""
+"This task sends an e-mail message to the provided address. You can specify\n"
+"the text (environment variables will be expanded if needed) and all the\n"
+"parameters necessary to correctly perform the operation. This is useful if\n"
+"you want to be notified of a certain event when you are away.\n"
+msgstr ""
+
+#: misc-sendmail.py:36
+msgid "Email"
+msgstr ""
+
+#: misc-sendmail.py:37
+msgid "Send an E-mail Message"
+msgstr ""
+
+#: misc-sendmail.py:71
+#, python-format
+msgid "An email will be sent to %s"
+msgstr ""
+
+#: misc-sound.py:21
+msgid ""
+"This actions plays the specified sound when the chosen condition occurs:\n"
+"it can be useful if you are near the computer and you want audible feedback\n"
+"about a certain event.\n"
+msgstr ""
+
+#: misc-sound.py:38
+msgid "Sound"
+msgstr ""
+
+#: misc-sound.py:39
+msgid "Play a Sound"
+msgstr ""
+
+#: misc-sound.py:89
+#, python-format
+msgid "The sound '%s' will be played"
+msgstr ""
+
+#: power-hibernate.py:18
+msgid ""
+"This action hibernates your Workstation, saving its current state and "
+"entering\n"
+"a very low-consumption mode: depending on your OS release and your settings\n"
+"the system will resume operations by either providing input or pressing the\n"
+"power button. In some cases network activity could cause a wakeup.\n"
+msgstr ""
+
+#: power-hibernate.py:39
+msgid "Hibernate"
+msgstr ""
+
+#: power-hibernate.py:40
+msgid "Hibernate your Workstation"
+msgstr ""
+
+#: power-hibernate.py:49
+msgid "The system will suspend or hibernate"
+msgstr ""
+
+#: power-reboot.py:18
+msgid ""
+"This action reboots your Workstation, exactly in the same way as you would\n"
+"do using the session shutdown menu. Your computer closes all applications "
+"and\n"
+"flushes all data to disk to enable a clean restart, however be sure that "
+"your\n"
+"data is saved (or at least auto-saved) before letting the computer restart.\n"
+msgstr ""
+
+#: power-reboot.py:37
+msgid "Reboot"
+msgstr ""
+
+#: power-reboot.py:38
+msgid "Reboot your Workstation"
+msgstr ""
+
+#: power-reboot.py:47
+msgid "The system will reboot"
+msgstr ""
+
+#: power-shutdown.py:18
+msgid ""
+"This action turns off your Workstation, exactly in the same way as you "
+"would\n"
+"do using the session shutdown menu. Your computer closes all applications "
+"and\n"
+"flushes all data to disk to enable a clean startup, however be sure that "
+"your\n"
+"data is saved (or at least auto-saved) before letting the computer shut "
+"down.\n"
+msgstr ""
+
+#: power-shutdown.py:37
+msgid "Shutdown"
+msgstr ""
+
+#: power-shutdown.py:38
+msgid "Shut Down your Workstation"
+msgstr ""
+
+#: power-shutdown.py:47
+msgid "The system will be shut down"
+msgstr ""
+
+#: session-lock.py:18
+msgid ""
+"This task locks your session without logging you out: it protects your\n"
+"Workstation by asking for a password to start over to work, but does not\n"
+"close any application.\n"
+msgstr ""
+
+#: session-lock.py:35
+msgid "Lock"
+msgstr ""
+
+#: session-lock.py:45
+msgid "The session will be locked"
+msgstr ""
+
+#: session-logout.py:18
+msgid ""
+"This task logs you out from the workstation. It closes all applications and\n"
+"your desktop session, returning to the login screen. Be careful when you "
+"use\n"
+"this task, because when it occurs you are likely to loose any unsaved work.\n"
+msgstr ""
+
+#: session-logout.py:36
+msgid "Logout"
+msgstr ""
+
+#: session-logout.py:37
+msgid "Session Logout"
+msgstr ""
+
+#: session-logout.py:46
+msgid "The session will be terminated"
+msgstr ""
+
+#: template-cond-command-plugin.py:28
+msgid ""
+"This is a template for a generic command condition plugin: it can be "
+"expanded\n"
+"suitably to the needs of the plugin. A command line based condition plugin\n"
+"must provide the full command line to be executed for the condition to be\n"
+"verified: if the command is successful (zero-status) the condition is true.\n"
+msgstr ""
+
+#: template-cond-command-plugin.py:43 template-cond-event-plugin.py:58
+#: template-cond-filechange-plugin.py:42 template-cond-idletime-plugin.py:42
+#: template-cond-interval-plugin.py:42 template-cond-time-plugin.py:42
+#: template-cond-userevent-plugin.py:40 template-task-plugin.py:47
+msgid "Template"
+msgstr ""
+
+#: template-cond-command-plugin.py:44 template-cond-event-plugin.py:59
+#: template-cond-filechange-plugin.py:43 template-cond-idletime-plugin.py:43
+#: template-cond-interval-plugin.py:43 template-cond-time-plugin.py:43
+#: template-cond-userevent-plugin.py:41 template-task-plugin.py:48
+msgid "Explain here what it does"
+msgstr ""
+
+#: template-cond-command-plugin.py:92 template-cond-filechange-plugin.py:88
+#: template-cond-idletime-plugin.py:88 template-cond-interval-plugin.py:88
+#: template-cond-time-plugin.py:98 template-task-plugin.py:100
+#, python-format
+msgid "Something will be done with %s"
+msgstr ""
+
+#: template-cond-event-plugin.py:25
+msgid ""
+"This is a template for a generic event condition plugin: it can be expanded\n"
+"suitably to the needs of the plugin. An event condition plugin must only\n"
+"provide the observed event as one of the constants defined below. "
+"Conditions\n"
+"that watch events have no configuration, thus they show no pane.\n"
+msgstr ""
+
+#: template-cond-filechange-plugin.py:28
+msgid ""
+"This is a template for a file change condition plugin: it can be expanded\n"
+"suitably to the needs of the plugin. This type of plugin must provide a "
+"file\n"
+"or a directory to watch for changes.\n"
+msgstr ""
+
+#: template-cond-idletime-plugin.py:28
+msgid ""
+"This is a template for a generic idle time plugin: it can be expanded "
+"suitably\n"
+"to the needs of the plugin. An idle time plugin must provide the minutes "
+"that\n"
+"the workstation must be in idle state for the task to run.\n"
+msgstr ""
+
+#: template-cond-interval-plugin.py:28
+msgid ""
+"This is a template for a generic interval plugin: it can be expanded "
+"suitably\n"
+"to the needs of the plugin. An interval plugin must provide the interval in\n"
+"minutes between repetitions of the associated task.\n"
+msgstr ""
+
+#: template-cond-time-plugin.py:28
+msgid ""
+"This is a template for a generic time plugin: it can be expanded suitably "
+"to\n"
+"the needs of the plugin. A time plugin must provide a time specification "
+"that\n"
+"specifies when in time the event should occur.\n"
+msgstr ""
+
+#: template-cond-userevent-plugin.py:25
+msgid ""
+"This is a template for an user event condition plugin: it can be expanded\n"
+"suitably to the needs of the plugin. Such event condition plugin must only\n"
+"provide the observed event name as imported into the applet. Conditions\n"
+"that watch events have no configuration, thus they show no pane.\n"
+msgstr ""
+
+#: template-task-plugin.py:28
+msgid ""
+"This is a template for a generic task plugin: it can be expanded suitably "
+"to\n"
+"the needs of the plugin. A task plugin must provide a command line, a "
+"summary\n"
+"description, the fixed construction data and nothing more: everything else "
+"is\n"
+"optional, including the configuration panel, and can be left out.\n"
+msgstr ""
