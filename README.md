@@ -48,7 +48,7 @@ The following screencast briefly shows the management application:
 
 
 ## Installation
-There is no automatic installation procedure at present: the package has to be downloaded from the GitHub page or cloned directly. To run the wizard, `cd` to the folder where the **When Wizard** has been unpacked or cloned, and type
+There is no automatic or package-based installation procedure at present: the package has to be downloaded from the GitHub page or cloned directly. To run the wizard, `cd` to the folder where the **When Wizard** has been unpacked or cloned, and type
 
 ```
 $ ./when-wizard start-wizard
@@ -58,7 +58,7 @@ at the `$` prompt. This will start the wizard GUI. To start the management appli
 
 
 ## What still has to be done
-The wizard interface is almost complete but might require some refinements. Also, it completely lacks any form of configuration: although at the moment the application does not seem to need any form of configuration, it might do in the future. The manager application is also quite complete and functional. Parts of its UI can be improved too, although in my opinion both graphic utilities now have reached an almost stable state.
+The wizard interface is almost complete but might require some refinements. Also, it completely lacks static configuration: although at the moment the application does not seem to need any form of configuration, as it relies on **When** and on its own datastore for static data, it might take advantage of some kind of settings in the future. The manager application is also quite complete and functional. Parts of its UI can be improved too, although in my opinion both GUI utilities now have reached an almost stable state.
 
 The provided _stock plugins_ **do not always do what they promise**: sometimes they do or at least try to, but in many cases they just don't work, especially for tasks. Mostly because I have to find out what is the command for a specific action, as I focused more on how to get the whole application working instead of caring for plugin details.
 
