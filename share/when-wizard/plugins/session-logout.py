@@ -23,7 +23,7 @@ this task, because when it occurs you are likely to loose any unsaved work.
 
 
 # TODO: find the suitable command to log out
-LOGOUT_COMMAND = "dm-tool switch-to-greeter"
+LOGOUT_COMMAND = "gnome-session-quit"
 
 
 class Plugin(TaskPlugin):

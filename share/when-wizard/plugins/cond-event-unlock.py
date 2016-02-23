@@ -16,7 +16,8 @@ _ = locale.gettext
 
 
 HELP = _("""\
-This event will occur when you unlock the session.
+This event will occur when the session exits from locked state, by entering
+the correct password in the lock screen.
 """)
 
 

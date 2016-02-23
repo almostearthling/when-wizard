@@ -47,6 +47,10 @@ The following screencast briefly shows the management application:
 ![anim](https://raw.githubusercontent.com/almostearthling/hello-world/master/images/when-wizard-manager.gif)
 
 
+## Documentation
+As said above, the documentation is included in the main **When** documentation as a chapter and can be viewed [here](http://when-documentation.readthedocs.org/en/latest/wizard.html). Analogously as what happens for the **When** applet, the documentation for contributors is available separately as a subset of the main developer documentation [here](http://contributing-to-when.readthedocs.org/en/latest/wizard.html).
+
+
 ## Installation
 There is no automatic or package-based installation procedure at present: the package has to be downloaded from the GitHub page or cloned directly. To run the wizard, `cd` to the folder where the **When Wizard** has been unpacked or cloned, and type
 
@@ -54,19 +58,17 @@ There is no automatic or package-based installation procedure at present: the pa
 $ ./when-wizard start-wizard
 ```
 
-at the `$` prompt. This will start the wizard GUI. To start the management application, change `start-wizard` to `start-manager`. Consider that it's in early alpha stage: it mostly works but it can produce some errors. Also consider that the **When Wizard** is used also to debug and improve **When**'s remote API: if something does not work it should be tested with the latest updates in the `devel` (_development_) branch of **When** before filing an issue.
+at the `$` prompt. This will start the wizard GUI. To start the management application, change `start-wizard` to `start-manager`: this also gives the option to install icons, that should however be removed manually. Consider that it's in early alpha stage: it mostly works but it can produce some errors. Also consider that the **When Wizard** is used also to debug and improve **When**'s remote API: if something does not work it should be tested with the latest updates in the `devel` (_development_) branch of **When** before filing an issue.
 
 
 ## What still has to be done
-The wizard interface is almost complete but might require some refinements. Also, it completely lacks static configuration: although at the moment the application does not seem to need any form of configuration, as it relies on **When** and on its own datastore for static data, it might take advantage of some kind of settings in the future. The manager application is also quite complete and functional. Parts of its UI can be improved too, although in my opinion both GUI utilities now have reached an almost stable state.
+The wizard interface is almost complete but it surely requires some refinements. Also, it completely lacks static configuration: although at the moment the application does not seem to need any form of configuration, as it relies on **When** and on its own datastore for static data, it might take advantage of some kind of settings in the future. The manager application is also quite complete and functional. Parts of its UI can be improved too, although in my opinion both GUI utilities now have reached an almost stable state.
 
 The provided _stock plugins_ **do not always do what they promise**: sometimes they do or at least try to, but in many cases they just don't work, especially for tasks. Mostly because I have to find out what is the command for a specific action, as I focused more on how to get the whole application working instead of caring for plugin details.
 
 The command line utilities (which are all subcommands of `when-wizard`) completely lack any output, and only rely on exit status code to inform the caller of errors and issues.
 
 The language used throughout the UI has been taken care of, but still needs to be revised.
-
-The documentation for the **When Wizard** has still to be written: the user part should be a chapter in the **When** documentation, while in the developer documentation there is already a chapter dedicated to plugin development.
 
 Localization is another argument that has to be faced: the plugin-based structure makes it hard to deal with localizations of third party components. While stock plugins will be handled just as if they were normal components, third-party plugins might have to be left out or find another way to be translated.
 
@@ -75,7 +77,7 @@ Everything has to be thoroughly tested: all functionality has been fairly checke
 ## What more can be done
 There are several elements that can be improved, besides what is strictly needed:
 - _stock_ plugins should be improved and made more stable
-- more stock plugins should be added
+- more stock plugins should be added (at least the ones promised in the documentation)
 - the `PicklingDatastore` is definitely too rough to be considered definitive: probably something more robust, maybe based on _SQLite_, can be used; in the end the `Datastore` protocol just requires to store big strings (usually JSON data) indexed by short strings which seems a fairly simple task for a SQL DB
 - **When** remote API has to be debugged, revised and made more consistent if necessary, and **When Wizard**'s client counterpart should change accordingly
 - the application has to be packaged for Linux systems.

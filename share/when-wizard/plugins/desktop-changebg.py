@@ -21,7 +21,8 @@ _ = locale.gettext
 HELP = _("""\
 Change the desktop background to the image you decide. Of course you can
 switch it back to the original one using the desktop settings: this can be
-useful to provide a strong alert when some event occurs.
+useful to provide a strong alert when some event occurs, or just to have
+different background images depending on the time of day.
 """)
 
 

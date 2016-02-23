@@ -16,10 +16,9 @@ _ = locale.gettext
 
 
 HELP = _("""\
-This event will occur when the session locks, either because the system is
-instructed to do so after a while or because you intentionally locked your
-computer by pressing the lock key combination or by selecting an appropriate
-menu entry.
+This event will occur when the screensaver starts, which normally happens
+when the workstation has been idle for a while. The idle time before the
+screensaver starts can be defined in the user settings.
 """)
 
 

@@ -20,7 +20,9 @@ _ = locale.gettext
 
 HELP = _("""\
 This event will occur as soon as the applet is closed, normally when the
-session itself finishes, at logout or when the computer is shut down.
+session itself finishes, at logout or when the computer is shut down. It is
+not safe to perform heavy operations here, because on real shutdown only a
+one second grace time is left to applications.
 """)
 
 
