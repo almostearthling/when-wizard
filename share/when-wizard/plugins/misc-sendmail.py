@@ -4,6 +4,8 @@
 # Task plugin to send an email
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
+# NOTE: the mailutils package *must* be installed and correctly configured
+
 
 import locale
 from plugin import TaskPlugin, PLUGIN_CONST

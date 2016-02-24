@@ -25,7 +25,8 @@ about a certain event.
 """)
 
 
-cmd_template = 'xdg-open "%s"'
+# the audio play commands installed by default in Ubuntu are aplay and paplay
+cmd_template = 'paplay "%s"'
 
 
 class Plugin(TaskPlugin):

@@ -4,6 +4,7 @@
 # Task plugin to shutdown the system
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
+# NOTE: the consolekit package is a *mandatory* requirement
 
 import locale
 from plugin import TaskPlugin, PLUGIN_CONST
@@ -23,8 +24,17 @@ data is saved (or at least auto-saved) before letting the computer shut down.
 """)
 
 
-# TODO: find the suitable command to shut down
-SHUTDOWN_COMMAND = "gnome-session-quit --no-prompt --force --power-off"
+# see: http://superuser.com/a/533684/471608
+# I also like `gdbus` as a command, it is probably more gnome-ish;
+# the reason for the one-minute sleep is that the user may want to do
+# something before shutting down, such as write an e-mail or send a message
+# through another action
+SHUTDOWN_COMMAND = """\
+sleep 60 && \
+gdbus call -y -d org.freedesktop.ConsoleKit \
+              -o /org/freedesktop/ConsoleKit/Manager \
+              -m org.freedesktop.ConsoleKit.Manager.Stop
+"""
 
 
 class Plugin(TaskPlugin):

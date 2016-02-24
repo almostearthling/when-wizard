@@ -70,6 +70,11 @@ class Plugin(TaskPlugin):
         if filename:
             o('txtDestination').set_text(filename)
 
+    # find the attached USB device: a possible solution is here
+    # http://askubuntu.com/a/168654/466738
+    # however since we rely on the device label, a scan of /media/$USER
+    # should be performed anyway; maybe that in case the system does not
+    # automount devices it has to be GVFS-mounted too
     def click_btnRefresh(self, obj):
         o = self.builder.get_object
         # TODO: ...
