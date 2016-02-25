@@ -1,14 +1,13 @@
 #!/bin/sh
 # Check that there are no more downloads pending from the major browsers
-# monitoring the known partial download file specifications in the default
+# monitoring the known partial download file specifications in the provided
 # download directory. It returns 0 if downloads *finished* (that is, there
-# *were* active downloads and there are no more), and 1 otherwise
-#
-# NOTE: maybe the directory should be configurable?
+# *were* active downloads and there are no more), and 1 otherwise; it expects
+# to have one parameter pointing to the directory to be monitored.
 
-DOWNLOADS=~/Downloads
+DOWNLOADS="$1"
 EXTENSIONS="crdownload part"
-DONTCHECK="$DOWNLOADS/.skip-check"
+DONTCHECK="$DOWNLOADS/.cond-downloads-finished_skip-check.tmp"
 
 discard_out () {
   $@ > /dev/null 2>&1

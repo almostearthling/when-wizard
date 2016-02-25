@@ -23,10 +23,12 @@ power button. In some cases network activity could cause a wakeup.
 """)
 
 
-HIBERNATE_COMMAND = """dbus-send --system --dest=org.freedesktop.UPower \
-/org/freedesktop/UPower org.freedesktop.UPower.Suspend"""
-# HIBERNATE_COMMAND = """dbus-send --system --dest=org.freedesktop.UPower \
-# /org/freedesktop/UPower org.freedesktop.UPower.Hibernate"""
+HIBERNATE_COMMAND = """\
+sleep 2 && \
+gdbus call -y -d org.freedesktop.UPower \
+              -o /org/freedesktop/UPower \
+              -m org.freedesktop.UPower.Suspend
+"""
 
 
 class Plugin(TaskPlugin):
