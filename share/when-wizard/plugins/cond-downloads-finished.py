@@ -6,6 +6,7 @@
 # Released under the BSD License (see LICENSE file)
 
 
+import locale
 from plugin import CommandConditionPlugin, PLUGIN_CONST, plugin_name
 
 

@@ -885,8 +885,11 @@ def load_plugin_module(basename, stock=False):
                     else:
                         path = None
     if path:
-        module = SourceFileLoader(basename, path).load_module()
-        return module
+        try:
+            module = SourceFileLoader(basename, path).load_module()
+            return module
+        except Exception:
+            return None
     else:
         return None
 
