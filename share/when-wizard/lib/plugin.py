@@ -17,6 +17,7 @@ import dbus
 import zipfile
 import tempfile
 import shutil
+import traceback
 from importlib.machinery import SourceFileLoader
 
 from utility import load_image, load_pixbuf, load_dialog, build_dialog, \
@@ -913,6 +914,8 @@ def load_plugin_module(basename, stock=False):
             module = SourceFileLoader(basename, path).load_module()
             return module
         except Exception:
+            if PLUGIN_TEMP_FOLDER:
+                traceback.print_tb(sys.exc_info()[2])
             return None
     else:
         return None
