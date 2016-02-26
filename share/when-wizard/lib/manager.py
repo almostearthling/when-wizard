@@ -31,7 +31,8 @@ from plugin import PLUGIN_CONST, stock_plugins_names, user_plugins_names, \
     load_plugin_module, unstore_association, unregister_plugin_data, \
     retrieve_action_history, retrieve_plugin_data, retrieve_plugin, \
     active_plugins_names, retrieve_association, retrieve_association_ids, \
-    install_plugin, uninstall_plugin
+    install_plugin, uninstall_plugin, \
+    enable_association_id, retrieve_association_ids_suspended
 
 _WIZARD_LOADER = 'when-wizard'
 _WIZARD_WIZARD_SUBCOMMAND = 'start-wizard'
@@ -71,6 +72,8 @@ class ManagerAppWindow(object):
         icon = load_pixbuf(_WIZARD_MANAGER_DLGICON)
         self.glyph_success = load_pixbuf('success')
         self.glyph_failure = load_pixbuf('failure')
+        self.glyph_enabled = load_pixbuf('enabled')
+        self.glyph_disabled = load_pixbuf('disabled')
         self.dialog.set_icon(icon)
 
         self.dialog_about = o('dlgAbout')
@@ -104,6 +107,8 @@ class ManagerAppWindow(object):
         r_text_e = Gtk.CellRendererText()
         r_text_e.set_property('ellipsize', Pango.EllipsizeMode.MIDDLE)
         r_pixbuf = Gtk.CellRendererPixbuf()
+        column_cond_active = Gtk.TreeViewColumn(
+            RESOURCES.UI_COLUMN_HEAD_ICON, r_pixbuf, pixbuf=6)
         column_cond_icon = Gtk.TreeViewColumn(
             RESOURCES.UI_COLUMN_HEAD_ICON, r_pixbuf, pixbuf=1)
         column_cond_name = Gtk.TreeViewColumn(
@@ -117,6 +122,7 @@ class ManagerAppWindow(object):
             RESOURCES.UI_COLUMN_HEAD_TASK, r_text, text=5)
         column_task_name.set_expand(True)
         l = o('listAssociation')
+        l.append_column(column_cond_active)
         l.append_column(column_cond_icon)
         l.append_column(column_cond_name)
         l.append_column(column_arrow)
@@ -176,21 +182,28 @@ class ManagerAppWindow(object):
         store = Gtk.ListStore(str,
                               GdkPixbuf.Pixbuf, str,
                               GdkPixbuf.Pixbuf,
-                              GdkPixbuf.Pixbuf, str)
+                              GdkPixbuf.Pixbuf, str,
+                              GdkPixbuf.Pixbuf, bool)
         association_ids = retrieve_association_ids()
+        suspended = retrieve_association_ids_suspended()
         arrow = load_pixbuf('right')
         l = o('listAssociation')
         delall_sensitive = False
         for x in association_ids:
             li = retrieve_association(x)
             cond_name = li[0]
+            cond_active = bool(x not in suspended)
+            cond_active_pixbuf = \
+                self.glyph_enabled if cond_active else self.glyph_disabled
             cond_data = retrieve_plugin_data(cond_name)
             cond_pixbuf = load_pixbuf(cond_data['icon'])
             task_name = li[1]
             task_data = retrieve_plugin_data(task_name)
             task_pixbuf = load_pixbuf(task_data['icon'])
-            store.append([x, cond_pixbuf, cond_data['name'], arrow,
-                          task_pixbuf, task_data['name']])
+            store.append([x,
+                          cond_pixbuf, cond_data['name'], arrow,
+                          task_pixbuf, task_data['name'],
+                          cond_active_pixbuf, cond_active])
             delall_sensitive = True
         l.set_model(store)
         o('btnDeleteAll').set_sensitive(delall_sensitive)
@@ -247,16 +260,25 @@ class ManagerAppWindow(object):
         m, i = sel.get_selected()
         if i is not None:
             self.selected_association = m[i][0]
+            enabled = m[i][7]
             li = retrieve_association(self.selected_association)
             data_cond = retrieve_plugin_data(li[0])
             data_task = retrieve_plugin_data(li[1])
             o('txtCondition').set_text(data_cond['summary_description'])
             o('txtConsequence').set_text(data_task['summary_description'])
             o('btnDelete').set_sensitive(True)
+            if enabled:
+                o('btnEnable').set_sensitive(False)
+                o('btnDisable').set_sensitive(True)
+            else:
+                o('btnEnable').set_sensitive(True)
+                o('btnDisable').set_sensitive(False)
         else:
             o('txtCondition').set_text("")
             o('txtConsequence').set_text("")
             o('btnDelete').set_sensitive(False)
+            o('btnEnable').set_sensitive(False)
+            o('btnDisable').set_sensitive(False)
 
     def changed_cbSelectUninstallPlugin(self, cb):
         o = self.builder.get_object
@@ -351,6 +373,14 @@ class ManagerAppWindow(object):
             self.fill_cbSelectUninstallPlugin(None)
             o('txtCondition').set_text("")
             o('txtConsequence').set_text("")
+
+    def click_btnEnable(self, obj):
+        enable_association_id(self.selected_association, True)
+        self.fill_listAssociations(None)
+
+    def click_btnDisable(self, obj):
+        enable_association_id(self.selected_association, False)
+        self.fill_listAssociations(None)
 
     def click_btnRefresh(self, obj):
         self.fill_listHistory(None)

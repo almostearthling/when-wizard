@@ -345,6 +345,28 @@ class BaseConditionPlugin(BasePlugin):
     def startup_check(self):
         return False
 
+    def active(self):
+        proxy = when_proxy()
+        if proxy is None:
+            return False
+        try:
+            if not proxy.IsSuspendedCondition(self.unique_id):
+                return False
+            return True
+        except dbus.exceptions.DBusException:
+            return False
+
+    def activate(self, active=True):
+        proxy = when_proxy()
+        if proxy is None:
+            return False
+        try:
+            if not proxy.SuspendCondition(self.unique_id, not active):
+                return False
+            return True
+        except dbus.exceptions.DBusException:
+            return False
+
 
 ##############################################################################
 # the following are all abstract base classes: real plugins have to derive
@@ -1192,12 +1214,59 @@ def retrieve_plugin_ids():
     return l
 
 
+def retrieve_plugin_ids_suspended():
+    proxy = when_proxy()
+    if proxy is None:
+        return None
+    l = []
+    for x in retrieve_plugin_ids():
+        data = retrieve_plugin_data(x)
+        if data['plugin_type'] == PLUGIN_CONST.PLUGIN_TYPE_CONDITION:
+            try:
+                if proxy.IsSuspendedCondition(x):
+                    l.append(x)
+            except dbus.exceptions.DBusException:
+                return None
+    return l
+
+
 def retrieve_association_ids():
     l = []
     for unique_id in datastore:
         if unique_id.startswith(_PLUGIN_ASSOCIATION_ID_MAGIC):
             l.append(unique_id)
     return l
+
+
+def retrieve_association_ids_suspended():
+    proxy = when_proxy()
+    if proxy is None:
+        return None
+    l = []
+    for unique_id in datastore:
+        if unique_id.startswith(_PLUGIN_ASSOCIATION_ID_MAGIC):
+            data = retrieve_association(unique_id)
+            cond = data[0]
+            try:
+                if proxy.IsSuspendedCondition(cond):
+                    l.append(unique_id)
+            except dbus.exceptions.DBusException:
+                return None
+    return l
+
+
+def enable_association_id(unique_id, enable=True):
+    proxy = when_proxy()
+    if proxy is None:
+        return None
+    data = retrieve_association(unique_id)
+    cond = data[0]
+    try:
+        if proxy.SuspendCondition(cond, not enable):
+            return True
+        return False
+    except dbus.exceptions.DBusException:
+        return None
 
 
 # find plugins dynamically

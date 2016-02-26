@@ -264,6 +264,42 @@
                       </packing>
                     </child>
                     <child>
+                      <object class="GtkButton" id="btnEnable">
+                        <property name="label">Enable</property>
+                        <property name="width_request">120</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="margin_left">5</property>
+                        <property name="margin_top">10</property>
+                        <property name="image">imgClear1</property>
+                        <signal name="clicked" handler="click_btnEnable" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="btnDisable">
+                        <property name="label">Disable</property>
+                        <property name="width_request">120</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="margin_left">5</property>
+                        <property name="margin_top">10</property>
+                        <property name="image">imgClear2</property>
+                        <signal name="clicked" handler="click_btnDisable" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">3</property>
+                      </packing>
+                    </child>
+                    <child>
                       <object class="GtkFixed" id="fixFill01">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
@@ -271,7 +307,7 @@
                       <packing>
                         <property name="expand">True</property>
                         <property name="fill">True</property>
-                        <property name="position">2</property>
+                        <property name="position">4</property>
                       </packing>
                     </child>
                   </object>
@@ -1221,5 +1257,15 @@
         </child>
       </object>
     </child>
+  </object>
+  <object class="GtkImage" id="imgClear1">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-clear</property>
+  </object>
+  <object class="GtkImage" id="imgClear2">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-clear</property>
   </object>
 </interface>
