@@ -40,6 +40,7 @@ class PluginConstants(object):
 
     CATEGORY_COND_TIME = 'time'
     CATEGORY_COND_EVENT = 'event'
+    CATEGORY_COND_FILESYSTEM = 'filesystem'
     CATEGORY_COND_MISC = 'misc'
 
 
@@ -827,7 +828,8 @@ class FileChangeConditionPlugin(BaseConditionPlugin):
                  version=None):
         if self.__class__.__name__ == 'FileChangeConditionPlugin':
             raise TypeError("cannot instantiate abstract class")
-        BaseConditionPlugin.__init__(self, PLUGIN_CONST.CATEGORY_COND_EVENT,
+        BaseConditionPlugin.__init__(self,
+                                     PLUGIN_CONST.CATEGORY_COND_FILESYSTEM,
                                      basename, name, description, author,
                                      copyright, icon, help_string, version)
         self.watched_path = None

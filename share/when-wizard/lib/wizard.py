@@ -163,6 +163,9 @@ class WizardAppWindow(object):
         store.append([load_pixbuf('clock'),
                       PLUGIN_CONST.CATEGORY_COND_TIME,
                       RESOURCES.UI_COMBO_CATEGORY_COND_TIME])
+        store.append([load_pixbuf('folder'),
+                      PLUGIN_CONST.CATEGORY_COND_FILESYSTEM,
+                      RESOURCES.UI_COMBO_CATEGORY_COND_FILESYSTEM])
         store.append([load_pixbuf('clapperboard'),
                       PLUGIN_CONST.CATEGORY_COND_EVENT,
                       RESOURCES.UI_COMBO_CATEGORY_COND_EVENT])

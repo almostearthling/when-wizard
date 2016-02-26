@@ -77,6 +77,7 @@ class Resources(object):
     UI_COMBO_CATEGORY_MISC = _("Miscellaneous")
 
     UI_COMBO_CATEGORY_COND_TIME = _("Time Related")
+    UI_COMBO_CATEGORY_COND_FILESYSTEM = _("Files and Directories")
     UI_COMBO_CATEGORY_COND_EVENT = _("Session or System Event")
     UI_COMBO_CATEGORY_COND_MISC = _("Miscellaneous")
 
