@@ -117,6 +117,8 @@ class Resources(object):
     MSGBOX_ERR_IMPORT_IDF = _("The specified item definition file could\nnot be imported. Check file consistency.")
     MSGBOX_ERR_IMPORT_IDF_READ = _("The item definition file could not be read.")
     MSGBOX_ERR_IMPORT_IDF_EXISTS = _("An item definition file with the same name\nhas been already imported: remove it first.")
+    MSGBOX_ERR_IMPORT_IDF_PARAMS = _("Invalid parameter values: please retry.")
+    MSGBOX_ERR_IMPORT_IDF_CANCEL = _("Parameter setup canceled by user.")
     MSGBOX_ERR_UNIMPORT_IDF = _("Not all items from the specified definition file\ncould be removed: please check dependencies.")
     MSGBOX_OK_IMPORT_IDF = _("Items imported successfully.")
     MSGBOX_OK_UNIMPORT_IDF = _("Items removed successfully.")

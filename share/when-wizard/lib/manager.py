@@ -24,7 +24,8 @@ from utility import app_dialog, load_pixbuf, when_proxy, \
     WHEN_OPTIONS_REACTIVITY_LAZY, WHEN_OPTIONS_REACTIVITY_NORMAL, \
     WHEN_OPTIONS_GENERIC
 
-from itemimport import idf_exists, idf_install, idf_remove, idf_installed_list
+from itemimport import idf_exists, idf_install, idf_remove, \
+    idf_installed_list, param_file, replace_params
 
 from resources import *
 from plugin import PLUGIN_CONST, stock_plugins_names, user_plugins_names, \
@@ -58,6 +59,7 @@ for name in user_plugins_names():
 
 # load windows and stock panes
 ui_app_manager = app_dialog('app-manager')
+ui_app_manager_paramidf = app_dialog('app-manager-paramidf')
 
 
 # the main wizard manager window
@@ -487,7 +489,22 @@ class ManagerAppWindow(object):
             else:
                 try:
                     with open(self.import_idf) as f:
-                        contents = f.read()
+                        full_contents = f.read()
+                    text, params = param_file(full_contents)
+                    if params:
+                        box = ConfigIDFWindow(params)
+                        try:
+                            box.run()
+                            param_dict = box.values
+                            if param_dict is not None:
+                                contents = replace_params(text, param_dict)
+                            else:
+                                error = RESOURCES.MSGBOX_ERR_IMPORT_IDF_CANCEL
+                        except ValueError:
+                            error = RESOURCES.MSGBOX_ERR_IMPORT_IDF_PARAMS
+                        box.destroy()
+                    else:
+                        contents = full_contents
                 except:
                     error = RESOURCES.MSGBOX_ERR_IMPORT_IDF_READ
             if error is None:
@@ -601,6 +618,210 @@ class ManagerAppWindow(object):
         ret = self.dialog.run()
         self.dialog.hide()
         return ret
+
+
+# the item definition file configuration dialog box: first define auxiliary
+# widget classes and then the main class; the auxiliary classes are used to
+# create the widgets that are appended inside the parameter list
+class entry_Text(object):
+
+    def __init__(self, param_name, label, default):
+        self.builder = Gtk.Builder().new_from_string(
+            ui_app_manager_paramidf, -1)
+        self.builder.set_translation_domain(APP_NAME)
+        o = self.builder.get_object
+        self.widget = o('entry_boxText')
+        self.param_name = param_name
+        self.value = default
+        o('lbl_boxText').set_text(label)
+        o('txt_boxText').set_text(self.value)
+        o('txt_boxText').connect('changed', self.change_text)
+
+    def change_text(self, obj):
+        o = self.builder.get_object
+        self.value = o('txt_boxText').get_text()
+
+
+class entry_Integer(object):
+
+    def __init__(self, param_name, label, default):
+        self.builder = Gtk.Builder().new_from_string(
+            ui_app_manager_paramidf, -1)
+        self.builder.set_translation_domain(APP_NAME)
+        o = self.builder.get_object
+        self.widget = o('entry_boxInteger')
+        self.param_name = param_name
+        self.value = default
+        o('lbl_boxInteger').set_text(label)
+        o('txt_boxInteger').set_text(self.value)
+        o('txt_boxInteger').connect('changed', self.change_text)
+
+    def change_text(self, obj):
+        o = self.builder.get_object
+        self.value = o('txt_boxInteger').get_text()
+
+
+class entry_Real(object):
+
+    def __init__(self, param_name, label, default):
+        self.builder = Gtk.Builder().new_from_string(
+            ui_app_manager_paramidf, -1)
+        self.builder.set_translation_domain(APP_NAME)
+        o = self.builder.get_object
+        self.widget = o('entry_boxReal')
+        self.param_name = param_name
+        self.value = default
+        o('lbl_boxReal').set_text(label)
+        o('txt_boxReal').set_text(self.value)
+        o('txt_boxReal').connect('changed', self.change_text)
+
+    def change_text(self, obj):
+        o = self.builder.get_object
+        self.value = o('txt_boxReal').get_text()
+
+
+class entry_File(object):
+
+    def __init__(self, param_name, label, default):
+        self.builder = Gtk.Builder().new_from_string(
+            ui_app_manager_paramidf, -1)
+        self.builder.set_translation_domain(APP_NAME)
+        o = self.builder.get_object
+        self.widget = o('entry_boxFile')
+        self.param_name = param_name
+        self.value = default
+        o('lbl_boxFile').set_text(label)
+        o('txt_boxFile').set_text(self.value)
+        o('txt_boxFile').connect('changed', self.change_text)
+        o('btn_boxFile').connect('clicked', self.click_choose)
+
+    def change_text(self, obj):
+        o = self.builder.get_object
+        self.value = o('txt_boxFile').get_text()
+
+    def click_choose(self, obj):
+        dlg = Gtk.FileChooserDialog(
+            RESOURCES.UI_TITLE_CHOOSE_IDF_FILE, None,
+            Gtk.FileChooserAction.OPEN,
+            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+             Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+        res = dlg.run()
+        filename = None
+        if res == Gtk.ResponseType.OK:
+            filename = dlg.get_filename()
+        dlg.destroy()
+        o = self.builder.get_object
+        o('txt_boxFile').set_text(filename)
+
+
+class entry_Dir(object):
+
+    def __init__(self, param_name, label, default):
+        self.builder = Gtk.Builder().new_from_string(
+            ui_app_manager_paramidf, -1)
+        self.builder.set_translation_domain(APP_NAME)
+        o = self.builder.get_object
+        self.widget = o('entry_boxDir')
+        self.param_name = param_name
+        self.value = default
+        o('lbl_boxDir').set_text(label)
+        o('txt_boxDir').set_text(self.value)
+        o('txt_boxDir').connect('changed', self.change_text)
+        o('btn_boxDir').connect('clicked', self.click_choose)
+
+    def change_text(self, obj):
+        o = self.builder.get_object
+        self.value = o('txt_boxDir').get_text()
+
+    def click_choose(self, obj):
+        dlg = Gtk.FileChooserDialog(
+            RESOURCES.UI_TITLE_CHOOSE_IDF_FILE, None,
+            Gtk.FileChooserAction.SELECT_FOLDER,
+            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+             Gtk.STOCK_OPEN, Gtk.ResponseType.OK))
+        res = dlg.run()
+        filename = None
+        if res == Gtk.ResponseType.OK:
+            filename = dlg.get_filename()
+        dlg.destroy()
+        o = self.builder.get_object
+        o('txt_boxDir').set_text(filename)
+
+
+class entry_Choice(object):
+
+    def __init__(self, param_name, label, default, choices):
+        self.builder = Gtk.Builder().new_from_string(
+            ui_app_manager_paramidf, -1)
+        self.builder.set_translation_domain(APP_NAME)
+        o = self.builder.get_object
+        self.widget = o('entry_boxChoice')
+        self.param_name = param_name
+        self.value = default
+        self.choices = choices
+        o('lbl_boxChoice').set_text(label)
+        cb = o('cb_boxChoice')
+        for choice in choices:
+            cb.append_text(choice)
+        cb.set_active(choices.index(default))
+
+    def change_value(self, obj):
+        o = self.builder.get_object
+        self.value = self.choices[o('cb_boxChoice').get_active()]
+
+
+class ConfigIDFWindow(object):
+
+    def __init__(self, params):
+        self.builder = Gtk.Builder().new_from_string(
+            ui_app_manager_paramidf, -1)
+        self.builder.connect_signals(self)
+        self.builder.set_translation_domain(APP_NAME)
+        o = self.builder.get_object
+        self.dialog = o('dlgConfigItems')
+        icon = load_pixbuf(_WIZARD_MANAGER_DLGICON)
+        self.dialog.set_icon(icon)
+        self.ctl_dict = {}
+        self.chk_dict = {}
+        self.values = None
+
+        scroll = o('boxEntries')
+        for param in params:
+            param_name = param[1:]
+            param_type, desc, default, ctl, choices = params[param]
+            if param_type == 'string':
+                entry = entry_Text(param_name, desc, default)
+            elif param_type == 'integer':
+                entry = entry_Integer(param_name, desc, default)
+            elif param_type == 'real':
+                entry = entry_Real(param_name, desc, default)
+            elif param_type == 'choice':
+                entry = entry_Choice(param_name, desc, default, choices)
+            elif param_type == 'file':
+                entry = entry_File(param_name, desc, default)
+            elif param_type == 'directory':
+                entry = entry_Dir(param_name, desc, default)
+            self.ctl_dict[param] = entry
+            self.chk_dict[param] = ctl
+            scroll.pack_start(entry.widget, False, False, 0)
+        scroll.pack_start(o('fixFiller'), True, True, 0)
+
+    def run(self):
+        self.values = {}
+        ret = self.dialog.run()
+        self.dialog.hide()
+        if ret == ACTION_OK:
+            for k in self.ctl_dict:
+                v = self.ctl_dict[k].value
+                if self.chk_dict[k](v):
+                    self.values[k] = v
+                else:
+                    raise ValueError
+        else:
+            self.values = None
+
+    def destroy(self):
+        self.dialog.destroy()
 
 
 # The main application loader

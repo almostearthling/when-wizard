@@ -10,6 +10,7 @@ import re
 import dbus
 import json
 import configparser
+from collections import OrderedDict
 from utility import datastore, unique_str, when_proxy
 
 
@@ -156,7 +157,7 @@ VALIDATE_PARAM_NAME = re.compile(r"^\@[a-zA-Z][a-zA-Z0-9_]*$")
 # and commas in string defaults and choice values
 def param_file(s):
     out_lines = []
-    params = {}
+    params = OrderedDict()
     for line in s.split('\n'):
         clean_line = line.strip()
         if not clean_line.startswith('@'):
@@ -216,6 +217,8 @@ def param_file(s):
                                 rest = rest[1:]
                             buf += rest[0]
                             rest = rest[1:]
+                    if buf and buf not in choices:
+                        choices.append(buf)
                     if default not in choices:
                         choices.insert(0, default)
                 elif 'file'.startswith(t):
@@ -235,46 +238,15 @@ def param_file(s):
 
 
 # this avoids to have to deal with regex group substitutions where just fixed
-# strings have to be replaced: the point in splitting the line in pieces and
-# looking ahead in the first character of the next piece is that we do not
-# want to replace a parameter that can be the substring of another one with
-# that other one; the other possible strategy is to sort parameter names in
+# strings have to be replaced. The strategy is to sort parameter names in
 # descending order and replace them abruptly in the entire string: in this
 # way we are sure that parameter names that contain other parameter names are
 # processed before the shorter ones and thus remove the chance of overlapping
-def replace_param(s, param, value):
-    out_lines = []
-    s_value = str(value)
-    for line in s.split('\n'):
-        clean_line = line.strip()
-        if clean_line.startswith('#') or clean_line.startswith(';'):
-            out_lines.append(line)
-        else:
-            s = ''
-            pieces = line.split(param)
-            while pieces:
-                s += pieces[0]
-                pieces = pieces[1:]
-                if pieces:
-                    if pieces[0] and (
-                       pieces[0][0].isalnum() or pieces[0][0] == '_'):
-                        s += param
-                    else:
-                        s += value
-                else:
-                    s += value
-            out_lines.append(s)
-    return '\n'.join(out_lines)
-
-
-# as said above both options are possible: let's keep the formally correct
-# one for now, for a try: it can be changed easily to the commented out one
 def replace_params(s, param_dict):
-    params = param_dict.keys()
+    params = list(param_dict.keys())
     params.sort(reverse=True)
     for x in params:
-        # s = s.replace(x, param_dict[x])
-        s = replace_param(s, x, param_dict[x])
+        s = s.replace(x, param_dict[x])
     return s
 
 
