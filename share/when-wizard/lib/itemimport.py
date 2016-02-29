@@ -112,43 +112,7 @@ def idf_remove(name):
         return -error
 
 
-##############################################################################
 # Parametrized IDF handling
-#
-# Parametrized IDFs can reference user-modifiable parameters, which have to
-# be defined in the file itself; when a IDF file is loaded, the manager
-# interface shows a dialog box containing fields, one for each parameter,
-# preset to their default values: the user can either modify the values or
-# accept the defaults. Parameters start with an at-sign ('@') both in their
-# definition line and when referenced: definition lines start with the
-# parameter identifier followed by attributes that help the UI build a
-# suitable configuration dialog.
-#
-# Possible definition lines are:
-# @param_id desc:s[tring]:default[:regex]
-# @param_id desc:i[nteger]:default[:min:max]
-# @param_id desc:r[eal]:default[:min:max]
-# @param_id desc:c[hoice]:default:value1,value2,...,valueN
-# @param_id desc:f[ile]:default
-# @param_id desc:d[irectory]:default
-#
-# where default is the default value (it can be the empty string); the choice
-# case can be used to create combo boxes with fixed values to choose from;
-# the type prefixes can be partial or even just one letter, for strings a
-# regular expression can (and should) be provided to check for validity and
-# for numerics minimum and maximum values can be provided too. Note that for
-# choices, if default is not in value1, ..., valueN it will just be added.
-#
-# Parameter substitution is performed string-wise in the file: if correctness
-# verifiers are not provided, the result might break the IDF making it invalid
-# and When will refuse to import it. Of course in such case the user will be
-# notified of the import failure by a message box.
-#
-# WARNING: incorrect param lines are skipped as param lines and sent back to
-#          the file as they are!
-#
-# TODO: this comment MUST GO AWAY and its contents find a way into the docs.
-
 VALIDATE_PARAM_NAME = re.compile(r"^\@[a-zA-Z][a-zA-Z0-9_]*$")
 
 
