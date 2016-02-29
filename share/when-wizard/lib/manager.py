@@ -813,7 +813,11 @@ class ConfigIDFWindow(object):
         if ret == ACTION_OK:
             for k in self.ctl_dict:
                 v = self.ctl_dict[k].value
-                if self.chk_dict[k](v):
+                try:
+                    correct = self.chk_dict[k](v)
+                except:
+                    raise ValueError
+                if correct:
                     self.values[k] = v
                 else:
                     raise ValueError

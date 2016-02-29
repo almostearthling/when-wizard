@@ -190,7 +190,7 @@ def param_file(s):
                     param_type = 'integer'
                     if ':' in rest:
                         default, smin, smax = [int(x) for x in rest.split(':')]
-                        control = lambda x: smin <= x <= smax
+                        control = lambda x: smin <= int(x) <= smax
                     else:
                         default = int(rest)
                 elif 'real'.startswith(t):
@@ -198,7 +198,7 @@ def param_file(s):
                     if ':' in rest:
                         default, smin, smax = [
                             float(x) for x in rest.split(':')]
-                        control = lambda x: smin <= x <= smax
+                        control = lambda x: smin <= float(x) <= smax
                     else:
                         default = float(rest)
                 elif 'choice'.startswith(t):
@@ -246,7 +246,7 @@ def replace_params(s, param_dict):
     params = list(param_dict.keys())
     params.sort(reverse=True)
     for x in params:
-        s = s.replace(x, param_dict[x])
+        s = s.replace(x, str(param_dict[x]))
     return s
 
 
