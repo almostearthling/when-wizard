@@ -6,7 +6,8 @@
 # Released under the BSD License (see LICENSE file)
 
 
-import locale
+# uncomment the following line if localization is supported
+# import locale
 from plugin import FileChangeConditionPlugin, PLUGIN_CONST, plugin_name
 
 # Gtk might be needed: uncomment if this is the case
@@ -19,7 +20,7 @@ from plugin import FileChangeConditionPlugin, PLUGIN_CONST, plugin_name
 # locale.textdomain(APP_NAME)
 # _ = locale.gettext
 
-# if localization is supported, uncomment the lines above configure
+# if localization is supported, uncomment the lines above, configure
 # them as appropriate, and remove this replacement function
 def _(x):
     return x
