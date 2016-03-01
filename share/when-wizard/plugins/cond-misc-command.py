@@ -52,8 +52,6 @@ class Plugin(CommandConditionPlugin):
             self.builder.connect_signals(self)
         return self.plugin_panel
 
-    # all following methods are optional
-
     def change_entry(self, obj):
         o = self.builder.get_object
         self.command_line = o('txtEntry').get_text()
