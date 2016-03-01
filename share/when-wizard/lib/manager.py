@@ -487,7 +487,7 @@ class ManagerAppWindow(object):
             elif idf_exists(name):
                 error = RESOURCES.MSGBOX_ERR_IMPORT_IDF_EXISTS
             else:
-                try:
+                # try:
                     with open(self.import_idf) as f:
                         full_contents = f.read()
                     text, params = param_file(full_contents)
@@ -505,8 +505,8 @@ class ManagerAppWindow(object):
                         box.destroy()
                     else:
                         contents = full_contents
-                except:
-                    error = RESOURCES.MSGBOX_ERR_IMPORT_IDF_READ
+                # except:
+                #     error = RESOURCES.MSGBOX_ERR_IMPORT_IDF_READ
             if error is None:
                 if not idf_install(name, contents):
                     box = Gtk.MessageDialog(type=Gtk.MessageType.ERROR,
@@ -792,9 +792,9 @@ class ConfigIDFWindow(object):
             if param_type == 'string':
                 entry = entry_Text(param_name, desc, default)
             elif param_type == 'integer':
-                entry = entry_Integer(param_name, desc, default)
+                entry = entry_Integer(param_name, desc, str(default))
             elif param_type == 'real':
-                entry = entry_Real(param_name, desc, default)
+                entry = entry_Real(param_name, desc, str(default))
             elif param_type == 'choice':
                 entry = entry_Choice(param_name, desc, default, choices)
             elif param_type == 'file':

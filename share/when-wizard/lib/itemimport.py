@@ -120,6 +120,14 @@ VALIDATE_PARAM_NAME = re.compile(r"^\@[a-zA-Z][a-zA-Z0-9_]*$")
 # this: the only thing I care about is to have the chance to put semicolons
 # and commas in string defaults and choice values
 def param_file(s):
+
+    def try_conversion(num, t):
+        try:
+            y = t(num)
+            return True
+        except:
+            return False
+
     out_lines = []
     params = OrderedDict()
     for line in s.split('\n'):
@@ -157,6 +165,7 @@ def param_file(s):
                         control = lambda x: smin <= int(x) <= smax
                     else:
                         default = int(rest)
+                        control = lambda x: try_conversion(x, int)
                 elif 'real'.startswith(t):
                     param_type = 'real'
                     if ':' in rest:
@@ -165,6 +174,7 @@ def param_file(s):
                         control = lambda x: smin <= float(x) <= smax
                     else:
                         default = float(rest)
+                        control = lambda x: try_conversion(x, float)
                 elif 'choice'.startswith(t):
                     param_type = 'choice'
                     default, rest = rest.split(':', 1)
