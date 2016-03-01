@@ -58,15 +58,10 @@ There is no automatic or package-based installation procedure at present: the pa
 $ ./when-wizard start-wizard
 ```
 
-at the `$` prompt. This will start the wizard GUI. To start the management application, change `start-wizard` to `start-manager`: this also gives the option to install icons, that should however be removed manually. Consider that it's in early alpha stage: it mostly works but it can produce some errors. Also consider that the **When Wizard** is used also to debug and improve **When**'s remote API: if something does not work it should be tested with the latest updates in the `devel` (_development_) branch of **When** before filing an issue.
-
+at the `$` prompt. This will start the wizard GUI. To start the management application, change `start-wizard` to `start-manager`: this also gives the option to install icons, that should however be removed manually. Consider that the **When Wizard** is also used to debug and improve **When**'s remote API: if something does not work it should be tested with the latest updates in the `devel` (_development_) branch of **When** before filing an issue.
 
 ## What still has to be done
 The wizard interface is almost complete but it surely requires some refinements. Also, it completely lacks static configuration: although at the moment the application does not seem to need any form of configuration, as it relies on **When** and on its own datastore for static data, it might take advantage of some kind of settings in the future. The manager application is also quite complete and functional. Parts of its UI can be improved too, although in my opinion both GUI utilities now have reached an almost stable state.
-
-The provided _stock plugins_ **do not always do what they promise**: sometimes they do or at least try to, but in many cases they just don't work, especially for tasks. Mostly because I have to find out what is the command for a specific action, as I focused more on how to get the whole application working instead of caring for plugin details.
-
-The command line utilities (which are all subcommands of `when-wizard`) completely lack any output, and only rely on exit status code to inform the caller of errors and issues.
 
 The language used throughout the UI has been taken care of, but still needs to be revised.
 
