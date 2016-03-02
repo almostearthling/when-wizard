@@ -60,6 +60,19 @@ $ ./when-wizard start-wizard
 
 at the `$` prompt. This will start the wizard GUI. To start the management application, change `start-wizard` to `start-manager`: this also gives the option to install icons, that should however be removed manually. Consider that the **When Wizard** is also used to debug and improve **When**'s remote API: if something does not work it should be tested with the latest updates in the `devel` (_development_) branch of **When** before filing an issue.
 
+
+### Requirements
+
+Some extra package may be required for the **When Wizard** and its stock plugins to correctly run. Of course the ``when-command`` package is needed, because the suite applications will simply refuse to run if no running instance of **When** is found: refer to the user guide on how to install this package. All dependencies for **When** are thus dependencies for the **When Wizard** suite.
+
+Other packages that should be installed on Ubuntu (and derivative) host system are:
+
+* ``mailutils`` for the e-mail plugin
+* ``consolekit`` for the confirmationless shutdown and reboot operations.
+
+These packages are not installed by default and need to be installed and set up by the user.
+
+
 ## What still has to be done
 The wizard interface is almost complete but it surely requires some refinements. Also, it completely lacks static configuration: although at the moment the application does not seem to need any form of configuration, as it relies on **When** and on its own datastore for static data, it might take advantage of some kind of settings in the future. The manager application is also quite complete and functional. Parts of its UI can be improved too, although in my opinion both GUI utilities now have reached an almost stable state.
 
