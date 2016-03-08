@@ -1,11 +1,11 @@
-# file: share/when-wizard/run-desktop
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
 # When Wizard
 #
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
-# Desktop file launcher
+# Desktop file launcher script
 # see: http://askubuntu.com/a/239883/466738 for the source
 
 

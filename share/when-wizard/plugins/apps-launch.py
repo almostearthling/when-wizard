@@ -40,6 +40,7 @@ class Plugin(TaskPlugin):
             version=APP_VERSION,
         )
         self.stock = True
+        self.script_path = self.get_script('run-desktop.py')
         self.builder = self.get_dialog('plugin_apps-launch')
         self.plugin_panel = None
         self.app_name = None
@@ -53,10 +54,10 @@ class Plugin(TaskPlugin):
         return self.plugin_panel
 
     def select_application(self, obj, desktop_app):
-        desktop_filename = desktop_app.get_filename()
+        desktop_path = desktop_app.get_filename()
         self.app_name = desktop_app.get_string("Name")
-        self.command_line = '%s run-desktop %s' % (
-            os.path.join(APP_BIN_FOLDER, 'when-wizard'), desktop_filename)
+        self.command_line = '/usr/bin/env python3 %s %s' % (
+            self.script_path, desktop_path)
         self.summary_description = _(
             "The application '%s' will be started") % self.app_name
         self.allow_forward(True)
