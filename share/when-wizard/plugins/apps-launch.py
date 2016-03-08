@@ -7,7 +7,7 @@
 
 import os
 import locale
-from plugin import TaskPlugin, PLUGIN_CONST
+from plugin import TaskPlugin, PLUGIN_CONST, plugin_name
 
 # setup i18n for both applet text and dialogs
 locale.setlocale(locale.LC_ALL, locale.getlocale())
@@ -30,7 +30,7 @@ class Plugin(TaskPlugin):
         TaskPlugin.__init__(
             self,
             category=PLUGIN_CONST.CATEGORY_TASK_APPS,
-            basename='apps-launch',
+            basename=plugin_name(__file__),
             name=_("Application Launcher"),
             description=_("Start a Desktop Application"),
             author=APP_AUTHOR,

@@ -1,15 +1,12 @@
-# file: share/when-wizard/templates/cond-event-shutdown.py
+# file: share/when-wizard/templates/cond-event-batterycharging.py
 # -*- coding: utf-8 -*-
 #
-# Condition plugin for the session close event
+# Condition plugin for the battery charging event
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
 import locale
 from plugin import EventConditionPlugin, PLUGIN_CONST, plugin_name
-
-# Gtk might be needed: uncomment if this is the case
-# from gi.repository import Gtk
 
 # setup i18n for both applet text and dialogs
 locale.setlocale(locale.LC_ALL, locale.getlocale())
@@ -19,14 +16,12 @@ _ = locale.gettext
 
 
 HELP = _("""\
-This event will occur as soon as the applet is closed, normally when the
-session itself finishes, at logout or when the computer is shut down. It is
-not safe to perform heavy operations here, because on real shutdown only a
-one second grace time is left to applications.
+This event will occur when the battery is charging, for example when you
+use a notebook and plug it in the mains socket.
 """)
 
 
-EVENT_APPLET_SHUTDOWN = 'shutdown'
+EVENT_SYSTEM_BATTERY_CHARGE = 'battery_charge'
 
 
 # class for a plugin: the derived class name should always be Plugin
@@ -36,18 +31,19 @@ class Plugin(EventConditionPlugin):
         EventConditionPlugin.__init__(
             self,
             basename=plugin_name(__file__),
-            name=_("Session End"),
-            description=_("End of the User Session"),
+            name=_("Charging"),
+            description=_("The Battery is Charging"),
             author=APP_AUTHOR,
             copyright=APP_COPYRIGHT,
-            icon='no_idea',
+            icon='charge_battery',
             help_string=HELP,
             version=APP_VERSION,
         )
         # mandatory or anyway structural variables and object values follow:
+        self.category = PLUGIN_CONST.CATEGORY_COND_POWER
         self.stock = True
-        self.event = EVENT_APPLET_SHUTDOWN
-        self.summary_description = _("When the session is ending")
+        self.event = EVENT_SYSTEM_BATTERY_CHARGE
+        self.summary_description = _("When the battery is charging")
 
 
 # end.

@@ -6,7 +6,7 @@
 # Released under the BSD License (see LICENSE file)
 
 import locale
-from plugin import TaskPlugin, PLUGIN_CONST
+from plugin import TaskPlugin, PLUGIN_CONST, plugin_name
 
 # setup i18n for both applet text and dialogs
 locale.setlocale(locale.LC_ALL, locale.getlocale())
@@ -31,7 +31,7 @@ class Plugin(TaskPlugin):
         TaskPlugin.__init__(
             self,
             category=PLUGIN_CONST.CATEGORY_TASK_SESSION,
-            basename='session-lock',
+            basename=plugin_name(__file__),
             name=_("Lock"),
             description=_("Session Lock"),
             author=APP_AUTHOR,

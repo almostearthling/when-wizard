@@ -6,7 +6,7 @@
 # Released under the BSD License (see LICENSE file)
 
 import locale
-from plugin import IdleConditionPlugin, PLUGIN_CONST
+from plugin import IdleConditionPlugin, PLUGIN_CONST, plugin_name
 
 from resources import UI_INTERVALS_MINUTES, UI_INTERVALS_HOURS
 
@@ -27,7 +27,7 @@ class Plugin(IdleConditionPlugin):
     def __init__(self):
         IdleConditionPlugin.__init__(
             self,
-            basename='cond-time-idletime',
+            basename=plugin_name(__file__),
             name=_("Idle Time"),
             description=_("Occur when the workstation is idle"),
             author=APP_AUTHOR,

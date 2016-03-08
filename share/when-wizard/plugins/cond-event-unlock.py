@@ -6,7 +6,7 @@
 # Released under the BSD License (see LICENSE file)
 
 import locale
-from plugin import EventConditionPlugin, PLUGIN_CONST
+from plugin import EventConditionPlugin, PLUGIN_CONST, plugin_name
 
 # setup i18n for both applet text and dialogs
 locale.setlocale(locale.LC_ALL, locale.getlocale())
@@ -30,7 +30,7 @@ class Plugin(EventConditionPlugin):
     def __init__(self):
         EventConditionPlugin.__init__(
             self,
-            basename='cond-event-unlock',
+            basename=plugin_name(__file__),
             name=_("Session Unlock"),
             description=_("Unlock the User Session"),
             author=APP_AUTHOR,

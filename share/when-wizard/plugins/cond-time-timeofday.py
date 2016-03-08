@@ -6,7 +6,7 @@
 # Released under the BSD License (see LICENSE file)
 
 import locale
-from plugin import TimeConditionPlugin, PLUGIN_CONST
+from plugin import TimeConditionPlugin, PLUGIN_CONST, plugin_name
 
 # setup i18n for both applet text and dialogs
 locale.setlocale(locale.LC_ALL, locale.getlocale())
@@ -26,7 +26,7 @@ class Plugin(TimeConditionPlugin):
     def __init__(self):
         TimeConditionPlugin.__init__(
             self,
-            basename='cond-time-timeofday',
+            basename=plugin_name(__file__),
             name=_("Time Of Day"),
             description=_("Full Specification of the Time of Day"),
             author=APP_AUTHOR,

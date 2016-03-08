@@ -7,7 +7,7 @@
 
 import os
 import locale
-from plugin import CommandConditionPlugin, PLUGIN_CONST
+from plugin import CommandConditionPlugin, PLUGIN_CONST, plugin_name
 
 # setup i18n for both applet text and dialogs
 locale.setlocale(locale.LC_ALL, locale.getlocale())
@@ -30,7 +30,7 @@ class Plugin(CommandConditionPlugin):
     def __init__(self):
         CommandConditionPlugin.__init__(
             self,
-            basename='cond-misc-command',
+            basename=plugin_name(__file__),
             name=_("Command"),
             description=_("Check successful execution of command"),
             author=APP_AUTHOR,

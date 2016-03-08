@@ -7,7 +7,7 @@
 
 import os
 import locale
-from plugin import TaskPlugin, PLUGIN_CONST
+from plugin import TaskPlugin, PLUGIN_CONST, plugin_name
 
 from gi.repository import Gtk
 
@@ -34,7 +34,7 @@ class Plugin(TaskPlugin):
         TaskPlugin.__init__(
             self,
             category=PLUGIN_CONST.CATEGORY_TASK_FILEOPS,
-            basename='fileops-opendir',
+            basename=plugin_name(__file__),
             name=_("Open Directory"),
             description=_("Show a Directory in File Manager"),
             author=APP_AUTHOR,

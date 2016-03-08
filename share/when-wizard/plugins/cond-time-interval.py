@@ -6,7 +6,7 @@
 # Released under the BSD License (see LICENSE file)
 
 import locale
-from plugin import IntervalConditionPlugin, PLUGIN_CONST
+from plugin import IntervalConditionPlugin, PLUGIN_CONST, plugin_name
 
 from resources import UI_INTERVALS_MINUTES, UI_INTERVALS_HOURS
 
@@ -29,7 +29,7 @@ class Plugin(IntervalConditionPlugin):
     def __init__(self):
         IntervalConditionPlugin.__init__(
             self,
-            basename='cond-time-interval',
+            basename=plugin_name(__file__),
             name=_("Time Interval"),
             description=_("Occur periodically after an amount of time"),
             author=APP_AUTHOR,

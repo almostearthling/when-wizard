@@ -6,7 +6,7 @@
 # Released under the BSD License (see LICENSE file)
 
 import locale
-from plugin import TaskPlugin, PLUGIN_CONST
+from plugin import TaskPlugin, PLUGIN_CONST, plugin_name
 
 from gi.repository import Gtk
 from gi.repository import GdkPixbuf
@@ -35,7 +35,7 @@ class Plugin(TaskPlugin):
         TaskPlugin.__init__(
             self,
             category=PLUGIN_CONST.CATEGORY_TASK_MISC,
-            basename='misc-badge',
+            basename=plugin_name(__file__),
             name=_("Show Badge"),
             description=_("Show a Notification Badge"),
             author=APP_AUTHOR,

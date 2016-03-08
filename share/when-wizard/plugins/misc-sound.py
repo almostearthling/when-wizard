@@ -7,7 +7,7 @@
 
 import os
 import locale
-from plugin import TaskPlugin, PLUGIN_CONST
+from plugin import TaskPlugin, PLUGIN_CONST, plugin_name
 
 from gi.repository import Gtk
 
@@ -35,7 +35,7 @@ class Plugin(TaskPlugin):
         TaskPlugin.__init__(
             self,
             category=PLUGIN_CONST.CATEGORY_TASK_MISC,
-            basename='misc-sound',
+            basename=plugin_name(__file__),
             name=_("Sound"),
             description=_("Play a Sound"),
             author=APP_AUTHOR,
