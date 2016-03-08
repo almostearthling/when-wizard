@@ -16,6 +16,8 @@ class PicklingDatastore(object):
         self.filename = None
 
     def __iter__(self):
+        if not self._data:
+            self.load()
         for k in self._data:
             yield k
 

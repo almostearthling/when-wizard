@@ -1,0 +1,116 @@
+# script: share/when-wizard/plugin-list
+# -*- coding: utf-8 -*-
+#
+# When Wizard
+#
+# Copyright (c) 2015-2016 Francesco Garosi
+# Released under the BSD License (see LICENSE file)
+#
+# Package lister: list all installed plugins
+# Usage: when-wizard plugin-list [--cvs] [--stock|--user]
+
+
+import os
+import sys
+from plugin import load_plugin_module, stock_plugins_names, \
+    user_plugins_names, active_plugins_names
+from utility import oerr
+from resources import RESOURCES
+
+ACTIVE = 'active'
+INACTIVE = 'unused'
+STOCK = 'stock'
+USER = 'user'
+HEADERS = [
+    "basename",
+    "module",
+    "type",
+    "category",
+    "name",
+    "description",
+    "version",
+    "author",
+    "copyright",
+    "stock",
+    "active",
+]
+
+CLI_LINE = "{basename}:\t{name}\t({type}, {stock}, {active})"
+CSV_LINE = """{basename};{module};{type};{category};"{name}";"{description}";\
+{version};"{author}";"{copyright}";{stock};{active}"""
+
+
+def main():
+    me = os.path.basename(__file__)
+    stock = True
+    user = True
+    csv = False
+    for x in sys.argv[1:]:
+        if x == '--csv':
+            csv = True
+        elif x == '--stock':
+            user = False
+        elif x == '--user':
+            stock = False
+        else:
+            oerr(me, RESOURCES.CLI_ERR_INVALID_ARGUMENTS)
+            return 1
+    if not user and not stock:
+        oerr(me, RESOURCES.CLI_ERR_INVALID_ARGUMENTS)
+        return 1
+    active = active_plugins_names()
+    plugin_names = []
+    plugin_data = {}
+    if stock:
+        l = stock_plugins_names()
+        for x in l:
+            mod = load_plugin_module(x, True)
+            p = mod.Plugin()
+            p_active = ACTIVE if x in active else INACTIVE
+            p_stock = STOCK if p.stock else USER
+            plugin_names.append(p.basename)
+            plugin_data[p.basename] = {
+                'basename': p.basename,
+                'module': p.module_basename,
+                'name': p.name,
+                'description': p.description,
+                'type': p.plugin_type,
+                'category': p.category,
+                'stock': p_stock,
+                'version': p.version,
+                'author': p.author,
+                'copyright': p.copyright,
+                'active': p_active,
+            }
+    if user:
+        l = user_plugins_names()
+        for x in l:
+            mod = load_plugin_module(x, True)
+            p = mod.Plugin()
+            p_active = ACTIVE if x in active else INACTIVE
+            p_stock = STOCK if p.stock else USER
+            plugin_names.append(p.basename)
+            plugin_data[p.basename] = {
+                'basename': p.basename,
+                'module': p.module_basename,
+                'name': p.name,
+                'description': p.description,
+                'type': p.plugin_type,
+                'category': p.category,
+                'stock': p_stock,
+                'version': p.version,
+                'author': p.author,
+                'copyright': p.copyright,
+                'active': p_active,
+            }
+    plugin_names.sort()
+    if csv:
+        print(";".join(HEADERS))
+        line_format = CSV_LINE
+    else:
+        line_format = CLI_LINE
+    for x in plugin_names:
+        print(line_format.format(**plugin_data[x]))
+
+
+# end.

@@ -42,6 +42,8 @@ class PluginConstants(object):
     CATEGORY_COND_TIME = 'time'
     CATEGORY_COND_EVENT = 'event'
     CATEGORY_COND_FILESYSTEM = 'filesystem'
+    CATEGORY_COND_NETWORK = 'network'
+    CATEGORY_COND_POWER = 'power'
     CATEGORY_COND_MISC = 'misc'
 
 

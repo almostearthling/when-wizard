@@ -166,6 +166,12 @@ class WizardAppWindow(object):
         store.append([load_pixbuf('folder'),
                       PLUGIN_CONST.CATEGORY_COND_FILESYSTEM,
                       RESOURCES.UI_COMBO_CATEGORY_COND_FILESYSTEM])
+        store.append([load_pixbuf('link'),
+                      PLUGIN_CONST.CATEGORY_COND_NETWORK,
+                      RESOURCES.UI_COMBO_CATEGORY_COND_NETWORK])
+        store.append([load_pixbuf('electricity'),
+                      PLUGIN_CONST.CATEGORY_COND_POWER,
+                      RESOURCES.UI_COMBO_CATEGORY_COND_POWER])
         store.append([load_pixbuf('clapperboard'),
                       PLUGIN_CONST.CATEGORY_COND_EVENT,
                       RESOURCES.UI_COMBO_CATEGORY_COND_EVENT])

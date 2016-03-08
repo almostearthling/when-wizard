@@ -40,6 +40,7 @@ class Plugin(EventConditionPlugin):
             version=APP_VERSION,
         )
         # mandatory or anyway structural variables and object values follow:
+        self.category = PLUGIN_CONST.CATEGORY_COND_POWER
         self.stock = True
         self.event = EVENT_SYSTEM_BATTERY_DISCHARGING
         self.summary_description = _("When the battery is discharging")
