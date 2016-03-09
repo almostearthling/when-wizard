@@ -24,7 +24,6 @@ the correct password in the lock screen.
 EVENT_SESSION_UNLOCK = 'session_unlock'
 
 
-# class for a plugin: the derived class name should always be Plugin
 class Plugin(EventConditionPlugin):
 
     def __init__(self):
@@ -39,7 +38,6 @@ class Plugin(EventConditionPlugin):
             help_string=HELP,
             version=APP_VERSION,
         )
-        # mandatory or anyway structural variables and object values follow:
         self.stock = True
         self.event = EVENT_SESSION_UNLOCK
         self.summary_description = _("When the session is unlocked")

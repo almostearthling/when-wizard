@@ -1,7 +1,7 @@
-# file: share/when-wizard/templates/cond-event-startup.py
+# file: share/when-wizard/templates/cond-event-cond-event-resume.py
 # -*- coding: utf-8 -*-
 #
-# Condition plugin for the session startup event
+# Condition plugin for the session resume event
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
@@ -19,13 +19,11 @@ _ = locale.gettext
 
 
 HELP = _("""\
-This event will occur as soon as the applet is started, normally when the
-session itself begins, that is at login time or after the computer was
-turned on.
+This event will occur when the session resumes from hibernation mode.
 """)
 
 
-EVENT_APPLET_STARTUP = 'startup'
+EVENT_SYSTEM_RESUME = 'system_resume'
 
 
 class Plugin(EventConditionPlugin):
@@ -34,17 +32,18 @@ class Plugin(EventConditionPlugin):
         EventConditionPlugin.__init__(
             self,
             basename=plugin_name(__file__),
-            name=_("Session Start"),
-            description=_("Beginning of the User Session"),
+            name=_("Resume"),
+            description=_("Exit the low consumption mode"),
             author=APP_AUTHOR,
             copyright=APP_COPYRIGHT,
-            icon='sports_mode',
+            icon='mms',
             help_string=HELP,
             version=APP_VERSION,
         )
+        self.category = PLUGIN_CONST.CATEGORY_COND_POWER
         self.stock = True
-        self.event = EVENT_APPLET_STARTUP
-        self.summary_description = _("When the session is beginning")
+        self.event = EVENT_SYSTEM_RESUME
+        self.summary_description = _("When the session is resumed")
 
 
 # end.

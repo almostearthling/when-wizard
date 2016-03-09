@@ -1,7 +1,7 @@
-# file: share/when-wizard/templates/cond-event-startup.py
+# file: share/when-wizard/templates/cond-event-cond-event-suspend.py
 # -*- coding: utf-8 -*-
 #
-# Condition plugin for the session startup event
+# Condition plugin for the session suspend event
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
@@ -19,13 +19,14 @@ _ = locale.gettext
 
 
 HELP = _("""\
-This event will occur as soon as the applet is started, normally when the
-session itself begins, that is at login time or after the computer was
-turned on.
+This event will occur when the session suspends or the computer enters
+hibernation mode, that is a very low energy consumption mode that saves
+the session state to resume it later exactly where it left. Consider that
+the result of the event may take place after the system has resumed.
 """)
 
 
-EVENT_APPLET_STARTUP = 'startup'
+EVENT_SYSTEM_SUSPEND = 'system_suspend'
 
 
 class Plugin(EventConditionPlugin):
@@ -34,17 +35,18 @@ class Plugin(EventConditionPlugin):
         EventConditionPlugin.__init__(
             self,
             basename=plugin_name(__file__),
-            name=_("Session Start"),
-            description=_("Beginning of the User Session"),
+            name=_("Suspend"),
+            description=_("Enter a low consumption mode"),
             author=APP_AUTHOR,
             copyright=APP_COPYRIGHT,
-            icon='sports_mode',
+            icon='night_landscape',
             help_string=HELP,
             version=APP_VERSION,
         )
+        self.category = PLUGIN_CONST.CATEGORY_COND_POWER
         self.stock = True
-        self.event = EVENT_APPLET_STARTUP
-        self.summary_description = _("When the session is beginning")
+        self.event = EVENT_SYSTEM_SUSPEND
+        self.summary_description = _("When the session is suspended")
 
 
 # end.

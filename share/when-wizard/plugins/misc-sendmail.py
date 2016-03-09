@@ -27,7 +27,6 @@ you want to be notified of a certain event when you are away.
 cmd_template = '{script} "{mailto}" "{title}" "{message}"'
 
 
-# the name should always be Plugin
 class Plugin(TaskPlugin):
 
     def __init__(self):

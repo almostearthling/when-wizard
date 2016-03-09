@@ -25,7 +25,6 @@ example by hibernating the computer.
 EVENT_SYSTEM_BATTERY_LOW = 'battery_low'
 
 
-# class for a plugin: the derived class name should always be Plugin
 class Plugin(EventConditionPlugin):
 
     def __init__(self):
@@ -40,7 +39,6 @@ class Plugin(EventConditionPlugin):
             help_string=HELP,
             version=APP_VERSION,
         )
-        # mandatory or anyway structural variables and object values follow:
         self.category = PLUGIN_CONST.CATEGORY_COND_POWER
         self.stock = True
         self.event = EVENT_SYSTEM_BATTERY_LOW

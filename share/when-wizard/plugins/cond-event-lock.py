@@ -26,7 +26,6 @@ menu entry.
 EVENT_SESSION_LOCK = 'session_lock'
 
 
-# class for a plugin: the derived class name should always be Plugin
 class Plugin(EventConditionPlugin):
 
     def __init__(self):
@@ -41,7 +40,6 @@ class Plugin(EventConditionPlugin):
             help_string=HELP,
             version=APP_VERSION,
         )
-        # mandatory or anyway structural variables and object values follow:
         self.stock = True
         self.event = EVENT_SESSION_LOCK
         self.summary_description = _("When the session is being locked")

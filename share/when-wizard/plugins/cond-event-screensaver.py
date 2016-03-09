@@ -25,7 +25,6 @@ screensaver starts can be defined in the user settings.
 EVENT_SESSION_SCREENSAVER = 'screensaver'
 
 
-# class for a plugin: the derived class name should always be Plugin
 class Plugin(EventConditionPlugin):
 
     def __init__(self):
@@ -40,7 +39,6 @@ class Plugin(EventConditionPlugin):
             help_string=HELP,
             version=APP_VERSION,
         )
-        # mandatory or anyway structural variables and object values follow:
         self.stock = True
         self.event = EVENT_SESSION_SCREENSAVER
         self.summary_description = _("When the screensaver starts")

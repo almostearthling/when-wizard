@@ -29,7 +29,6 @@ one second grace time is left to applications.
 EVENT_APPLET_SHUTDOWN = 'shutdown'
 
 
-# class for a plugin: the derived class name should always be Plugin
 class Plugin(EventConditionPlugin):
 
     def __init__(self):
@@ -44,7 +43,6 @@ class Plugin(EventConditionPlugin):
             help_string=HELP,
             version=APP_VERSION,
         )
-        # mandatory or anyway structural variables and object values follow:
         self.stock = True
         self.event = EVENT_APPLET_SHUTDOWN
         self.summary_description = _("When the session is ending")

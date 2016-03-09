@@ -24,7 +24,6 @@ virtually everything in the system can be checked.
 """)
 
 
-# class for a plugin: the derived class name should always be Plugin
 class Plugin(CommandConditionPlugin):
 
     def __init__(self):

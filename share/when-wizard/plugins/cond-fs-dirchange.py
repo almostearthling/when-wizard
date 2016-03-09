@@ -25,7 +25,6 @@ event will fire up and trigger a consequence.
 """)
 
 
-# class for a plugin: the derived class name should always be Plugin
 class Plugin(FileChangeConditionPlugin):
 
     def __init__(self):
