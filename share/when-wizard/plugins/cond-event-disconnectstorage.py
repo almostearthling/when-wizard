@@ -1,7 +1,7 @@
-# file: share/when-wizard/templates/cond-event-exitscreensaver.py
+# file: share/when-wizard/templates/cond-event-disconnectstorage.py
 # -*- coding: utf-8 -*-
 #
-# Condition plugin for the screen saver start event
+# Condition plugin for external storage disconnection
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
@@ -16,12 +16,13 @@ _ = locale.gettext
 
 
 HELP = _("""\
-This event will occur when the screensaver exits, which normally happens
-when there is user interaction while the screensaver is active.
+This event will be fired when an external storage device is detached from the
+workstation: no detail is given about the storage device, the associated
+consequence should take care of discovering what is no more available.
 """)
 
 
-EVENT_SESSION_SCREENSAVER_EXIT = 'screensaver_exit'
+EVENT_SYSTEM_DEVICE_DETACH = 'device_detach'
 
 
 class Plugin(EventConditionPlugin):
@@ -30,17 +31,19 @@ class Plugin(EventConditionPlugin):
         EventConditionPlugin.__init__(
             self,
             basename=plugin_name(__file__),
-            name=_("Exit Screensaver"),
-            description=_("The Screensaver Ends"),
+            name=_("Disconnect Storage"),
+            description=_("An External Storage Device is Disconnected"),
             author=APP_AUTHOR,
             copyright=APP_COPYRIGHT,
-            icon='light_at_the_end_of_tunnel',
+            icon='delete_database',
             help_string=HELP,
             version=APP_VERSION,
         )
+        self.category = PLUGIN_CONST.CATEGORY_COND_FILESYSTEM
         self.stock = True
-        self.event = EVENT_SESSION_SCREENSAVER_EXIT
-        self.summary_description = _("When the screensaver stops")
+        self.event = EVENT_SYSTEM_DEVICE_DETACH
+        self.summary_description = _(
+            "When a storage device is detached from the computer")
 
 
 # end.

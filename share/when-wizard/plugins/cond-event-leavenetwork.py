@@ -1,7 +1,7 @@
-# file: share/when-wizard/templates/cond-event-exitscreensaver.py
+# file: share/when-wizard/templates/cond-event-leavenetwork.py
 # -*- coding: utf-8 -*-
 #
-# Condition plugin for the screen saver start event
+# Condition plugin for network disconnection
 # Copyright (c) 2015-2016 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
@@ -16,12 +16,12 @@ _ = locale.gettext
 
 
 HELP = _("""\
-This event will occur when the screensaver exits, which normally happens
-when there is user interaction while the screensaver is active.
+This event will be fired when a network is left: no detail is given about
+the network, the associated consequence should take care of finding it out.
 """)
 
 
-EVENT_SESSION_SCREENSAVER_EXIT = 'screensaver_exit'
+EVENT_SYSTEM_NETWORK_LEAVE = 'network_leave'
 
 
 class Plugin(EventConditionPlugin):
@@ -30,17 +30,18 @@ class Plugin(EventConditionPlugin):
         EventConditionPlugin.__init__(
             self,
             basename=plugin_name(__file__),
-            name=_("Exit Screensaver"),
-            description=_("The Screensaver Ends"),
+            name=_("Leave Network"),
+            description=_("A Network Connection is no more Available"),
             author=APP_AUTHOR,
             copyright=APP_COPYRIGHT,
-            icon='light_at_the_end_of_tunnel',
+            icon='flash_off',
             help_string=HELP,
             version=APP_VERSION,
         )
+        self.category = PLUGIN_CONST.CATEGORY_COND_NETWORK
         self.stock = True
-        self.event = EVENT_SESSION_SCREENSAVER_EXIT
-        self.summary_description = _("When the screensaver stops")
+        self.event = EVENT_SYSTEM_NETWORK_LEAVE
+        self.summary_description = _("When a network connection has been left")
 
 
 # end.
