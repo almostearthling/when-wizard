@@ -54,7 +54,7 @@ class Plugin(TimeConditionPlugin):
             o('spinHour').set_text(str(self.timespec['hour']))
             o('spinMinute').set_text(str(self.timespec['minute']))
             cal = o('calDate')
-            cal.select_month(self.timespec['year'], self.timespec['month'])
+            cal.select_month(self.timespec['month'] - 1, self.timespec['year'])
             cal.select_day(self.timespec['day'])
             self.plugin_panel = o('viewPlugin')
             self.builder.connect_signals(self)
@@ -68,11 +68,12 @@ class Plugin(TimeConditionPlugin):
         smin = ("00" + str(self.timespec['minute']))[-2:]
         cal = o('calDate')
         year, month, day = cal.get_date()
+        month += 1
         self.timespec['year'] = year
         self.timespec['month'] = month
         self.timespec['day'] = day
-        self.summary_description = _(
-            "On %s/%s/%s at %s:%s o'clock") % (year, month, day, shr, smin)
+        self.summary_description = _("On %s/%s/%s at %s:%s o'clock") % (
+            year, month, day, shr, smin)
         self.allow_forward(True)
 
 
