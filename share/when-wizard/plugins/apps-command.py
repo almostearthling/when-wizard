@@ -31,7 +31,7 @@ class Plugin(TaskPlugin):
             category=PLUGIN_CONST.CATEGORY_TASK_APPS,
             basename=plugin_name(__file__),
             name=_("Command Launcher"),
-            description=_("Run a Command using the default Shell"),
+            description=_("Run a Command using the Default Shell"),
             author=APP_AUTHOR,
             copyright=APP_COPYRIGHT,
             icon='start',

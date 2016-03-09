@@ -31,7 +31,7 @@ class Plugin(CommandConditionPlugin):
             self,
             basename=plugin_name(__file__),
             name=_("Command"),
-            description=_("Check successful execution of command"),
+            description=_("Check Successful Execution of Command"),
             author=APP_AUTHOR,
             copyright=APP_COPYRIGHT,
             icon='start',

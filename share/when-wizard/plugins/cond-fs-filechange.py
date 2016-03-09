@@ -31,7 +31,7 @@ class Plugin(FileChangeConditionPlugin):
             self,
             basename=plugin_name(__file__),
             name=_("File Monitor"),
-            description=_("Monitor a single file for changes"),
+            description=_("Monitor a Single File for Changes"),
             author=APP_AUTHOR,
             copyright=APP_COPYRIGHT,
             icon='file',

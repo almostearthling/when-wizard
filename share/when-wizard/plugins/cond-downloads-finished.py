@@ -31,7 +31,7 @@ class Plugin(CommandConditionPlugin):
             self,
             basename=plugin_name(__file__),
             name=_("Downloads Finished"),
-            description=_("Check that all active downloads have finished"),
+            description=_("Check that all Active Downloads have Finished"),
             author=APP_AUTHOR,
             copyright=APP_COPYRIGHT,
             icon='business',

@@ -36,7 +36,7 @@ class Plugin(EventConditionPlugin):
             self,
             basename=plugin_name(__file__),
             name=_("Suspend"),
-            description=_("Enter a low consumption mode"),
+            description=_("Enter a Low Consumption Mode"),
             author=APP_AUTHOR,
             copyright=APP_COPYRIGHT,
             icon='night_landscape',

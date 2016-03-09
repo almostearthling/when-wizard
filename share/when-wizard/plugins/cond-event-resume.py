@@ -33,7 +33,7 @@ class Plugin(EventConditionPlugin):
             self,
             basename=plugin_name(__file__),
             name=_("Resume"),
-            description=_("Exit the low consumption mode"),
+            description=_("Exit the Low Consumption Mode"),
             author=APP_AUTHOR,
             copyright=APP_COPYRIGHT,
             icon='mms',

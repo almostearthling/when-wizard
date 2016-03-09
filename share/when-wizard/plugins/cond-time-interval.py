@@ -31,7 +31,7 @@ class Plugin(IntervalConditionPlugin):
             self,
             basename=plugin_name(__file__),
             name=_("Time Interval"),
-            description=_("Occur periodically after an amount of time"),
+            description=_("Occur Periodically after an Amount of Time"),
             author=APP_AUTHOR,
             copyright=APP_COPYRIGHT,
             icon='pie_chart',

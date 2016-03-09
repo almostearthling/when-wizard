@@ -29,7 +29,7 @@ class Plugin(IdleConditionPlugin):
             self,
             basename=plugin_name(__file__),
             name=_("Idle Time"),
-            description=_("Occur when the workstation is idle"),
+            description=_("Occur when the Workstation is Idle"),
             author=APP_AUTHOR,
             copyright=APP_COPYRIGHT,
             icon='night_portrait',

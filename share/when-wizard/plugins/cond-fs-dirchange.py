@@ -32,7 +32,7 @@ class Plugin(FileChangeConditionPlugin):
             self,
             basename=plugin_name(__file__),
             name=_("Directory Monitor"),
-            description=_("Monitor a directory for changes"),
+            description=_("Monitor a Directory for Changes"),
             author=APP_AUTHOR,
             copyright=APP_COPYRIGHT,
             icon='folder',
