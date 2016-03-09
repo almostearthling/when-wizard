@@ -28,8 +28,8 @@ class Plugin(TimeConditionPlugin):
         TimeConditionPlugin.__init__(
             self,
             basename=plugin_name(__file__),
-            name=_("Time"),
-            description=_("Full Specification of the Time"),
+            name=_("Date and Time"),
+            description=_("Full Specification of Date and Time"),
             author=APP_AUTHOR,
             copyright=APP_COPYRIGHT,
             icon='calendar',
