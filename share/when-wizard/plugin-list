@@ -85,7 +85,7 @@ def main():
     if user:
         l = user_plugins_names()
         for x in l:
-            mod = load_plugin_module(x, True)
+            mod = load_plugin_module(x, False)
             p = mod.Plugin()
             p_active = ACTIVE if x in active else INACTIVE
             p_stock = STOCK if p.stock else USER
