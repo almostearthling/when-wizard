@@ -18,4 +18,8 @@ def main():
     launcher.launch()
 
 
+if __name__ == '__main__':
+    main()
+
+
 # end.

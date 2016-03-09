@@ -54,7 +54,11 @@ for name in stock_plugins_names():
 for name in user_plugins_names():
     m = load_plugin_module(name)
     if m:
-        all_plugins[name] = m.Plugin()
+        try:
+            all_plugins[name] = m.Plugin()
+        except Exception:
+            if PLUGIN_TEMP_FOLDER:
+                traceback.print_tb(sys.exc_info()[2])
 
 
 # load windows and stock panes

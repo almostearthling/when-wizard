@@ -86,7 +86,11 @@ def main():
         l = user_plugins_names()
         for x in l:
             mod = load_plugin_module(x, False)
-            p = mod.Plugin()
+            try:
+                p = mod.Plugin()
+            except Exception:
+                if PLUGIN_TEMP_FOLDER:
+                    traceback.print_tb(sys.exc_info()[2])
             p_active = ACTIVE if x in active else INACTIVE
             p_stock = STOCK if p.stock else USER
             plugin_names.append(p.basename)
