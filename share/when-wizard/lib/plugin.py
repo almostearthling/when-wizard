@@ -239,6 +239,10 @@ class BasePlugin(object):
             key = 'u:%s' % self.basename
         return json.loads(datastore.get(key))
 
+    # cleanup function: to override if something must be done before deletion
+    def remove_action(self):
+        return True
+
     # retrieve a script in the correct folder and return its full path
     def get_script(self, filename):
         if self.stock:
@@ -261,14 +265,6 @@ class BasePlugin(object):
     def allow_forward(self, allow=True):
         if self._forward_button is not None:
             self._forward_button.set_sensitive(allow)
-
-    # this function must be overridden to enable or disable the plugin
-    # when necessary: the self.enabled attribute must be set to either
-    # True or False appropriately, and the value of self.enabled must
-    # be returned
-    def enable_plugin(self):
-        self.enabled = True
-        return self.enabled
 
 
 # this class too is not meant to be directly derived from

@@ -349,6 +349,8 @@ class ManagerAppWindow(object):
                 plugin_task = retrieve_plugin(li[1])
                 unregister_plugin_data(plugin_cond)
                 unregister_plugin_data(plugin_task)
+                plugin_cond.remove_action()
+                plugin_task.remove_action()
                 unstore_association(self.selected_association)
                 self.selected_association = None
                 self.fill_listAssociations(None)
@@ -373,6 +375,8 @@ class ManagerAppWindow(object):
                 plugin_task = retrieve_plugin(li[1])
                 unregister_plugin_data(plugin_cond)
                 unregister_plugin_data(plugin_task)
+                plugin_cond.remove_action()
+                plugin_task.remove_action()
                 unstore_association(x)
             self.selected_association = None
             self.fill_listAssociations(None)
