@@ -239,6 +239,21 @@ class BasePlugin(object):
             key = 'u:%s' % self.basename
         return json.loads(datastore.get(key))
 
+    # create and return a location where files can be stored, None on errors
+    def file_storage(self, datadir=None):
+        if datadir is None:
+            datadir = self.basename
+        fullpath = os.path.join(USER_STORE_FOLDER, datadir)
+        try:
+            if not os.path.exists(fullpath):
+                os.mkdir(fullpath)
+            else:
+                if not os.path.isdir(fullpath):
+                    return None
+            return fullpath
+        except Exception:
+            return None
+
     # cleanup function: to override if something must be done before deletion
     def remove_action(self):
         return True
