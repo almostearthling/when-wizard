@@ -8,6 +8,7 @@
 import os
 import time
 import dbus
+import traceback
 import subprocess
 
 import gi
@@ -58,7 +59,9 @@ for name in user_plugins_names():
             all_plugins[name] = m.Plugin()
         except Exception:
             if PLUGIN_TEMP_FOLDER:
-                traceback.print_tb(sys.exc_info()[2])
+                _x_info = sys.exc_info()
+                sys.stderr.write("%s: %s\n" % (_x_info[0].__name__, _x_info[1]))
+                traceback.print_tb(_x_info[2])
 
 
 # load windows and stock panes
@@ -356,7 +359,10 @@ class ManagerAppWindow(object):
                         plugin_cond.remove_action()
                     except Exception:
                         if PLUGIN_TEMP_FOLDER:
-                            traceback.print_tb(sys.exc_info()[2])
+                            _x_info = sys.exc_info()
+                            sys.stderr.write(
+                                "%s: %s\n" % (_x_info[0].__name__, _x_info[1]))
+                            traceback.print_tb(_x_info[2])
                 if plugin_task.stock:
                     plugin_task.remove_action()
                 else:
@@ -364,7 +370,10 @@ class ManagerAppWindow(object):
                         plugin_task.remove_action()
                     except Exception:
                         if PLUGIN_TEMP_FOLDER:
-                            traceback.print_tb(sys.exc_info()[2])
+                            _x_info = sys.exc_info()
+                            sys.stderr.write(
+                                "%s: %s\n" % (_x_info[0].__name__, _x_info[1]))
+                            traceback.print_tb(_x_info[2])
                 unstore_association(self.selected_association)
                 self.selected_association = None
                 self.fill_listAssociations(None)
@@ -396,7 +405,10 @@ class ManagerAppWindow(object):
                         plugin_cond.remove_action()
                     except Exception:
                         if PLUGIN_TEMP_FOLDER:
-                            traceback.print_tb(sys.exc_info()[2])
+                            _x_info = sys.exc_info()
+                            sys.stderr.write(
+                                "%s: %s\n" % (_x_info[0].__name__, _x_info[1]))
+                            traceback.print_tb(_x_info[2])
                 if plugin_task.stock:
                     plugin_task.remove_action()
                 else:
@@ -404,7 +416,10 @@ class ManagerAppWindow(object):
                         plugin_task.remove_action()
                     except Exception:
                         if PLUGIN_TEMP_FOLDER:
-                            traceback.print_tb(sys.exc_info()[2])
+                            _x_info = sys.exc_info()
+                            sys.stderr.write(
+                                "%s: %s\n" % (_x_info[0].__name__, _x_info[1]))
+                            traceback.print_tb(_x_info[2])
                 unstore_association(x)
             self.selected_association = None
             self.fill_listAssociations(None)
