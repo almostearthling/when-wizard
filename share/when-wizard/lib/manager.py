@@ -349,8 +349,22 @@ class ManagerAppWindow(object):
                 plugin_task = retrieve_plugin(li[1])
                 unregister_plugin_data(plugin_cond)
                 unregister_plugin_data(plugin_task)
-                plugin_cond.remove_action()
-                plugin_task.remove_action()
+                if plugin_cond.stock:
+                    plugin_cond.remove_action()
+                else:
+                    try:
+                        plugin_cond.remove_action()
+                    except Exception:
+                        if PLUGIN_TEMP_FOLDER:
+                            traceback.print_tb(sys.exc_info()[2])
+                if plugin_task.stock:
+                    plugin_task.remove_action()
+                else:
+                    try:
+                        plugin_task.remove_action()
+                    except Exception:
+                        if PLUGIN_TEMP_FOLDER:
+                            traceback.print_tb(sys.exc_info()[2])
                 unstore_association(self.selected_association)
                 self.selected_association = None
                 self.fill_listAssociations(None)
@@ -375,8 +389,22 @@ class ManagerAppWindow(object):
                 plugin_task = retrieve_plugin(li[1])
                 unregister_plugin_data(plugin_cond)
                 unregister_plugin_data(plugin_task)
-                plugin_cond.remove_action()
-                plugin_task.remove_action()
+                if plugin_cond.stock:
+                    plugin_cond.remove_action()
+                else:
+                    try:
+                        plugin_cond.remove_action()
+                    except Exception:
+                        if PLUGIN_TEMP_FOLDER:
+                            traceback.print_tb(sys.exc_info()[2])
+                if plugin_task.stock:
+                    plugin_task.remove_action()
+                else:
+                    try:
+                        plugin_task.remove_action()
+                    except Exception:
+                        if PLUGIN_TEMP_FOLDER:
+                            traceback.print_tb(sys.exc_info()[2])
                 unstore_association(x)
             self.selected_association = None
             self.fill_listAssociations(None)
@@ -495,7 +523,7 @@ class ManagerAppWindow(object):
             elif idf_exists(name):
                 error = RESOURCES.MSGBOX_ERR_IMPORT_IDF_EXISTS
             else:
-                # try:
+                try:
                     with open(self.import_idf) as f:
                         full_contents = f.read()
                     text, params = param_file(full_contents)
@@ -513,8 +541,8 @@ class ManagerAppWindow(object):
                         box.destroy()
                     else:
                         contents = full_contents
-                # except:
-                #     error = RESOURCES.MSGBOX_ERR_IMPORT_IDF_READ
+                except:
+                    error = RESOURCES.MSGBOX_ERR_IMPORT_IDF_READ
             if error is None:
                 if not idf_install(name, contents):
                     box = Gtk.MessageDialog(type=Gtk.MessageType.ERROR,

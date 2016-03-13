@@ -7,6 +7,7 @@
 
 import os
 import time
+import traceback
 import subprocess
 
 import gi
@@ -371,9 +372,19 @@ class WizardAppWindow(object):
             t.set_text(item_plugin.desc_string_gui())
             self.plugin_task = item_plugin
             self.plugin_task.set_forward_button(o('btnForward'))
-            self.pane_TaskDef = item_plugin.get_pane()
+            if item_plugin.stock:
+                self.pane_TaskDef = item_plugin.get_pane()
+                self.enable_next = True
+            else:
+                try:
+                    self.pane_TaskDef = item_plugin.get_pane()
+                    self.enable_next = True
+                except Exception:
+                    if PLUGIN_TEMP_FOLDER:
+                        traceback.print_tb(sys.exc_info()[2])
+                    self.pane_TaskDef = None
+                    self.enable_next = False
             self.pane_TaskDef_changed = True
-            self.enable_next = True
             self.refresh_buttons()
         else:
             t.set_text('')
@@ -388,15 +399,25 @@ class WizardAppWindow(object):
         m, i = sel.get_selected()
         t = p('txtCondHint').get_buffer()
         self.plugin_cond_changed = True
-        self.pane_CondDef_changed = True
         if i is not None:
             item = m[i][0]
             item_plugin = all_plugins[item]
             t.set_text(item_plugin.desc_string_gui())
             self.plugin_cond = item_plugin
             self.plugin_cond.set_forward_button(o('btnForward'))
-            self.pane_CondDef = item_plugin.get_pane()
-            self.enable_next = True
+            if item_plugin.stock:
+                self.pane_CondDef = item_plugin.get_pane()
+                self.enable_next = True
+            else:
+                try:
+                    self.pane_CondDef = item_plugin.get_pane()
+                    self.enable_next = True
+                except Exception:
+                    if PLUGIN_TEMP_FOLDER:
+                        traceback.print_tb(sys.exc_info()[2])
+                    self.pane_CondDef = None
+                    self.enable_next = False
+            self.pane_CondDef_changed = True
             self.refresh_buttons()
         else:
             t.set_text('')
@@ -447,6 +468,22 @@ class WizardAppWindow(object):
     def register_action(self):
         if self.direct_register:
             # register to running instance
+            if self.plugin_task.stock:
+                self.plugin_task.register_action()
+            else:
+                try:
+                    self.plugin_task.register_action()
+                except Exception:
+                    if PLUGIN_TEMP_FOLDER:
+                        traceback.print_tb(sys.exc_info()[2])
+            if self.plugin_cond.stock:
+                self.plugin_cond.register_action()
+            else:
+                try:
+                    self.plugin_cond.register_action()
+                except Exception:
+                    if PLUGIN_TEMP_FOLDER:
+                        traceback.print_tb(sys.exc_info()[2])
             if not register_plugin_data(self.plugin_task):
                 return False
             if not register_plugin_data(self.plugin_cond):

@@ -254,8 +254,12 @@ class BasePlugin(object):
         except Exception:
             return None
 
-    # cleanup function: to override if something must be done before deletion
+    # cleanup function: override if something must be done before deletion
     def remove_action(self):
+        return True
+
+    # before registration: override if something must be done before activation
+    def register_action(self):
         return True
 
     # retrieve a script in the correct folder and return its full path
