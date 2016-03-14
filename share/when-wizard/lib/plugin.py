@@ -230,7 +230,7 @@ class BasePlugin(object):
             key = 's:%s' % self.basename
         else:
             key = 'u:%s' % self.basename
-        datastore.put(json.dumps(key, data_dic))
+        datastore.put(key, json.dumps(data_dic))
 
     def data_retrieve(self):
         if self.stock:
