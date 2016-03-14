@@ -271,7 +271,12 @@ class BasePlugin(object):
         if self.stock:
             folder = os.path.join(APP_DATA_FOLDER, 'scripts')
         else:
-            folder = USER_SCRIPT_FOLDER
+            if PLUGIN_TEMP_FOLDER:
+                path = os.path.join(PLUGIN_TEMP_FOLDER, filename)
+                if os.path.isfile(path):
+                    return path
+            else:
+                folder = USER_SCRIPT_FOLDER
         path = os.path.join(folder, filename)
         if os.path.isfile(path):
             return path

@@ -24,6 +24,8 @@ def main():
         oerr(me, RESOURCES.CLI_ERR_INVALID_ARGUMENTS)
         return 1
     mod = load_plugin_module(sys.argv[1], True)
+    if mod is None:
+        mod = load_plugin_module(sys.argv[1], False)
     if mod:
         p = mod.Plugin()
         try:
@@ -37,6 +39,7 @@ def main():
             oerr(me, RESOURCES.CLI_ERR_FAIL_RUN_PLUGIN)
             return 2
     else:
+        oerr(me, RESOURCES.CLI_ERR_FAIL_LOAD_PLUGIN_MODULE)
         return 2
 
 

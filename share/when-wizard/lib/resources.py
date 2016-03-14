@@ -55,6 +55,7 @@ class Resources(object):
     CLI_ERR_FAIL_INSTALL_PLUGIN = _("the specified plugin could not be installed")
     CLI_ERR_FAIL_UNINSTALL_PLUGIN = _("the specified plugin could not be uninstalled")
     CLI_ERR_FAIL_PACKAGE_PLUGIN = _("could not package plugin: check file names")
+    CLI_ERR_FAIL_LOAD_PLUGIN_MODULE = _("the required plugin module could not be loaded")
     CLI_ERR_FAIL_LOAD_PLUGIN = _("the required plugin could not be loaded")
     CLI_ERR_FAIL_RUN_PLUGIN = _("the required plugin could not be loaded")
 
