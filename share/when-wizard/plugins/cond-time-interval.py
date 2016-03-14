@@ -56,7 +56,7 @@ class Plugin(IntervalConditionPlugin):
 
     def change_unit(self, obj):
         o = self.builder.get_object
-        idx = o('cbUnit').get_selected()
+        idx = o('cbUnit').get_active()
         if idx == 0:
             l = UI_INTERVALS_MINUTES
         else:
