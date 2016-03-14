@@ -67,9 +67,9 @@ _PLUGIN_HELP_LINE_LENGTH_CONSOLE = 78 - _PLUGIN_HELP_HEADER_LENGTH_CONSOLE
 _PLUGIN_DESC_FORMAT_GUI = """\
 {help_string}
 
-({plugin_type}: {basename})\
+{plugin_type}: {basename}\
 """
-_PLUGIN_DESC_FORMAT_GUI_COPYRIGHT = """\nversion {version} - {copyright}, {author}"""
+_PLUGIN_DESC_FORMAT_GUI_COPYRIGHT = """, version {version} - {copyright}, {author}"""
 
 _PLUGIN_FILE_EXTENSIONS = ['.py']
 _PLUGIN_UNIQUE_ID_MAGIC = '00wiz99_'
