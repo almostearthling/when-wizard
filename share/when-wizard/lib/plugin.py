@@ -237,7 +237,11 @@ class BasePlugin(object):
             key = 's:%s' % self.basename
         else:
             key = 'u:%s' % self.basename
-        return json.loads(datastore.get(key))
+        data = datastore.get(key)
+        if data:
+            return json.loads(data)
+        else:
+            return None
 
     # create and return a location where files can be stored, None on errors
     def file_storage(self, datadir=None):
