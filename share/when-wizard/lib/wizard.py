@@ -449,6 +449,7 @@ class WizardAppWindow(object):
         l.set_model(store)
 
     def click_Next(self, obj):
+        p = self.builder_panes.get_object
         if _WIZARD_STEPS[self.step_index] == 'finish':
             self.dialog.hide()
             Gtk.main_quit()
@@ -456,6 +457,12 @@ class WizardAppWindow(object):
             self.plugin_cond.set_task(self.plugin_task.unique_id)
             self.register_error = not self.register_action()
             self.step_index += 1
+            self.plugin_task = None
+            self.plugin_cond = None
+            p('cbCategory').set_active(-1)
+            p('cbCondType').set_active(-1)
+            p('listActions').get_model().clear()
+            p('listConditions').get_model().clear()
             self.change_pane(forward=True)
             self.refresh_buttons()
         elif self.step_index < len(_WIZARD_STEPS) - 1:
