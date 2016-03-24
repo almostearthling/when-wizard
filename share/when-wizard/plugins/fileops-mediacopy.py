@@ -20,8 +20,8 @@ _ = locale.gettext
 
 HELP = _("""\
 Use this task to copy files from a certain removable storage device (such as
-an USB stick or a CD-ROM) to a selected destination directory. The removable
-storage device is recognized by its label, which has to be specified.
+an USB stick) to a selected destination directory. The removable storage device
+is recognized by its label, which has to be specified.
 """)
 
 
@@ -41,18 +41,27 @@ class Plugin(TaskPlugin):
             version=APP_VERSION,
         )
         self.stock = True
-        self.script = self.get_script('plugin_fileops-mediacopy.sh')
         self.builder = self.get_dialog('plugin_fileops-mediacopy')
         self.plugin_panel = None
         self.forward_allowed = False
         self.media_label = None
         self.destination = None
+        self.data = self.data_retrieve()
+        if self.data is None:
+            self.data = {
+                'device_labels': [],
+            }
+        self.device_labels = self.data['device_labels']
 
     def get_pane(self):
         if self.plugin_panel is None:
             o = self.builder.get_object
             self.plugin_panel = o('viewPlugin')
             self.builder.connect_signals(self)
+            cb = o('cbMediaLabel')
+            cb.get_model().clear()
+            for x in self.device_labels:
+                cb.append_text(x)
         return self.plugin_panel
 
     def click_btnDestination(self, obj):
@@ -77,7 +86,18 @@ class Plugin(TaskPlugin):
     # automount devices it has to be GVFS-mounted too
     def click_btnRefresh(self, obj):
         o = self.builder.get_object
-        # TODO: ...
+        cb = o('cbMediaLabel')
+        cb.get_model().clear()
+        dirs = (os.path.basename(x)
+                for x in os.listdir('/media/%s' % os.environ['USER']))
+        for x in dirs:
+            if x not in self.device_labels:
+                self.device_labels.append(x)
+        self.device_labels.sort()
+        self.data['device_labels'] = self.device_labels
+        self.data_store(self.data)
+        for x in self.device_labels:
+            cb.append_text(x)
 
     def change_paths(self, obj):
         o = self.builder.get_object
@@ -91,9 +111,10 @@ class Plugin(TaskPlugin):
             self.destination = destination
             if self.media_label:
                 self.command_line = '%s %s %s' % (
-                    self.script, self.media_label, self.destination)
+                    self.get_script('plugin_fileops-mediacopy.sh'),
+                    self.media_label, self.destination)
                 self.summary_description = _(
-                    "Files from %s will be copied to %s") % (
+                    "Files from '%s' will be copied to '%s'") % (
                     self.media_label, destname)
             self.allow_forward(True)
         else:

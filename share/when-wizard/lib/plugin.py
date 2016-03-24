@@ -794,7 +794,7 @@ class EventConditionPlugin(BaseConditionPlugin):
         d = BaseConditionPlugin.to_item_dict(self)
         d['subtype'] = 'EventBasedCondition'
         d['event'] = self.event
-        d['no_skip'] = False
+        d['no_skip'] = True
         return d
 
 
@@ -838,7 +838,7 @@ class UserEventConditionPlugin(BaseConditionPlugin):
         d = BaseConditionPlugin.to_item_dict(self)
         d['subtype'] = 'EventBasedCondition'
         d['event'] = 'dbus_signal:%s' % self.event_name
-        d['no_skip'] = False
+        d['no_skip'] = True
         return d
 
 

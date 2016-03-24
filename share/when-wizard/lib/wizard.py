@@ -236,6 +236,9 @@ class WizardAppWindow(object):
         if step == 'finish':
             btn_next.set_label(RESOURCES.UI_BUTTON_FINISH)
             btn_prev.set_label(RESOURCES.UI_BUTTON_RESTART)
+            btn_next.set_sensitive(True)
+            btn_prev.set_sensitive(True)
+            self.enable_next = True
         else:
             btn_next.set_label(self.btntext_next)
             btn_prev.set_label(self.btntext_prev)
