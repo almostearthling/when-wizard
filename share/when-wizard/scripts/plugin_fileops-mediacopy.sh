@@ -6,7 +6,6 @@ MEDIA="$1"
 DEST="$2"
 SRC="/media/$USER/$MEDIA"
 
-notify-send -i drive-removable-media "Media Copy" "Synchronizing $SRC to $DEST"
 
 if [ ! -d "$DEST" ] ; then
     mkdir -p "$DEST" || exit 2
@@ -16,10 +15,11 @@ OUTCOME="failed"
 sleep 3
 if [ -d "$SRC" -a -d "$DEST" ] ; then
     OUTCOME="succeeded"
+    notify-send -i drive-removable-media "Media Copy" "Synchronizing $SRC to $DEST"
     rsync -qrtv "$SRC/" "$DEST/" || OUTCOME="failed"
+    notify-send -i drive-removable-media "Media Copy" "Synchronization complete (operation $OUTCOME)."
 fi
 
-notify-send -i drive-removable-media "Media Copy" "Synchronization complete (operation $OUTCOME)."
 
 if [ "$OUTCOME" = "failed" ] ; then
     exit 2
