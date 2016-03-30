@@ -880,7 +880,7 @@ class FileChangeConditionPlugin(BaseConditionPlugin):
         d = BaseConditionPlugin.to_item_dict(self)
         d['subtype'] = 'PathNotifyBasedCondition'
         d['watched_paths'] = [self.watched_path]
-        d['no_skip'] = False
+        d['no_skip'] = True
         return d
 
 
