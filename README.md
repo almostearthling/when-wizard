@@ -16,7 +16,8 @@ The **When Wizard** still lacks the possibility to be installed using a package 
 
 ```
 $ sudo add-apt-repository ppa:franzg/when-command
-$ sudo apt-get install when-command mailutils consolekit
+$ sudo apt-get install when-command mailutils consolekit wget \
+                       rsync libnotify-bin
 $ mkdir Apps
 $ cd Apps
 ~/Apps$ git clone https://github.com/almostearthling/when-wizard.git
