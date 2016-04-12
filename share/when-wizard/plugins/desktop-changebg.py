@@ -84,8 +84,7 @@ class Plugin(TaskPlugin):
             name = os.path.basename(path)
             self.background_image = os.path.realpath(path)
             self.command_line = cmd_template % self.background_image
-            self.summary_description = _(
-                "The desktop background will be changed to '%s'") % name
+            self.summary_description = _("The desktop background will be changed to '%s'") % name
             self.allow_forward(True)
         else:
             self.background_image = None

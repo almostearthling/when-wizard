@@ -86,8 +86,7 @@ class Plugin(TaskPlugin):
             name = os.path.basename(path)
             self.path = os.path.realpath(path)
             self.command_line = cmd_template % self.path
-            self.summary_description = _(
-                "The sound '%s' will be played") % name
+            self.summary_description = _("The sound '%s' will be played") % name
         else:
             self.path = None
             self.command_line = None

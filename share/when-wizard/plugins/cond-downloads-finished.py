@@ -43,8 +43,7 @@ class Plugin(CommandConditionPlugin):
         self.script = self.get_script('plugin_cond-downloads-finished.sh')
         self.download_dir = "~/Downloads"
         self.command_line = '%s "%s"' % (self.script, self.download_dir)
-        self.summary_description = _(
-            "When all downloads in '%s' are complete") % self.download_dir
+        self.summary_description = _("When all downloads in '%s' are complete") % self.download_dir
 
 
 # end.

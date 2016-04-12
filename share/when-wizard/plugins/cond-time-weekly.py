@@ -67,8 +67,7 @@ class Plugin(TimeConditionPlugin):
         day = c.get_active()
         day_s = c.get_active_text()
         self.timespec['weekday'] = day
-        self.summary_description = _(
-            "On %s at %s:%s o'clock") % (day_s, shr, smin)
+        self.summary_description = _("On %s at %s:%s o'clock") % (day_s, shr, smin)
         self.allow_forward(True)
 
 

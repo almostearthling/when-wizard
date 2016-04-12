@@ -99,8 +99,7 @@ class Plugin(TaskPlugin):
             self.destination = destination
             self.command_line = '%s %s %s' % (
                 self.script, self.source, self.destination)
-            self.summary_description = _(
-                "Files from %s will be copied to %s") % (sourcename, destname)
+            self.summary_description = _("Files from %s will be copied to %s") % (sourcename, destname)
             self.allow_forward(True)
         else:
             self.command_line = None

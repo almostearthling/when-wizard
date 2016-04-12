@@ -58,8 +58,7 @@ class Plugin(TaskPlugin):
         self.app_name = desktop_app.get_string("Name")
         self.command_line = '/usr/bin/env python3 %s %s' % (
             self.script_path, desktop_path)
-        self.summary_description = _(
-            "The application '%s' will be started") % self.app_name
+        self.summary_description = _("The application '%s' will be started") % self.app_name
         self.allow_forward(True)
 
 

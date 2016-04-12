@@ -42,8 +42,7 @@ class Plugin(EventConditionPlugin):
         self.category = PLUGIN_CONST.CATEGORY_COND_FILESYSTEM
         self.stock = True
         self.event = EVENT_SYSTEM_DEVICE_ATTACH
-        self.summary_description = _(
-            "When a storage device is connected to the computer")
+        self.summary_description = _("When a storage device is connected to the computer")
 
 
 # end.

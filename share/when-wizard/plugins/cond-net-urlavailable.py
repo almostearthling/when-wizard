@@ -67,8 +67,7 @@ class Plugin(CommandConditionPlugin):
                 if not r:
                     raise ValueError
                 host = r.netloc.split(':')[0]
-                self.summary_description = _(
-                    "When a resource at '%s' is available") % host
+                self.summary_description = _("When a resource at '%s' is available") % host
                 self.allow_forward(True)
                 self.command_line = cmd_template % r.geturl()
             except Exception:

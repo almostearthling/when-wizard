@@ -79,8 +79,7 @@ class Plugin(TaskPlugin):
             name = os.path.basename(path)
             self.path = os.path.realpath(path)
             self.command_line = cmd_template % self.path
-            self.summary_description = _(
-                "The file '%s' will be open") % name
+            self.summary_description = _("The file '%s' will be open") % name
             self.allow_forward(True)
         else:
             self.command_line = None

@@ -55,8 +55,7 @@ class Plugin(TaskPlugin):
         self.command_line = o('txtCommand').get_text()
         if self.command_line:
             command_name = os.path.basename(self.command_line.split()[0])
-            self.summary_description = _(
-                "A command based on '%s' will be run") % command_name
+            self.summary_description = _("A command based on '%s' will be run") % command_name
             self.allow_forward(True)
         else:
             self.command_line = None

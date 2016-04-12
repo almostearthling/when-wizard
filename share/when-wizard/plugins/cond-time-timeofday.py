@@ -58,8 +58,7 @@ class Plugin(TimeConditionPlugin):
         self.timespec['minute'] = int(o('spinMinute').get_text())
         shr = ("00" + str(self.timespec['hour']))[-2:]
         smin = ("00" + str(self.timespec['minute']))[-2:]
-        self.summary_description = _(
-            "At %s:%s o'clock") % (shr, smin)
+        self.summary_description = _("At %s:%s o'clock") % (shr, smin)
         self.allow_forward(True)
 
 

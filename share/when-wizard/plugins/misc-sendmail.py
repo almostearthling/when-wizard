@@ -68,8 +68,7 @@ class Plugin(TaskPlugin):
             self.command_line = cmd_template.format(
                 script=self.get_script('plugin_misc-sendmail.sh'),
                 title=title, message=message, mailto=mailto)
-            self.summary_description = _(
-                "An email will be sent to %s") % mailto
+            self.summary_description = _("An email will be sent to %s") % mailto
             self.allow_forward(True)
         else:
             self.command_line = None

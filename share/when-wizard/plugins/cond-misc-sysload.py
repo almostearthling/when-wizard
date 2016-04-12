@@ -71,7 +71,7 @@ class Plugin(CommandConditionPlugin):
         except TypeError:
             value = None
         if value:
-            self.summary_description = _("When CPU load reaches %s%%") % value
+            self.summary_description = _("When system load reaches %s%%") % value
             self.command_line = "%s %s" % (
                 self.get_script('plugin_cond-misc-sysload.sh'), value)
             self.allow_forward(True)
