@@ -46,7 +46,7 @@ $ cd Apps/when-wizard
 ~/Apps/when-wizard$ ./when-wizard start-wizard
 ```
 
-and the wizard application appears. Choose the task first and then the condition: the **When Wizard** takes care to register it correctly. Note that after the first time that the **Wizard** application has been launched from the command line, it will be available in the *Dash* too.
+and the wizard application appears. Choose the task first and then the condition: the **When Wizard** takes care to register it correctly.
 
 ### The Manager
 
@@ -61,7 +61,7 @@ $ cd Apps/when-wizard
 ~/Apps/when-wizard$ ./when-wizard start-manager
 ```
 
-and the management application appears. Many operations can be performed from here: action management, history view, plugin and add-on management, **When** scheduler tuning. Note that after the first time that the **Wizard Manager** application has been launched from the command line, it will be available in the *Dash* too.
+and the management application appears. Many operations can be performed from here: action management, history view, plugin and add-on management, **When** scheduler tuning. You can use the *Create or Restore Desktop Icons for Wizard Applications* entry in the *Utility* pane to be able to invoke both the **When Wizard** and the **When Wizard Manager** from the *Dash*.
 
 
 ## Credits
