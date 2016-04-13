@@ -1,4 +1,4 @@
-# file: share/when-wizard/modules/cond-downloads-finished.py
+# file: share/when-wizard/modules/cond-fs-downloads-finished.py
 # -*- coding: utf-8 -*-
 #
 # Condition plugin that checks whether downloads have finished or not
@@ -40,7 +40,7 @@ class Plugin(CommandConditionPlugin):
         )
         self.stock = True
         self.category = PLUGIN_CONST.CATEGORY_COND_FILESYSTEM
-        self.script = self.get_script('plugin_cond-downloads-finished.sh')
+        self.script = self.get_script('plugin_cond-fs-downloads-finished.sh')
         self.download_dir = "~/Downloads"
         self.command_line = '%s "%s"' % (self.script, self.download_dir)
         self.summary_description = _("When all downloads in '%s' are complete") % self.download_dir
