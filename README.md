@@ -7,7 +7,7 @@
 
 The **When Wizard** is a suite of utilities that can be used to perform unattended actions under certain conditions within a Gnome graphical session in Ubuntu or a derivative. It provides a wizard-style interface to choose actions and circumstances, and uses the **When** Gnome [Scheduler](http://almostearthling.github.io/when-command/) to actually manage the jobs. Actions can be defined and managed using simple GUI applications.
 
-More extended documentation for the **When Wizard** can be found [here](http://when-documentation.readthedocs.org/en/latest/wizard.html).
+More extended documentation for the **When Wizard** can be found [here](http://when-documentation.readthedocs.io/en/latest/wizard.html).
 
 
 ## Installation
@@ -31,7 +31,7 @@ Start **When** from the *Dash*, and ensure that in the settings box the *Autosta
 
 ## Usage
 
-Refer to the [documentation](http://when-documentation.readthedocs.org/en/latest/wizard.html) for a more detailed description.
+Refer to the [documentation](http://when-documentation.readthedocs.io/en/latest/wizard.html) for a more detailed description.
 
 ### The Wizard
 
