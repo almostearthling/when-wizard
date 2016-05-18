@@ -43,7 +43,7 @@ class Plugin(TaskPlugin):
             category=PLUGIN_CONST.CATEGORY_TASK_MISC,
             basename=plugin_name(__file__),
             name=_("Send Keystroke"),
-            description=_("Send a keystroke to an application if running"),
+            description=_("Send a keystroke to an open window"),
             author=APP_AUTHOR,
             copyright=APP_COPYRIGHT,
             icon='internal',
