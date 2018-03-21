@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Task plugin to send an email
-# Copyright (c) 2015-2016 Francesco Garosi
+# Copyright (c) 2015-2018 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 # NOTE: the mailutils package *must* be installed and correctly configured
 

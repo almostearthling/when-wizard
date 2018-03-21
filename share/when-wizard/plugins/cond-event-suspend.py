@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Condition plugin for the session suspend event
-# Copyright (c) 2015-2016 Francesco Garosi
+# Copyright (c) 2015-2018 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
 import locale

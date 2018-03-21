@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Resources and constants
-# Copyright (c) 2015-2016 Francesco Garosi
+# Copyright (c) 2015-2018 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
 # NOTE: all APP_... constants are builtins from the main script

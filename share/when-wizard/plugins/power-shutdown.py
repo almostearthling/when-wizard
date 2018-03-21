@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Task plugin to shutdown the system
-# Copyright (c) 2015-2016 Francesco Garosi
+# Copyright (c) 2015-2018 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 # NOTE: the consolekit package is a *mandatory* requirement
 

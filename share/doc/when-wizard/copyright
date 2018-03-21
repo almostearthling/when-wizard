@@ -3,7 +3,7 @@ Upstream-Name: when-wizard
 Source: https://github.com/almostearthling/when-wizard
 
 Files: *
-Copyright: 2015-2016 Francesco Garosi (AlmostEarthling) <franz.g@infinito.it>
+Copyright: 2015-2018 Francesco Garosi (AlmostEarthling) <franz@no-spam-please.jks.it>
 License: BSD
  Redistribution and use in source and binary forms, with or without
  modification, are permitted provided that the following conditions are met:
@@ -31,7 +31,7 @@ License: BSD
  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 Files: debian/*
-Copyright: 2015 Francesco Garosi (AlmostEarthling) <franz.g@infinito.it>
+Copyright: 2015-2018 Francesco Garosi (AlmostEarthling) <franz@no-spam-please.jks.it>
 License: GPL-2+
  This package is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by

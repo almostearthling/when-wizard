@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # Fire an event when a file changes
-# Copyright (c) 2015-2016 Francesco Garosi
+# Copyright (c) 2015-2018 Francesco Garosi
 # Released under the BSD License (see LICENSE file)
 
 
