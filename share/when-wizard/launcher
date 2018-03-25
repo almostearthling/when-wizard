@@ -30,7 +30,7 @@ def main():
         p = mod.Plugin()
         try:
             retrieve_plugin(sys.argv[2], p)
-        except:
+        except Exception:
             oerr(me, RESOURCES.CLI_ERR_FAIL_LOAD_PLUGIN)
             return 2
         if hasattr(p, 'run') and p.run():
